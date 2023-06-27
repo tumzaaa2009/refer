@@ -587,6 +587,7 @@ if (isset($_GET['destroy'])) {
         opreator: hosOpreator,
     });
 
+
     socket.on(`send_status ${hosCode}`, function(data) {
         if ((data.message = "มี RefNo เข้า  ")) {
             toastr.success(`มี RefNo เข้า ${data.refNo}`, "", {
@@ -701,6 +702,7 @@ if (isset($_GET['destroy'])) {
         if (onfrom === "formreferout") {
             ServiceStation();
             ward();
+            LevelActual();
             pttype();
             SelectGroupClinic();
             Typept();
@@ -799,9 +801,12 @@ if (isset($_GET['destroy'])) {
             dataType: "JSON",
             success: function(response) {
                 const stationService = [];
+                stationService.push(
+                    `<option value="0" selected="selected"  >-- ระบุจัดบริการ --</option>`
+                );
                 for (let index = 0; index < response.response.length; index++) {
                     stationService.push(
-                        `<option id='${response.response[index].station_name}'>${response.response[index].station_name}</option>`
+                        `<option id='${response.response[index].station_name}' >${response.response[index].station_name}</option>`
                     );
                 }
                 $("#getStationService").html(stationService);
@@ -809,6 +814,65 @@ if (isset($_GET['destroy'])) {
             },
         });
     };
+    //? จัดการสถานที่ บริการ ตัวแปรเริ่มต้นคือ service station opd 
+    const ChangeLocation = (value) => {
+        ward(value.value)
+        LevelActual(value.value)
+    }
+
+
+    const ward = (value) => {
+        $.ajax({
+            type: "POST",
+            url: `${callPathRefer}`,
+            data: {
+                ward: value,
+            },
+            dataType: "JSON",
+            success: function(response) {
+                const stationService = [];
+                for (let index = 0; index < response.response.length; index++) {
+                    stationService.push(
+                        `<option id='${response.response[index].dep_id}'>${response.response[index].dep_name}</option>`
+                    );
+                }
+                $("#getdepartment").html(
+                    stationService.map((option) =>
+                        option.replace("id='", "id='getdepartment-")
+                    )
+                );
+
+            },
+        });
+    };
+
+    const LevelActual = (value) => {
+        $.ajax({
+            type: "POST",
+            url: `${callPathRefer}`,
+            data: {
+                lvActual: value,
+            },
+            dataType: "JSON",
+            success: function(response) {
+                const lvActual = [];
+                lvActual.push(`<option selected="selected" value="0">--เลือกระดับความรุนแรง--</option>`)
+                for (let index = 0; index < response.response.length; index++) {
+                    lvActual.push(
+                        `<option value="${response.response[index].level_value}" >${response.response[index].level_name}</option>`
+                    );
+                }
+                $("#levelActual").html(lvActual);
+
+            },
+        });
+
+    }
+
+
+    // ?จบการค้นหา
+
+
     const HnInput = (value) => {
         $.ajax({
             type: "POST",
@@ -991,30 +1055,6 @@ if (isset($_GET['destroy'])) {
 
 
 
-    const ward = () => {
-        $.ajax({
-            type: "POST",
-            url: `${callPathRefer}`,
-            data: {
-                ward: "on",
-            },
-            dataType: "JSON",
-            success: function(response) {
-                const stationService = [];
-                for (let index = 0; index < response.response.length; index++) {
-                    stationService.push(
-                        `<option id='${response.response[index].dep_id}'>${response.response[index].dep_name}</option>`
-                    );
-                }
-                $("#getdepartment").html(
-                    stationService.map((option) =>
-                        option.replace("id='", "id='getdepartment-")
-                    )
-                );
-
-            },
-        });
-    };
 
     const pttype = () => {
         $.ajax({
@@ -1123,6 +1163,7 @@ if (isset($_GET['destroy'])) {
         });
     };
 
+
     // * Ajax other Cause
     const ValueOtherCaseReferOut = (params) => {
 
@@ -1158,6 +1199,41 @@ if (isset($_GET['destroy'])) {
             },
         });
     };
+
+    // Add Truma 
+    let rowCount = 0
+    const TrumaAdd = () => {
+        const tableBody = document.querySelector("#TrumaTable tbody");
+        const newRow = document.createElement("tr");
+        let numCount = ++rowCount
+        newRow.innerHTML = `
+        <td><input class="form-control" type="text" name="e" /></td>
+        <td><input class="form-control" type="text" name="v" /></td>
+        <td><input class="form-control" type="text" name="m" /></td>
+        <td><input class="form-control" type="text" name="pupilR" /></td>
+        <td><input class="form-control" type="text" name="pupilL" /></td>
+        <td><input class="form-control" type="text" name="Tc" /></td>
+        <td><input class="form-control" type="text" name="prF" /></td>
+        <td><input class="form-control" type="text" name="pfM" /></td>
+        <td><input class="form-control" type="text" name="bp" placeholder="bp" /></td>
+        <td><input class="form-control" type="text" name="mmHg" placeholder="mmhg" /></td>
+        <td><input class="form-control" type="text" name="spo2" /></td>
+        <td><button class="btn btn-danger" onclick="deleteTurmaTr(this,${numCount})">Delete</button></td>
+    `;
+
+        $("#numTruma").val(numCount);
+        tableBody.appendChild(newRow);
+    }
+
+    const deleteTurmaTr = (btn, count) => {
+        const row = btn.closest("tr");
+        const countDiff = count - 1;
+        $("#numTruma").val(countDiff);
+        rowCount--;
+        row.remove();
+    }
+
+
     const checkEtt = (params) => {};
     const conscious = () => {
         $.ajax({

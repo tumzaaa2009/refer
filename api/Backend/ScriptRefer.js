@@ -37,10 +37,14 @@ const sendFrom = () => {
   const formData = new FormData(form);
   // เพิ่มเงื่อนไข validate ข้อมูลก่อนส่งข้อมูลผ่าน AJAX
   // ตรวจสอบค่าของ input element แต่ละตัวใน form ก่อนส่งข้อมูล
-  if ($("#hosIdMain").val() === "") {
-    alert("ระบุรัสรพ");
-    return false;
-  }
+  if ($("#getStationService").val() === 0) {
+        alert("ระบุสถานบริการ");
+        return false;
+ }
+   if ($("#hosIdMain").val() === "") {
+     alert("ระบุรัสรพ");
+     return false;
+   }
 
   if ($("#hosMainName").val() === "") {
     alert("ระบุชื่อรพ");

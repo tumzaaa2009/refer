@@ -37,8 +37,9 @@ function StationRefer()
 }
 function Ward()
 {
+     
     global $objconnectRefer;
-    $selectWard = "SELECT * FROM department";
+    $selectWard = "SELECT * FROM department WHERE station_name ='".$_POST['ward']."'";
     $queryStationWard = mysqli_query($objconnectRefer, $selectWard);
     $stationWard = array();
     while ($rowStationService = mysqli_fetch_array($queryStationWard)) {
@@ -48,6 +49,18 @@ function Ward()
     echo json_encode($rsWard);
 }
 
+function LvActual(){
+  global  $objconnectRefer;
+ 
+   $selectLvActual = "SELECT * FROM level WHERE staion_name ='". $_POST['lvActual']. "' ORDER BY level_id ASC";
+    $queryStationWard = mysqli_query($objconnectRefer, $selectLvActual);
+    $lv= array();
+    while ($rowStationService = mysqli_fetch_array($queryStationWard)) {
+        $lv[] = $rowStationService;
+    }
+    $rslv = array('status' => true, 'response' => $lv);
+    echo json_encode($rslv);
+}
 function pttype()
 {
     global $objconnectRefer;
@@ -448,6 +461,9 @@ if (isset($_POST['servicestation'])) {
 }
 if (isset($_POST['ward'])) {
     Ward();
+}
+if(isset($_POST['lvActual'])){
+    LvActual();
 }
 if (isset($_POST['pttype'])) {
     pttype();
