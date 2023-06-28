@@ -39,7 +39,7 @@
                               <label>จุดบริการ</label>
                               <input type="hidden" name="refercode" value="<?php echo $_SESSION['hosCode']; ?>" />
                               <input type="hidden" name="referName" value="<?php echo $_SESSION['hosName']; ?>" />
-                              <select id="getStationService" class="form-control select2 " name="location_org" data-dropdown-css-class="select2-primary" style="width: 100%;">
+                              <select id="getStationService" class="form-control select2 " name="location_org" data-dropdown-css-class="select2-primary" onchange="ChangeLocation(this)" style="width: 100%;">
                               </select>
                           </div>
                           <span class="select2-selection__arrow" role="presentation"><b role="presentation"></b></span>
@@ -58,8 +58,7 @@
                               <!-- /.input group -->
                           </div>
                       </div>
-                      <div class="col-sm-3">
-
+                      <div class="col-sm-3" style="display: none;">
                           <div class="form-group">
                               <label>VN:</label>
                               <input type="text" class="form-control" placeholder="" name="vn">
@@ -419,20 +418,8 @@
                                               <div class="form-group">
                                                   <label class="col-md-autocol-form-label">Level of Acuity:</label>
                                                   <select class="form-control lvlactual" width="100%;" name="levelActual" id="levelActual" onchange="updateColor()">
-                                                      <option selected="selected" value="0">--เลือกระดับความรุนแรง--</option>
-                                                      <option value="Unstable">I : Unstable</option>
-                                                      <option value="Stable with High risk of deterioration"> II :
-                                                          Stable with High risk of deterioration</option>
-                                                      <option value="Stable with Medium risk of deterioration"> III
-                                                          : Stable with Medium risk of deterioration</option>
-                                                      <option value="Stable with Low risk of deterioration"> IV :
-                                                          Stable with Low risk of deterioration </option>
-                                                      <option value="Stable with Low risk of deterioration "> IV :
-                                                          Stable with Low risk of deterioration </option>
-                                                      <option value="Stable with No risk of deterioration"> V :
-                                                          Stable with No risk of deterioration</option>
-                                                      <option value="OPD-New case">OPD-New case</option>
-                                                      <option value="OPD-นัดเดิม">OPD-นัดเดิม</option>
+
+
                                                   </select>
                                                   <input type="hidden" name="colorLvAc">
                                               </div>
@@ -441,7 +428,7 @@
                                               <!-- select -->
                                               <div class="form-group">
                                                   <label class="col-md-autocol-form-label">เป็นผู้ป่วยแผนก : </label>
-                                                  <select class="form-control select2" name="clinicGroup" id="clinicGrop" width="100%;">
+                                                  <select class="form-control select2" name="clinicGroup" id="clinicGrop" width="100%;" multiple="multiple">
                                                   </select>
                                               </div>
                                           </div>
@@ -461,7 +448,7 @@
                                           <div class="col-md-6">
                                               <div class="form-group">
                                                   <label>Service Plane :</label>
-                                                  <select class="form-control select2" name="sevicePlan" id="servicePlane" width="100%;"> </select>
+                                                  <select class="form-control select2" name="sevicePlan" id="servicePlane" width="100%;" multiple="multiple"> </select>
                                               </div>
                                           </div>
                                           <div class="col-md-6">
@@ -509,10 +496,12 @@
                                                   <div class="row">
                                                       <div class="col-md-12 col-lg-12" style="border:solid;">
                                                           <div align="center">
-                                                              <label>การประเมินผู้ป่วย <button name="" id="" class="btn btn-primary">ADD+</button> </label>
+                                                              <label>การประเมินผู้ป่วย <button name="AddTruma" id="AddTruma" class="btn btn-primary" onclick="TrumaAdd()">ADD+</button>
+                                                                  <input type="hidden" class="form-control" name="numTruma" id="numTruma" value="0">
+                                                              </label>
                                                           </div>
                                                           <div class="table-responsive">
-                                                              <table id="example2" class="table table-bordered table-hover dataTable dtr-inline">
+                                                              <table id="TrumaTable" class="table table-bordered table-hover dataTable dtr-inline">
                                                                   <thead>
                                                                       <tr>
                                                                           <th>E</th>
@@ -523,22 +512,26 @@
                                                                           <th>T (c)</th>
                                                                           <th>PR (ครั้ง/หน้า)</th>
                                                                           <th>RR (ครั้ง/นาที)</th>
-                                                                          <th>BP (mmHg)</th>
+                                                                          <th colspan="2" style="text-align:center">BP/mmHg</th>
                                                                           <th>Sp O2(%)</th>
                                                                       </tr>
                                                                   </thead>
                                                                   <tbody>
-                                                                      <td><input class="form-control" ype="text" name="e" /> </td>
-                                                                      <td><input class="form-control" type="text" name="v" /> </td>
-                                                                      <td><input class="form-control" type="text" name="m" />
-                                                                      </td>
-                                                                      <td><input class="form-control" type="text" name="pupilR" /></td>
-                                                                      <td><input class="form-control" type="text" name="pupilL" /></td>
-                                                                      <td><input class="form-control" type="text" name="Tc" /></td>
-                                                                      <td><input class="form-control" type="text" name="prF" /></td>
-                                                                      <td><input class="form-control" type="text" name="pfM" /></td>
-                                                                      <td><input class="form-control" type="text" name="bpmmhg" /></td>
-                                                                      <td><input class="form-control" type="text" name="spo2" /></td>
+                                                                      <tr id="TrAddTruma">
+                                                                          <td><input class="form-control" ype="text" name="e" /> </td>
+                                                                          <td><input class="form-control" type="text" name="v" /> </td>
+                                                                          <td><input class="form-control" type="text" name="m" /> </td>
+                                                                          <td><input class="form-control" type="text" name="pupilR" /></td>
+                                                                          <td><input class="form-control" type="text" name="pupilL" /></td>
+                                                                          <td><input class="form-control" type="text" name="Tc" /></td>
+                                                                          <td><input class="form-control" type="text" name="prF" /></td>
+                                                                          <td><input class="form-control" type="text" name="pfM" /></td>
+                                                                          <td>
+                                                                              <input class="form-control" type="text" name="bp" placeholder="bp" />
+                                                                          </td>
+                                                                          <td><input class="form-control" type="text" name="mmHg" placeholder="mmhg" /></td>
+                                                                          <td><input class="form-control" type="text" name="spo2" /></td>
+                                                                      </tr>
                                                                   </tbody>
                                                               </table>
                                                           </div>

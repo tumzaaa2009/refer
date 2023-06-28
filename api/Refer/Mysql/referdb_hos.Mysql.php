@@ -37,8 +37,9 @@ function StationRefer()
 }
 function Ward()
 {
+
     global $objconnectRefer;
-    $selectWard = "SELECT * FROM department";
+    $selectWard = "SELECT * FROM department WHERE station_name ='" . $_POST['ward'] . "'";
     $queryStationWard = mysqli_query($objconnectRefer, $selectWard);
     $stationWard = array();
     while ($rowStationService = mysqli_fetch_array($queryStationWard)) {
@@ -48,6 +49,19 @@ function Ward()
     echo json_encode($rsWard);
 }
 
+function LvActual()
+{
+    global  $objconnectRefer;
+
+    $selectLvActual = "SELECT * FROM level WHERE staion_name ='" . $_POST['lvActual'] . "' ORDER BY level_id ASC";
+    $queryStationWard = mysqli_query($objconnectRefer, $selectLvActual);
+    $lv = array();
+    while ($rowStationService = mysqli_fetch_array($queryStationWard)) {
+        $lv[] = $rowStationService;
+    }
+    $rslv = array('status' => true, 'response' => $lv);
+    echo json_encode($rslv);
+}
 function pttype()
 {
     global $objconnectRefer;
@@ -348,13 +362,14 @@ function ModalDerivery()
     echo json_encode($rsHos);
 }
 
-function tableStation(){
-    global $objconnectRefer;  
-    $selectStation ="SELECT * FROM station";
-    $queryStation = mysqli_query($objconnectRefer,$selectStation);
+function tableStation()
+{
+    global $objconnectRefer;
+    $selectStation = "SELECT * FROM station";
+    $queryStation = mysqli_query($objconnectRefer, $selectStation);
     $rsStation = array();
     while ($fetchStation = mysqli_fetch_array($queryStation)) {
-        $rsStation[] =array('status'=>true ,"data"=> $fetchStation);
+        $rsStation[] = array('status' => true, "data" => $fetchStation);
     }
     echo json_encode($rsStation);
 }
@@ -377,69 +392,68 @@ function AddStationRefer()
     }
     echo json_encode($resultArr);
 }
-function EditDelStation(){
+function EditDelStation()
+{
     global $objconnectRefer;
-           if($_POST['stationSource']=="del"){
-            $sqlStation = "DELETE FROM station WHERE station_id='".$_POST['stationId']."'";
-              mysqli_query($objconnectRefer, $sqlStation);
-            }else if ($_POST['stationSource']== "stationName"){
-              $sqlEditStation = "UPDATE station SET station_name ='".$_POST['stationValue']. "'  WHERE station_id ='" . $_POST['stationId'] . "' ";
-              mysqli_query($objconnectRefer, $sqlEditStation);
-            }
+    if ($_POST['stationSource'] == "del") {
+        $sqlStation = "DELETE FROM station WHERE station_id='" . $_POST['stationId'] . "'";
+        mysqli_query($objconnectRefer, $sqlStation);
+    } else if ($_POST['stationSource'] == "stationName") {
+        $sqlEditStation = "UPDATE station SET station_name ='" . $_POST['stationValue'] . "'  WHERE station_id ='" . $_POST['stationId'] . "' ";
+        mysqli_query($objconnectRefer, $sqlEditStation);
+    }
 
     $sqlSelectStation = "SELECT * FROM station";
     $querySelectStation = mysqli_query($objconnectRefer, $sqlSelectStation);
     while ($fetchStation = mysqli_fetch_array($querySelectStation)) {
         $stationArr['res'][] = $fetchStation['station_name'];
     }
-    if($querySelectStation==1){
+    if ($querySelectStation == 1) {
         $resultArr = array('status' => true, "hosCode" => $_POST['hosCode'], "res" => $stationArr['res']);
-    }else{
+    } else {
         $resultArr[] = array('status' => false);
     }
     echo json_encode($resultArr);
-}   
-function GetTableDepartment(){
+}
+function GetTableDepartment()
+{
     global $objconnectRefer;
     $sql = "SELECT * FROM department ORDER BY dep_id DESC";
-    $query = mysqli_query($objconnectRefer,$sql);
-    if($query)  {
+    $query = mysqli_query($objconnectRefer, $sql);
+    if ($query) {
         while ($rowDepartment = mysqli_fetch_array($query)) {
-        $rsDepartment[] = array('status' => true, "id" => $rowDepartment["dep_id"],"name"=>$rowDepartment["dep_name"]);
+            $rsDepartment[] = array('status' => true, "id" => $rowDepartment["dep_id"], "name" => $rowDepartment["dep_name"]);
+        }
+    } else {
+        $rsDepartment[] = array('status' => false);
     }
-    }else{
-    $rsDepartment[] = array('status' => false);
-    }
-   
-   
+
+
     echo json_encode($rsDepartment);
-    
 }
 
-function AddDepartment(){
+function AddDepartment()
+{
     global $objconnectRefer;
-     $sql = "INSERT INTO department (dep_name) value('". $_POST["nameDeapartMent"]."')";
-    $query= mysqli_query($objconnectRefer,$sql);
-    if($query)
-    echo json_encode($query);
+    $sql = "INSERT INTO department (dep_name) value('" . $_POST["nameDeapartMent"] . "')";
+    $query = mysqli_query($objconnectRefer, $sql);
+    if ($query)
+        echo json_encode($query);
 }
 function EditDelDepartment()
 {
     global $objconnectRefer;
     if ($_POST['departmentSource'] == "del") {
         $sqlStation = "DELETE FROM department WHERE dep_id='" . $_POST['departmentId'] . "'";
-        $fetchVale=  mysqli_query($objconnectRefer, $sqlStation);
-        if($fetchVale) $rs[] = array("status"=>true,$fetchVale);
- 
+        $fetchVale =  mysqli_query($objconnectRefer, $sqlStation);
+        if ($fetchVale) $rs[] = array("status" => true, $fetchVale);
     } else if ($_POST['departmentSource'] == "departmentName") {
         $sqlEditStation = "UPDATE department SET dep_name ='" . $_POST['departmentValue'] . "' WHERE dep_id ='" . $_POST['departmentId'] . "' ";
         $fetchVale = mysqli_query($objconnectRefer, $sqlEditStation);
         if ($fetchVale) $rs[] = array("status" => true, $fetchVale);
-
     }
     echo json_encode($rs);
- 
-}   
+}
 
 //* เรียกใช้การทำงาน //
 
@@ -448,6 +462,9 @@ if (isset($_POST['servicestation'])) {
 }
 if (isset($_POST['ward'])) {
     Ward();
+}
+if (isset($_POST['lvActual'])) {
+    LvActual();
 }
 if (isset($_POST['pttype'])) {
     pttype();
@@ -506,23 +523,21 @@ if (isset($_POST['modalDerivery'])) {
     ModalDerivery();
 }
 
-if(isset($_POST['tableStation'])){
+if (isset($_POST['tableStation'])) {
     tableStation();
 }
-if(isset($_POST['station'] )&& isset($_POST['hosCode'])){
+if (isset($_POST['station']) && isset($_POST['hosCode'])) {
     AddStationRefer();
 }
 if (isset($_POST['stationValue']) && isset($_POST['stationId']) && isset($_POST['stationSource']) && isset($_POST['hosCode'])) {
     EditDelStation();
 }
-if(isset($_POST['Department'])){
+if (isset($_POST['Department'])) {
     GetTableDepartment();
 }
-if(isset($_POST['nameDeapartMent'])){
+if (isset($_POST['nameDeapartMent'])) {
     AddDepartment();
 }
-if (isset($_POST['departmentValue']) && isset($_POST['departmentId']) && isset($_POST['departmentSource']) ) {
+if (isset($_POST['departmentValue']) && isset($_POST['departmentId']) && isset($_POST['departmentSource'])) {
     EditDelDepartment();
 }
-
- 
