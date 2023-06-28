@@ -170,7 +170,7 @@ if (isset($_POST['submitPost'])) {
                                             <label for="passcode" class="form-label">Token : <span class="text-danger">*</span></label>
                                             <input class="form-control" type="password" id="passcode" name="passCode" readonly placeholder="Password">
                                         </div>
-                                        <div class="form-group" style="display: none;">
+                                        <div class="form-group" style="display:none;">
                                             <label for="passcode" class="form-label">แผนกเข้าใช้งาน : <span class="text-danger">*</span></label>
                                             <div class="form-group">
                                                 <label for=""></label>

@@ -331,12 +331,18 @@ if (isset($_GET['destroy'])) {
                             </a>
                         </li>
                         <li class="nav-item">
+                            <a href="indexfromuse.php?onfrom=formreferback" class="nav-link <?php echo ($_GET['onfrom'] == 'formreferback') ? 'active' : '' ?>">
+                                <i class=" far fa-circle nav-icon"></i>
+                                <p>ส่งกลับ</p>
+                            </a>
+                        </li>
+
+                        <!-- <li class="nav-item">
                             <a href="indexfromuse.php?onfrom=referintablewait" class="nav-link <?php echo ($_GET['onfrom'] == 'referintablewait') ? 'active' : '' ?>">
                                 <i class=" far fa-circle nav-icon"></i>
                                 <p>รายชื่อผู้ป่วยรอส่งตัวกลับ (เฉพาะเคสที่ได้รับ ReferBack)</p>
                             </a>
-                        </li>
-
+                        </li> -->
                         <!-- </ul> -->
                         <!-- </li> -->
                         <li class="nav-header">Menu รายชื่อผู้ป่วย</li>
@@ -409,6 +415,11 @@ if (isset($_GET['destroy'])) {
                                 include($includedFile);
                                 $includedFileName = basename($includedFile);
                                 $pageActive = "active";
+                            } else if ($_GET['onfrom'] == 'formreferback') {
+                                $includedFile = './form/formreferback.form.php';
+                                include($includedFile);
+                                $includedFileName = basename($includedFile);
+                                $pageActive = "active";
                             } else if ($_GET['onfrom'] == 'referoutDestinationtable') {
                                 $includedFile = './form/FromHosDestination/referout/show.table.php';
                                 include($includedFile);
@@ -431,12 +442,14 @@ if (isset($_GET['destroy'])) {
                                 include($includedFile);
                                 $includedFileName = basename($includedFile);
                                 $pageActive = "active";
-                            } else if ($_GET['onfrom'] == 'referintablewait') {
-                                $includedFile = './form/FormReferIn/table.referin.wait.php';
-                                include($includedFile);
-                                $includedFileName = basename($includedFile);
-                                $pageActive = "active";
-                            } else if ($_GET['onfrom'] == "showdetailreferin") {
+                            }
+                            // else if ($_GET['onfrom'] == 'referintablewait') {
+                            //     $includedFile = './form/FormReferIn/table.referin.wait.php';
+                            //     include($includedFile);
+                            //     $includedFileName = basename($includedFile);
+                            //     $pageActive = "active";
+                            // }
+                            else if ($_GET['onfrom'] == "showdetailreferin") {
 
                                 if ($_GET['idrefer'] != "") {
                                     $includedFile = './form/FormReferIn/show.detail.php';
@@ -587,7 +600,6 @@ if (isset($_GET['destroy'])) {
         opreator: hosOpreator,
     });
 
-
     socket.on(`send_status ${hosCode}`, function(data) {
         if ((data.message = "มี RefNo เข้า  ")) {
             toastr.success(`มี RefNo เข้า ${data.refNo}`, "", {
@@ -702,7 +714,20 @@ if (isset($_GET['destroy'])) {
         if (onfrom === "formreferout") {
             ServiceStation();
             ward();
-            LevelActual();
+            pttype();
+            SelectGroupClinic();
+            Typept();
+            Loads();
+            ServicePlane();
+            CaseReferOut();
+            DoctorName();
+            CoordinateIsName();
+            conscious();
+            getStation(hosCode)
+        } else if (onfrom === "formreferback") {
+           
+            ServiceStation();
+            ward();
             pttype();
             SelectGroupClinic();
             Typept();
@@ -802,11 +827,11 @@ if (isset($_GET['destroy'])) {
             success: function(response) {
                 const stationService = [];
                 stationService.push(
-                    `<option value="0" selected="selected"  >-- ระบุจัดบริการ --</option>`
+                    `<option value="0" seleted>--ระบุหน่วยบริการ--</option>`
                 );
                 for (let index = 0; index < response.response.length; index++) {
                     stationService.push(
-                        `<option id='${response.response[index].station_name}' >${response.response[index].station_name}</option>`
+                        `<option id='${response.response[index].station_name}'>${response.response[index].station_name}</option>`
                     );
                 }
                 $("#getStationService").html(stationService);
@@ -814,38 +839,6 @@ if (isset($_GET['destroy'])) {
             },
         });
     };
-    //? จัดการสถานที่ บริการ ตัวแปรเริ่มต้นคือ service station opd 
-    const ChangeLocation = (value) => {
-        ward(value.value)
-        LevelActual(value.value)
-    }
-
-
-    const ward = (value) => {
-        $.ajax({
-            type: "POST",
-            url: `${callPathRefer}`,
-            data: {
-                ward: value,
-            },
-            dataType: "JSON",
-            success: function(response) {
-                const stationService = [];
-                for (let index = 0; index < response.response.length; index++) {
-                    stationService.push(
-                        `<option id='${response.response[index].dep_id}'>${response.response[index].dep_name}</option>`
-                    );
-                }
-                $("#getdepartment").html(
-                    stationService.map((option) =>
-                        option.replace("id='", "id='getdepartment-")
-                    )
-                );
-
-            },
-        });
-    };
-
     const LevelActual = (value) => {
         $.ajax({
             type: "POST",
@@ -868,11 +861,6 @@ if (isset($_GET['destroy'])) {
         });
 
     }
-
-
-    // ?จบการค้นหา
-
-
     const HnInput = (value) => {
         $.ajax({
             type: "POST",
@@ -1053,8 +1041,36 @@ if (isset($_GET['destroy'])) {
         $("#searchNameHosDes").val(hosName);
     };
 
+    const ChangeLocation = (value) => {
 
+        ward(value.value)
+        LevelActual(value.value)
+    }
 
+    const ward = (value) => {
+        $.ajax({
+            type: "POST",
+            url: `${callPathRefer}`,
+            data: {
+                ward: value,
+            },
+            dataType: "JSON",
+            success: function(response) {
+                const stationService = [];
+                for (let index = 0; index < response.response.length; index++) {
+                    stationService.push(
+                        `<option id='${response.response[index].dep_id}'>${response.response[index].dep_name}</option>`
+                    );
+                }
+                $("#getdepartment").html(
+                    stationService.map((option) =>
+                        option.replace("id='", "id='getdepartment-")
+                    )
+                );
+
+            },
+        });
+    };
 
     const pttype = () => {
         $.ajax({
@@ -1163,7 +1179,6 @@ if (isset($_GET['destroy'])) {
         });
     };
 
-
     // * Ajax other Cause
     const ValueOtherCaseReferOut = (params) => {
 
@@ -1199,7 +1214,6 @@ if (isset($_GET['destroy'])) {
             },
         });
     };
-
     // Add Truma 
     let rowCount = 0
     const TrumaAdd = () => {
@@ -1232,7 +1246,6 @@ if (isset($_GET['destroy'])) {
         rowCount--;
         row.remove();
     }
-
 
     const checkEtt = (params) => {};
     const conscious = () => {
@@ -1425,11 +1438,17 @@ if (isset($_GET['destroy'])) {
 
                     const optimereceItems = data[date].optimerece;
 
+                    html +=
+                        '<tr><td style="width: fit-content"><div class="form-check"><input class="  check-all-items" type="checkbox" data-date="' +
+                        date +
+                        '"></div></td><td colspan="3"><label class="form-check-label">เลือกทั้งหมด</label></td></tr>';
+
                     for (let i = 0; i < optimereceItems.length; i++) {
                         let item = optimereceItems[i];
 
                         html +=
-                            '<tr><td style="width: fit-content"><input type="checkbox" name="itemCheckbox" value=\'{"date": "' +
+                            '<tr><td style="width: fit-content"><input type="checkbox" id="itemCheckbox' + date +
+                            '" name="itemCheckbox" value=\'{"date": "' +
                             date +
                             '", "drugname": "' +
                             item.drugname +
@@ -1458,12 +1477,18 @@ if (isset($_GET['destroy'])) {
                         '<li class="nav-item"><a class="nav-link"><i class="fas fa-angle-left right"></i>' +
                         formatDateThai(date) +
                         '</a><ul class="nav nav-treeview"><li class="nav-item"><div class="table-responsive"><table class="table table-bordered"><thead><tr><th>LabItemCode</th><th>LabItemName</th><th>LabItemNameNormalValue</th><th>lab_items_normal_value</th></tr></thead><tbody>';
+                    html +=
+                        '<tr><td style="width: fit-content"> <input class="check-all-items-labs" type="checkbox" data-date="' +
+                        date +
+                        '"></td><td colspan="3"><label class="form-check-label">เลือกทั้งหมด</label></td></tr>';
                     for (let i = 0; i < data[date].length; i++) {
                         let item = data[date][i];
 
                         html +=
-                            '<tr><td style="width: fit-content"><input type="checkbox" name="itemCheckboxlabs" value=\'{"date": "' +
-                            date + '", "lab_items_code": "' + item.lab_items_code + '", "lab_items_name": "' + item.lab_items_name +
+                            '<tr><td style="width: fit-content"><input type="checkbox" id="itemCheckboxLabs' + date +
+                            '" name="itemCheckboxlabs" value=\'{"date": "' +
+                            date + '", "lab_items_code": "' + item.lab_items_code + '", "lab_items_name": "' + item
+                            .lab_items_name +
                             '", "lab_items_normal_value": "' + item.lab_items_normal_value + '"}\'></td>' +
                             '<td style="width: fit-content"><input type="text" class="form-control" readonly value="' + item
                             .lab_items_code + '"></td>' +
@@ -1485,23 +1510,62 @@ if (isset($_GET['destroy'])) {
         } else {
             document.getElementById('treeviewLabs').innerHTML = html;
         }
-
-        // เรียกใช้งาน plugin treeview ของ Bootstrap 5
-
-        // เพิ่มการเชื่อมต่อกับ checkbox
+        //* drug
         const checkboxes = document.querySelectorAll('input[name="itemCheckbox"]');
-
+        const checkAllItems = document.querySelectorAll('.check-all-items');
 
         checkboxes.forEach((checkbox) => {
             checkbox.addEventListener('change', toggleCheckbox);
         });
 
-        // ฟังก์ชันเพื่อเปิด/ปิด checkbox แต่ละรายการ
+        checkAllItems.forEach((checkAllItem) => {
+            checkAllItem.addEventListener('change', toggleAllItems);
+        });
+
         function toggleCheckbox(event) {
             const checkbox = event.target;
             const allChecked = Array.from(checkboxes).every((checkbox) => checkbox.checked);
 
+            checkAllItems.forEach((checkAllItem) => {
+                if (checkbox.checked) {
+                    checkAllItem.checked = allChecked;
+                } else {
+                    checkAllItem.checked = false;
+                }
+            });
         }
+
+        function toggleAllItems(event) {
+            const checkAllItem = event.target;
+            const date = checkAllItem.getAttribute('data-date');
+            console.log(date)
+            const drugCheckboxes = document.querySelectorAll(
+                'input[id="itemCheckbox' + date + '"]'
+            );
+
+            drugCheckboxes.forEach((checkbox) => {
+                checkbox.checked = checkAllItem.checked;
+            });
+        }
+        //* End Drug
+        // *  LAbs 
+        function toggleAllLabItems(event) {
+            const checkAllItem = event.target;
+            const date = checkAllItem.getAttribute("data-date");
+            const labItemCheckboxes = document.querySelectorAll(
+                'input[id="itemCheckboxLabs' + date + '"]');
+
+            labItemCheckboxes.forEach((checkbox) => {
+                checkbox.checked = checkAllItem.checked;
+            });
+        }
+
+        const checkAllItemsLabs = document.querySelectorAll(".check-all-items-labs");
+        checkAllItemsLabs.forEach((checkAllItem) => {
+            checkAllItem.addEventListener("change", toggleAllLabItems);
+        });
+
+        // *  LAbs 
 
     }
 
