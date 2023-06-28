@@ -420,7 +420,7 @@ if (isset($_GET['destroy'])) {
                                 include($includedFile);
                                 $includedFileName = basename($includedFile);
                                 $pageActive = "active";
-                            }else if ($_GET['onfrom'] == 'referoutDestinationtable') {
+                            } else if ($_GET['onfrom'] == 'referoutDestinationtable') {
                                 $includedFile = './form/FromHosDestination/referout/show.table.php';
                                 include($includedFile);
                                 $includedFileName = basename($includedFile);
@@ -442,14 +442,14 @@ if (isset($_GET['destroy'])) {
                                 include($includedFile);
                                 $includedFileName = basename($includedFile);
                                 $pageActive = "active";
-                            } 
-                           // else if ($_GET['onfrom'] == 'referintablewait') {
+                            }
+                            // else if ($_GET['onfrom'] == 'referintablewait') {
                             //     $includedFile = './form/FormReferIn/table.referin.wait.php';
                             //     include($includedFile);
                             //     $includedFileName = basename($includedFile);
                             //     $pageActive = "active";
                             // }
-                             else if ($_GET['onfrom'] == "showdetailreferin") {
+                            else if ($_GET['onfrom'] == "showdetailreferin") {
 
                                 if ($_GET['idrefer'] != "") {
                                     $includedFile = './form/FormReferIn/show.detail.php';
@@ -712,6 +712,20 @@ if (isset($_GET['destroy'])) {
         var onfrom = '<?php echo isset($_GET['onfrom']) ? $_GET['onfrom'] : ""; ?>';
         var idrefer = '<?php echo isset($_GET['idrefer']) ? $_GET['idrefer'] : ""; ?>';
         if (onfrom === "formreferout") {
+            ServiceStation();
+            ward();
+            pttype();
+            SelectGroupClinic();
+            Typept();
+            Loads();
+            ServicePlane();
+            CaseReferOut();
+            DoctorName();
+            CoordinateIsName();
+            conscious();
+            getStation(hosCode)
+        } else if (onfrom === "formreferback") {
+           
             ServiceStation();
             ward();
             pttype();
