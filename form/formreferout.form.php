@@ -158,7 +158,6 @@
                   </div>
                   <div class="row">
                       <div class="col-sm-6">
-
                           <div class="form-group">
                               <label>ห้องตรวจ/หอผู้ป่วย</label>
                               <select class="form-control select2" name="department" id="getdepartment"> </select>
@@ -721,7 +720,7 @@
                       </div>
                       <!-- /.card-body -->
                       <div class="card-footer">
-                          <button type="button" onclick="sendFrom()" class="btn btn-primary">Submit</button>
+                          <button type="button" onclick="sendFromReferOut()" class="btn btn-primary">ยืนยันการส่ง</button>
                       </div>
                   </div>
           </form>

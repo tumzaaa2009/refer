@@ -32,7 +32,7 @@ const getStationServiceDestinations = (value) => {
 };
 
 // ? SendForm API
-const sendFrom = () => {
+const sendFromReferOut = () => {
   const form = document.getElementById("refer-out-form");
   const formData = new FormData(form);
   // เพิ่มเงื่อนไข validate ข้อมูลก่อนส่งข้อมูลผ่าน AJAX
@@ -42,7 +42,10 @@ const sendFrom = () => {
     alert("ระบุสถานบริการ");
     return false;
   }
+<<<<<<< Updated upstream
  
+=======
+>>>>>>> Stashed changes
   if ($("#hosIdMain").val() === "") {
     alert("ระบุรัสรพ");
     return false;
@@ -101,6 +104,89 @@ const sendFrom = () => {
     },
   });
 };
+
+// ? SendFormReferBack API
+const sendFromReferBack = () => {
+  const form = document.getElementById("refer-back-form");
+  const formData = new FormData(form);
+  // เพิ่มเงื่อนไข validate ข้อมูลก่อนส่งข้อมูลผ่าน AJAX
+  // ตรวจสอบค่าของ input element แต่ละตัวใน form ก่อนส่งข้อมูล
+  if ($("#getStationService").val() === 0) {
+    alert("ระบุสถานบริการ");
+    return false;
+  }
+  if ($("#hosIdMain").val() === "") {
+    alert("ระบุรัสรพ");
+    return false;
+  }
+
+  if ($("#hosMainName").val() === "") {
+    alert("ระบุชื่อรพ");
+    return false;
+  }
+
+  if ($("#hosCodeRefer").val() === "0") {
+    alert("กรุณาเลือกโรงพยาบาลที่จะส่งต่อ");
+    return false;
+  }
+
+  if ($("#levelActual").val() === "0") {
+    alert("กรุณาเลือกระดับความรุนแรง");
+    return false;
+  }
+  if ($("#doctorName").val() === "0") {
+    alert("กรุณาเลือกแพทย์ผู้สั่ง");
+    return false;
+  }
+  if ($("#movementFromReferBack").val() === 0) {
+       alert("ระบุการเคลื่อนย้าย");
+       return false;
+  }
+    if (
+      $("#DivotherCauseReferback").is(":visible") &&
+      $("#otherCauseReferBack").val()==""
+    ) {
+      alert("กรุณากรอก otherCauseReferBack");
+      return;
+    }
+
+  if (
+    $("#otherCauseReferBack").is(":visible") &&
+    $("#inputOtherCauseReferBack").val()==""
+  ) {
+    alert("กรุณากรอก inputOtherCauseReferBack");
+    return;
+  }
+
+
+  $.ajax({
+    headers: {
+      "x-access-token": hosPassCode,
+    },
+    type: "POST",
+    url: "https://rh4cloudcenter.moph.go.th:3000/referapi/postreferback",
+    data: formData,
+    contentType: false,
+    processData: false,
+    beforeSend: function () {
+      // แสดงข้อความโหลดก่อนส่งข้อมูล
+      $("#loader").show();
+    },
+    complete: function () {
+      // ซ่อนข้อความโหลดเมื่อสำเร็จหรือเกิดข้อผิดพลาด
+      $("#loader").hide();
+    },
+    success: function (response) {
+      if (response.message === "Suscess") {
+        alert("บันทึกระบบเข้าสู่ datacenter เรียบร้อยครับ");
+        location.href = "indexfromuse.php?onfrom=referoutOrigin";
+      } else {
+        alert("บันทึกไม่ผ่านโปรดตรวจสอบอีกครั้ง");
+      }
+    },
+  });
+};
+
 // ! cancle การส่งตัว ของ รพ ต้นทาง
 function cancleReferoutOrg() {
   const caseCancle = $("#inputCancleReferoutOrg").val();

@@ -2,13 +2,12 @@
       <div class="loader"></div>
   </div>
   <?php
-
     if ($_GET['onfrom'] === "formreferback") { ?>
       <div class="content-header">
           <div class="container-fluid">
               <div class="row mb-2">
                   <div class="col-sm-6">
-                      <h1 class="m-0" id="title-id"> ส่งตัวที่ไป </h1>
+                      <h1 class="m-0" id="title-id"> ส่งกลับ </h1>
                   </div>
                   <!-- /.col -->
                   <div class="col-sm-6">
@@ -26,26 +25,16 @@
       <!-- /.content-header -->
       <div class="card card-primary">
           <div class="card-header">
-              <h3 class="card-title">ข้อมูลผู้ป่วย</h3>
+              <h3 class="card-title">ข้อมูลผู้ป่วยส่งกลับ</h3>
           </div>
           <!-- /.card-header -->
           <!-- form start -->
-          <form enctype="multipart/form-data" id="refer-out-form">
+          <form enctype="multipart/form-data" id="refer-back-form">
               <div class="card-body">
                   <div class="row">
                       <div class="col-sm-3">
-
-                          <div class="form-group">
-                              <label>จุดบริการ</label>
-                              <input type="hidden" name="refercode" value="<?php echo $_SESSION['hosCode']; ?>" />
-                              <input type="hidden" name="referName" value="<?php echo $_SESSION['hosName']; ?>" />
-                              <select id="getStationService" class="form-control select2 " name="location_org" data-dropdown-css-class="select2-primary" onchange="ChangeLocation(this)" style="width: 100%;">
-                              </select>
-                          </div>
-                          <span class="select2-selection__arrow" role="presentation"><b role="presentation"></b></span>
-                      </div>
-                      <div class="col-sm-3">
-
+                          <input type="hidden" name="refercode" value="<?php echo $_SESSION['hosCode']; ?>" />
+                          <input type="hidden" name="referName" value="<?php echo $_SESSION['hosName']; ?>" />
                           <div class="form-group">
                               <label>วันที่รับบริการ</label>
                               <?php $date = date('d/m/Y');;  ?>
@@ -65,7 +54,6 @@
                           </div>
                       </div>
                       <div class="col-sm-3">
-
                           <div class="form-group">
                               <label>HN:</label>
                               <input type="number" class="form-control" name="Hninput" id="hn" placeholder="" onchange="HnInput(this.value)">
@@ -158,14 +146,6 @@
                   </div>
                   <div class="row">
                       <div class="col-sm-6">
-
-                          <div class="form-group">
-                              <label>ห้องตรวจ/หอผู้ป่วย</label>
-                              <select class="form-control select2" name="department" id="getdepartment"> </select>
-                          </div>
-                      </div>
-                      <div class="col-sm-6">
-
                           <div class="form-group">
                               <label>แพ้ยา </label>
                               <input type="text" class="form-control" name="opd_allergy" id="opd_allergy" placeholder="">
@@ -194,107 +174,8 @@
                       <div class="col-sm-12">
 
                           <div class="form-group">
+
                               <div class="row">
-                                  <!-- <div class="col-sm-4">
-                                      
-                                      <div class="form-group">
-                                          <label>รหัสรพต้นทาง</label>
-                                          <button type="button" class="form-control btn btn-primary" data-toggle="modal" data-target="#modal-lg-hosmain">
-                                              ค้นหาสถานบริการหลัก
-                                          </button>
-                                      </div>
-
-                                  </div> -->
-                                  <!-- <div class="col-sm-4">
-                                      
-                                      <div class="form-group">
-                                          <label>รหัสสถานบริการต้นทาง</label>
-                                          <input type="text" class="form-control" name="hosIdMain" id="hosIdMain" readonly>
-                                      </div>
-                                  </div> -->
-                                  <!-- <div class="col-sm-4">
-                                      <div class="form-group">
-                                          <label>ชื่อ รพ ต้นทาง</label>
-                                          <input type="text" class="form-control" name="hosMainName" id="hosMainName" readonly>
-                                      </div>
-                                  </div> -->
-                                  <!-- //* modal hosmain */ -->
-                                  <div class="modal fade" id="modal-lg-hosmain">
-                                      <div class="modal-dialog modal-lg">
-                                          <div class="modal-content">
-                                              <div class="modal-header">
-                                                  <h4 class="modal-title">เลือกการค้นหาอย่างใดอย่างหนึ่ง</h4>
-                                                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                      <span aria-hidden="true">&times;</span>
-                                                  </button>
-                                              </div>
-                                              <div class="modal-body">
-                                                  <div class="row">
-                                                      <div class="col">
-
-                                                          <div class="form-group">
-                                                              <label>รหัสรพ</label>
-                                                              <input type="text" name="searchIdHosmain" id="searchIdHosmain" class="form-control">
-                                                          </div>
-                                                      </div>
-                                                      <div class="col">
-                                                          <div class="form-group">
-                                                              <label>ชื่อ รพ </label>
-                                                              <input type="text" name="searchNameHosMain" id="searchNameHosMain" class="form-control">
-                                                          </div>
-                                                      </div>
-                                                      <button type="button" class="btn btn-primary" onclick="SearchHosMain()">ค้นหา</button>
-                                                  </div>
-                                                  <h2>ผลการค้นหา</h2>
-                                                  <div class="modal-body" style="max-height: 400px; overflow-y: auto;">
-                                                      <table class="table table-hover">
-                                                          <thead>
-                                                              <tr>
-                                                                  <th>รหัส</th>
-                                                                  <th>ชื่อสถานพยาบาล</th>
-                                                              </tr>
-                                                          </thead>
-                                                          <tbody id="searchHosMain">
-
-                                                          </tbody>
-                                                      </table>
-                                                  </div>
-                                              </div>
-                                              <div class="modal-footer justify-content-between">
-                                                  <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                                                  <button type="button" class="btn btn-primary" data-dismiss="modal" onclick="ValueSeachHos()">เลือก</button>
-                                              </div>
-                                          </div>
-                                          <!-- /.mo  dal-content -->
-
-                                      </div>
-                                      <!-- /.modal-dialog -->
-                                  </div>
-                                  <!-- /.modal -->
-                              </div>
-                              <div class="row">
-                                  <!-- <div class="col-sm-4">
-                                      
-                                      <div class="form-group">
-                                          <label>รหัสสถานพยาบาลปลายทาง</label>
-                                          <button type="button" class="form-control btn btn-primary" data-toggle="modal" data-target="#modal-lg-hosDes">
-                                              ค้นหาสถานบริการลอง
-                                          </button>
-                                      </div>
-                                  </div> -->
-                                  <!-- <div class="col-sm-4">
-                                      
-                                      <div class="form-group">
-                                          <label>รหัสรพปลายทาง</label>
-                                          <input type="text" class="form-control" name="hosIdHosDes" id="hosIdHosDes" readonly>
-                                      </div>
-                                  </div> -->
-                                  <!-- <div class="col-sm-4">
-                                      <div class="form-group">
-                                          <label>ชื่อ รพ ปลายทาง</label>
-                                          <input type="text" class="form-control" name="hosMainNameDes" id="hosMainNameDes" readonly>
-                                      </div>
-                                  </div> -->
                                   <!-- //* modal hosDes */ -->
                                   <div class="modal fade" id="modal-lg-hosDes">
                                       <div class="modal-dialog modal-lg">
@@ -382,6 +263,23 @@
                                   <div class="tab-pane fade active show" id="custom-tabs-one-home" role="tabpanel" aria-labelledby="custom-tabs-one-home-tab">
                                       <!-- //! ข้อมูลส่งต่อทั่วไป */ -->
                                       <div class="form-group row">
+                                          <div class=" col-md-4">
+                                              <label>จุดบริการ</label>
+                                              <select id="getStationService" class="form-control select2 " name="location_org" data-dropdown-css-class="select2-primary" onchange="ChangeLocation(this)" style="width: 100%;">
+                                              </select>
+                                          </div>
+                                          <div class="col-md-4">
+                                              <div class="form-group">
+                                                  <label>ห้องตรวจ/หอผู้ป่วย</label>
+                                                  <select class="form-control select2" name="department" id="getdepartment"> </select>
+                                              </div>
+                                          </div>
+                                          <div class="col-md-4">
+                                              <div class="form-group">
+                                                  <label>เบอร์ติดต่อ</label>
+                                                  <input type="number" class="form-control  " name="telformreferback" id="telformreferback">
+                                              </div>
+                                          </div>
                                           <div class=" col-md-6">
                                               <label class="col-md-autocol-form-label">สถานพยาบาลปลายทาง</label>
                                               <select class="form-control select2" id="hosCodeRefer" onchange="getStationServiceDestinations(this.value)" name="hosCodeRefer" style="width: 100%;">
@@ -389,106 +287,88 @@
                                               </select>
                                           </div>
                                           <div class="col-md-6">
-                                              <label class="col-md-autocol-form-label" style="color:red">วันหมดอายุใบนำส่ง</label>
+                                              <label class="col-md-autocol-form-label" style="color:red">วันที่keyข้อมูลส่งกลับ</label>
                                               <i class="far fa-clock"></i> <input type="text" class="form-control float-left" id="reservationtime" name="reservationtimeExpire">
                                           </div>
                                       </div>
                                       <div class="form-group row">
-
-                                          <!-- <div class="col-md-auto">
-                                                  
-                                                  <div class="form-group">
-                                                      <label>เลขที่ใบส่งตัว</label>
-                                                      <input type="text" class="form-control" name="deliveryNumber" placeholder="**NewId**">
-                                                  </div>
-                                              </div>
-                                              <div class="col-md-auto">
-                                                  
-                                                  <div class="form-group">
-                                                      <label>เลขที่ใบส่งตัว HIS</label>
-                                                      <input type="text" class="form-control" placeholder="" name="deliveryNumberHis">
-                                                  </div>
-                                              </div> -->
-
                                           <div class=" col-md-6">
-                                              <label class="col-md-autocol-form-label">จุดบริการปลายทาง</label>
-                                              <select class="form-control select2" id="getStationServiceDestination" name="getStationServiceDestination"></select>
+                                              <label class="col-md-autocol-form-label">การเคลื่อนย้ายผู้ป่วย</label>
+                                              <select class="form-control select2" name="movementFromReferBack" id="movementFromReferBack" style="width: 100%;">
+                                                  <option value="0">---ระบุ--</option>
+                                                  <option value="เปลนอน">เปลนอน</option>
+                                                  <option value="ล้อนั่ง">ล้อนั่ง</option>
+                                                  <option value="เดิน">เดิน</option>
+                                              </select>
                                           </div>
                                           <div class="col-md-6">
                                               <div class="form-group">
-                                                  <label class="col-md-autocol-form-label">Level of Acuity:</label>
-                                                  <select class="form-control lvlactual" width="100%;" name="levelActual" id="levelActual" onchange="updateColor()">
-
-
-                                                  </select>
-                                                  <input type="hidden" name="colorLvAc">
-                                              </div>
-                                          </div>
-                                          <div class="col-md-6">
-                                              <!-- select -->
-                                              <div class="form-group">
-                                                  <label class="col-md-autocol-form-label">เป็นผู้ป่วยแผนก : </label>
-                                                  <select class="form-control select2" name="clinicGroup" id="clinicGrop" width="100%;" multiple="multiple">
+                                                  <label class="col-md-autocol-form-label">การนำส่ง</label>
+                                                  <select class="form-control lvlactual" width="100%;" name="loads">
+                                                      <option value="รถ Refer ของโรงพยาบาลต้นทางมารับ">รถ Refer ของโรงพยาบาลต้นทางมารับ</option>
+                                                      <option value="ผู้ป่วย/ญาติเดินทางมาเอง">ผู้ป่วย/ญาติเดินทางมาเอง</option>
+                                                      <option value="รถ Refer ของพยาบาลไปส่ง">รถ Refer ของพยาบาลไปส่ง</option>
                                                   </select>
                                               </div>
                                           </div>
                                           <div class="col-md-6">
                                               <!-- select -->
-                                              <div class="form-group ">
-                                                  <label class="col-md-6-form-label">ประเภทผู้ป่วย :</label>
-                                                  <select class="form-control select2" name="Typept" id="Typept" width="100%;"> </select>
-                                              </div>
-                                          </div>
-                                          <div class="col-md-6">
                                               <div class="form-group">
-                                                  <label>วิธีการนำส่ง :</label>
-                                                  <select class="form-control select2" id="loads" name="loads" width="100%;"> </select>
-                                              </div>
-                                          </div>
-                                          <div class="col-md-6">
-                                              <div class="form-group">
-                                                  <label>Service Plane :</label>
-                                                  <select class="form-control select2" name="sevicePlan" id="servicePlane" width="100%;" multiple="multiple"> </select>
-                                              </div>
-                                          </div>
-                                          <div class="col-md-6">
-                                              <div class="form-group">
-                                                  <label>ทะเบียนรถนำส่ง :</label>
-                                                  <input type="text" class="form-control" name="carRefer" id="" aria-describedby="helpId" placeholder="">
-                                              </div>
-                                          </div>
-                                          <div class="col-md-6">
-                                              <div class="form-group">
-                                                  <label>เหตุผลการส่ง :</label>
-                                                  <select class="form-control select2" name="causeReferout" id="causeReferout" onchange="ValueOtherCaseReferOut(this.value)"></select>
-                                              </div>
-                                          </div>
-                                          <div class="col-md-auto" id="otherCauseReferout" style=" display: none;">
-                                              <div class="form-group">
-                                                  <label>อื่น :</label>
-                                                  <input type="text" class="form-control" name="otherCauseReferout" id="inputotherCauseReferout" placeholder="ป้อนเหตุผล">
-                                              </div>
-                                          </div>
-                                          <div class="col-md-6">
-                                              <div class="form-group">
-                                                  <label>แพทย์ผู้สั่ง :</label>
+                                                  <label class="col-md-autocol-form-label">แพทย์ผู้สั่ง</label>
                                                   <select class="form-control select2" name="doctorName" id="doctorName"> </select>
                                               </div>
                                           </div>
-                                          <div class="col-6">
+                                          <div class="col-md-6">
+                                              <!-- select -->
                                               <div class="form-group">
-                                                  <label>ระบบการประสานงาน (contract is)</label>
-                                                  <select class="form-control select2 select2-hidden-accessible" style="width: 100%;" data-select2-id="1" tabindex="-1" aria-hidden="true" name="coordinateIs" id="coordinateIs">
-
+                                                  <label class="col-md-autocol-form-label">แพทย์ Staff</label>
+                                                  <select class="form-control select2" name="staffDoctorName" id="staffDoctorName"> </select>
+                                              </div>
+                                          </div>
+                                          <div class="col-md-6">
+                                              <div class="form-group">
+                                                  <label>เหตุผลการส่งกลับ</label>
+                                                  <select class="form-control select2" id="reasonFormReferback" name="reasonFormReferback" width="100%;" onchange="ValueOtherCaseReferBack(this.value)">
+                                                      <option value="0" Selected>ระบบเหตุผล </option>
+                                                      <option value="Admin รักษาต่อเนื่อง">Admin รักษาต่อเนื่อง</option>
+                                                      <option value="Discharge/Follow up รพช">Discharge/Follow up รพช</option>
+                                                      <option value="หลังคลอด">หลังคลอด</option>
+                                                      <option value="อื่นๆ">อื่นๆ</option>
+                                                  </select>
+                                              </div>
+                                          </div>
+                                          <div class="col-md-auto" id="DivotherCauseReferback" style=" display: none;">
+                                              <div class="form-group">
+                                                  <label>อื่น :</label>
+                                                  <input type="text" class="form-control" name="otherCauseReferBack" id="otherCauseReferBack" placeholder="ป้อนเหตุผล">
+                                              </div>
+                                          </div>
+                                          <div class="col-md-6">
+                                              <div class="form-group">
+                                                  <label>ข้อมูลการนำยา</label>
+                                                  <select class="form-control select2" name="refdrugReferBack" id="refdrugReferBack" width="100%;" multiple="multiple">
+                                                      <option value="ผู้ป่วยนำยากลับไปด้วย">ผู้ป่วยนำยากลับไปด้วย</option>
+                                                      <option value="ใช้ยาที่ รพช.">ใช้ยาที่ รพช.</option>
                                                   </select>
                                               </div>
                                           </div>
                                           <div class="col-md-6">
-                                              <div class="form-group ">
-                                                  <div class="col-md-6">
-                                                      <label>การประเมินผู้ป่วย</label>
-                                                      <select class="form-control select2 select2-hidden-accessible" style="width: 100%;" data-select2-id="1" tabindex="-1" aria-hidden="true" name="conscious" id="conscious"></select>
-                                                  </div>
+                                              <div class="form-group">
+                                                  <label>สิ่งที่จำเป็นต้องใช้ขณะนำส่ง</label>
+                                                  <select class="form-control select2" name="refReciveReferBack" id="refReciveReferBack" width="100%;" multiple="multiple" onchange="referReciveReferBack(this.value)">
+                                                      <option value="Oxygen">Oxygen</option>
+                                                      <option value="Suction">Suction</option>
+                                                      <option value="Respirator">Respirator</option>
+                                                      <option value="พยาบาล">พยาบาล</option>
+                                                      <option value="แพทย์">แพทย์</option>
+                                                      <option value="อื่นๆ">อื่นๆ</option>
+                                                  </select>
+                                              </div>
+                                          </div>
+                                          <div class="col-md-auto" id="otherRefReciveReferBack" style=" display: none;">
+                                              <div class="form-group">
+                                                  <label>อื่น :</label>
+                                                  <input type="text" class="form-control" name="inputOtherRefReciveReferBack" id="inputOtherRefReciveReferBack" placeholder="ป้อนเหตุผล">
                                               </div>
                                           </div>
                                           <div class="col-md-12 col-lg-12">
@@ -542,73 +422,25 @@
                                           <div class="form-group">
                                               <div class="col-md-12">
                                                   <div align="left">
-                                                      <label>CC\Pl\Physical Examination</label>
+                                                      <label>สรุปเหตุการณ์ที่สำคัญ / Progress Note และการรักษาที่ให้ </label>
                                                   </div>
-                                                  <textarea name="cc" id="contents" class="col-md-12" title="Contents"></textarea>
+                                                  <textarea name="progressNote" id="contents" class="col-md-12" style="height:350px;" title="Contents"></textarea>
                                               </div>
                                               <div class="col-md-12">
-                                                  <div align="left">
-                                                      <div class="row mb-2">
-                                                          <div class="col-md-auto">
-                                                              <label>Management</label>
-                                                          </div>
-                                                          <div class="col-md-auto">
-                                                              <div class="form-check">
-                                                                  <input type="checkbox" class="form-check-input" style="border:solid" name="Ettcheck" id="Ettcheck" onchange="EttChk()">
-                                                                  <label>ETT NO.</label>
-                                                              </div>
-                                                          </div>
-                                                          <div class="col-md-auto">
-                                                              <input type="text" class="form-control" name="noEtt" style="border:solid;" id="noEtt" oninput="textnoEtt(this.value)" disabled>
-                                                          </div>
-                                                          <div class="col-md-auto">
-                                                              <input type="text" class="form-control" name="MarkEtt" style="border:solid;" id="MarkEtt" oninput="textMarkEtt(this.value)" disabled>
-                                                          </div>
-                                                      </div>
-                                                  </div>
-                                                  <textarea title="Contents" name="management" id="management" class="col-md-12"></textarea>
+                                                  <label>Final Diagnosis : การวินิจฉัยขั้นสุดท้าย</label>
+                                                  <textarea title="Contents" name="finalDianosis" id="finalDianosis" style="height:50px;" class="col-md-12"></textarea>
                                               </div>
                                               <div class="col-md-12">
                                                   <div align="left">
                                                       <div class="row">
                                                           <div class="col-md-12">
-                                                              <label>Diagonosis</label>
-                                                              <textarea name="digonosis" class="col-md-12" id="Diagonosis" title="Diagonosis"></textarea>
+                                                              <label>ขอให้ดำเนินการดังต่อไปนี้</label>
+                                                              <textarea name="suggestionDianosis" class="col-md-12" id="suggestionDianosis" title="Diagonosis"></textarea>
                                                           </div>
                                                       </div>
                                                   </div>
                                               </div>
-                                              <div class="col-md-12">
-                                                  <div class="form-group ">
-                                                      <div class="row">
-                                                          <div class="col-md-12">
-                                                              <div align="left">
-                                                                  <label>Memo ต้นทาง</label>
-                                                              </div>
-                                                              <textarea name="ccMain" class="col-md-12" id="ccMain" title="Contents">ccMain</textarea>
-                                                          </div>
-                                                          <!-- <div class="col-md-auto col-lg-auto">
-                                                             <div align="left">
-                                                                 <div class="row">
-                                                                     <div class="col-md-auto">
-                                                                         <label>Memo ปลายทาง</label>
-                                                                     </div>
-                                                                 </div>
-                                                             </div>
-                                                             <div class="col-md-auto">
-                                                                 <textarea name="ccDestination" style="width: 450px;" title="Contents">ccDestination</textarea>
-                                                             </div>
-                                                         </div> -->
-
-
-                                                      </div>
-                                                  </div>
-                                              </div>
-
                                           </div>
-
-
-
                                           <div class="col-md-auto">
                                               <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-xl-icd-10">
                                                   เพิ่ม icd-10
@@ -721,7 +553,7 @@
                       </div>
                       <!-- /.card-body -->
                       <div class="card-footer">
-                          <button type="button" onclick="sendFrom()" class="btn btn-primary">Submit</button>
+                          <button type="button" onclick="sendFromReferBack()" class="btn btn-primary">ยืนยันการส่งตัวกลับ</button>
                       </div>
                   </div>
           </form>

@@ -725,7 +725,7 @@ if (isset($_GET['destroy'])) {
             conscious();
             getStation(hosCode)
         } else if (onfrom === "formreferback") {
-           
+
             ServiceStation();
             ward();
             pttype();
@@ -1184,11 +1184,31 @@ if (isset($_GET['destroy'])) {
     const ValueOtherCaseReferOut = (params) => {
 
         if (params == "อื่นๆ") {
-            $("#otherCauseReferout").show();
+            $("#otherCauseReferBack").show();
         } else {
-            $("#otherCauseReferout").hide();
+            $("#otherCauseReferBack").hide();
         }
     };
+    // * Ajax other Case Refer Back 
+    const ValueOtherCaseReferBack = (params) => {
+
+        if (params == "อื่นๆ") {
+            $("#DivotherCauseReferback").show();
+        } else {
+            $("#DivotherCauseReferback").hide();
+        }
+    };
+    //  * Ajax other referReciveReferBack
+    const referReciveReferBack = () => {
+        const selectedValues = $("#refReciveReferBack").val();
+
+        if (selectedValues.indexOf("อื่นๆ") !== -1) {
+            $("#otherRefReciveReferBack").show();
+        } else {
+            $("#otherRefReciveReferBack").hide();
+        }
+    };
+
     const DoctorName = () => {
         $.ajax({
             type: "POST",
@@ -1199,6 +1219,7 @@ if (isset($_GET['destroy'])) {
             dataType: "JSON",
             success: function(response) {
                 $("#doctorName").html(response);
+                $("#staffDoctorName").html(response)
             },
         });
     };
