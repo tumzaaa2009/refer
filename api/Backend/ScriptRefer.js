@@ -42,10 +42,7 @@ const sendFromReferOut = () => {
     alert("ระบุสถานบริการ");
     return false;
   }
-<<<<<<< Updated upstream
  
-=======
->>>>>>> Stashed changes
   if ($("#hosIdMain").val() === "") {
     alert("ระบุรัสรพ");
     return false;

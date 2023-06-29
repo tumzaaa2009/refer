@@ -25,7 +25,7 @@
       <!-- /.content-header -->
       <div class="card card-primary">
           <div class="card-header">
-              <h3 class="card-title">ข้อมูลผู้ป่วยส่งกลับ TEST</h3>
+              <h3 class="card-title">ข้อมูลผู้ป่วยส่งกลับ GG</h3>
           </div>
           <!-- /.card-header -->
           <!-- form start -->
