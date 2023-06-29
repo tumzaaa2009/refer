@@ -37,6 +37,13 @@ const sendFrom = () => {
   const formData = new FormData(form);
   // เพิ่มเงื่อนไข validate ข้อมูลก่อนส่งข้อมูลผ่าน AJAX
   // ตรวจสอบค่าของ input element แต่ละตัวใน form ก่อนส่งข้อมูล
+<<<<<<< Updated upstream
+=======
+  if ($("#getStationService").val() === 0) {
+    alert("ระบุสถานบริการ");
+    return false;
+  }
+>>>>>>> Stashed changes
   if ($("#hosIdMain").val() === "") {
     alert("ระบุรัสรพ");
     return false;
@@ -383,7 +390,6 @@ function showDetailReferOut() {
         // ? Consult files
         $("#refer_no").val(response.message[0].refer_no);
         $("#refer_code").val(response.message[0].refer_code);
-        $("#deliveryNuber").val(response.message[0].delivery_number);
 
         $("#codeGenRefer").val(response.message[0].codegen_refer_no);
         $("#hn").val(response.message[0].hn);
@@ -398,8 +404,6 @@ function showDetailReferOut() {
         $("#lname").val(response.message[0].lname);
         $("#aligy").val(response.message[0].drug_aligy);
 
-        $("#hopsmain").val(response.message[0].hopsmain);
-        $("#hospsup").val(response.message[0].hospsup);
         $("#doctorname").val(response.message[0].doctor_name);
         $("#hosReferDes").val(response.message[0].refer_hosp_name);
 
@@ -407,10 +411,6 @@ function showDetailReferOut() {
           `${response.message[0].formatteStartDate}  เวลา ${response.message[0].expire_time}`
         );
 
-        $("#deliveryNumberDes").val(`${response.message[0].delivery_number}`);
-        $("#deliveryNumberHisDes").val(
-          `${response.message[0].delivery_number_his}`
-        );
         $("#getStationServiceDestinationDes").val(
           `${response.message[0].location_des}`
         );
@@ -438,16 +438,27 @@ function showDetailReferOut() {
         $("#doctorNameDes").val(response.message[0].doctor_name);
         $("#coordinateIs").val(response.message[0].coordinate_name);
         $("#conscious").val(response.message[0].conscious);
-        $("#e").val(response.message[0].e);
-        $("#v").val(response.message[0].v);
-        $("#m").val(response.message[0].m);
-        $("#pupilR").val(response.message[0].pupil_left);
-        $("#pupilL").val(response.message[0].pupil_right);
-        $("#Tc").val(response.message[0].t);
-        $("#prF").val(response.message[0].p);
-        $("#pfM").val(response.message[0].r);
-        $("#bpmmhg").val(response.message[0].bp);
-        $("#spo2").val(response.message[0].spo2);
+
+        // ? ตาราง risk torma
+        if (response.message[0].risk_turma != "") {
+          const jsonRiskTurma = JSON.parse(response.message[0].risk_turma);
+          
+          const riskTurmaArray = Object.keys(jsonRiskTurma).map((key) => {
+            if (key === "riskturma") {
+              const riskTurma = jsonRiskTurma[key];
+              return  riskTurma.map((item) => {
+                console.log(item)
+                  return `<tr class="table-active table-bordered"><td>${item.e}</td><td>${item.v}</td><td>${item.m}</td><td>${item.pupilR}</td><td>${item.pupilL}</td><td>${item.Tc}</td><td>${item.prF}</td><td>${item.pfM}</td><td>${item.bp}</td><td>${item.mmHg}</td><td>${item.spo2}</td></tr>`;
+                // ส่งค่าที่ต้องการให้กลับจาก map
+               
+              });
+            }
+          });
+
+     
+          $("#riskturmatbody").html(riskTurmaArray);
+        }
+
         $("#cc").text(response.message[0].cc);
         $("#managementDes").text(response.message[0].management);
         $("#DiagonosisDes").text(response.message[0].dianosis_des);
@@ -1103,7 +1114,6 @@ function showDetailReferIn() {
 
         $("#refer_no").val(response.message[0].refer_no);
         $("#refer_code").val(response.message[0].refer_code);
-        $("#deliveryNuber").val(response.message[0].delivery_number);
 
         $("#hn").val(response.message[0].hn);
         $("#cid").val(response.message[0].cid);
@@ -1122,10 +1132,7 @@ function showDetailReferIn() {
         $("#reservationtimeExpireDes").val(
           `${expDateString} เวลา ${response.message[0].expire_time}`
         );
-        $("#deliveryNumberDes").val(`${response.message[0].delivery_number}`);
-        $("#deliveryNumberHisDes").val(
-          `${response.message[0].delivery_number_his}`
-        );
+
         $("#getStationServiceDestinationDes").val(
           `${response.message[0].location_des}`
         );
@@ -1356,7 +1363,6 @@ function showDetailReferInOnsusSecss() {
 
         $("#refer_no").val(response.message[0].refer_no);
         $("#refer_code").val(response.message[0].refer_code);
-        $("#deliveryNuber").val(response.message[0].delivery_number);
 
         $("#hn").val(response.message[0].hn);
         $("#cid").val(response.message[0].cid);
@@ -1371,18 +1377,13 @@ function showDetailReferInOnsusSecss() {
         $("#lname").val(response.message[0].lname);
         $("#aligy").val(response.message[0].drug_aligy);
 
-        $("#hopsmain").val(response.message[0].hopsmain);
-        $("#hospsup").val(response.message[0].hospsup);
         $("#doctorname").val(response.message[0].doctor_name);
         $("#hosReferDes").val(response.message[0].refer_hosp_name);
 
         $("#reservationtimeExpireDes").val(
           `${response.message[0].formatteStartDate}  เวลา ${response.message[0].expire_time}`
         );
-        $("#deliveryNumberDes").val(`${response.message[0].delivery_number}`);
-        $("#deliveryNumberHisDes").val(
-          `${response.message[0].delivery_number_his}`
-        );
+
         $("#getStationServiceDestinationDes").val(
           `${response.message[0].location_des}`
         );

@@ -851,6 +851,7 @@ if (isset($_GET['destroy'])) {
                 const lvActual = [];
                 lvActual.push(`<option selected="selected" value="0">--เลือกระดับความรุนแรง--</option>`)
                 for (let index = 0; index < response.response.length; index++) {
+                
                     lvActual.push(
                         `<option value="${response.response[index].level_value}" >${response.response[index].level_name}</option>`
                     );
@@ -1476,7 +1477,7 @@ if (isset($_GET['destroy'])) {
                     html +=
                         '<li class="nav-item"><a class="nav-link"><i class="fas fa-angle-left right"></i>' +
                         formatDateThai(date) +
-                        '</a><ul class="nav nav-treeview"><li class="nav-item"><div class="table-responsive"><table class="table table-bordered"><thead><tr><th>LabItemCode</th><th>LabItemName</th><th>LabItemNameNormalValue</th><th>lab_items_normal_value</th></tr></thead><tbody>';
+                        '</a><ul class="nav nav-treeview"><li class="nav-item"><div class="table-responsive"><table class="table table-bordered"><thead><tr><th>รายการ</th><th>LabItemName</th><th>LabItemName</th><th>lab_items_normal_value</th></tr></thead><tbody>';
                     html +=
                         '<tr><td style="width: fit-content"> <input class="check-all-items-labs" type="checkbox" data-date="' +
                         date +
@@ -1490,7 +1491,7 @@ if (isset($_GET['destroy'])) {
                             date + '", "lab_items_code": "' + item.lab_items_code + '", "lab_items_name": "' + item
                             .lab_items_name +
                             '", "lab_items_normal_value": "' + item.lab_items_normal_value + '"}\'></td>' +
-                            '<td style="width: fit-content"><input type="text" class="form-control" readonly value="' + item
+                            '<td style="width: fit-content"><input type="hidden" class="form-control" readonly value="' + item
                             .lab_items_code + '"></td>' +
                             '<td style="width: fit-content"><input type="text" class="form-control" readonly value="' + item
                             .lab_items_name + '"></td>' +

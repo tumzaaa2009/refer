@@ -526,10 +526,10 @@
                                                                           <td><input class="form-control" type="text" name="Tc" /></td>
                                                                           <td><input class="form-control" type="text" name="prF" /></td>
                                                                           <td><input class="form-control" type="text" name="pfM" /></td>
-                                                                          <td>
+                                                                          <td colspan="1">
                                                                               <input class="form-control" type="text" name="bp" placeholder="bp" />
                                                                           </td>
-                                                                          <td><input class="form-control" type="text" name="mmHg" placeholder="mmhg" /></td>
+                                                                          <td colspan="1"><input class="form-control" type="text" name="mmHg" placeholder="mmhg" /></td>
                                                                           <td><input class="form-control" type="text" name="spo2" /></td>
                                                                       </tr>
                                                                   </tbody>
