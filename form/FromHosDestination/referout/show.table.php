@@ -9,15 +9,14 @@
             <div class="col-sm-6">
                 <h1 class="m-0" id="title-id"> รายการรับผู้ป่วย </h1>
             </div>
-            <!-- /.col -->
-
-            <!-- /.col -->
+ 
         </div>
         <!-- /.row -->
     </div>
     <div class="card">
         <div class="card-header bg-primary text-white border-0">
             <h3 class="card-title">ระบบการส่งตัว</h3>
+            
         </div>
         <div class="card-body table-responsive ">
             <table class="table table-bordered  " id="showTableReferoutDestination">

@@ -29,7 +29,6 @@ if (isset($_GET['destroy'])) {
             $params["httponly"]
         );
     }
-
     // นำ user กลับไปยังหน้า login หรือหน้าที่ต้องการ
     header("Location:index.php");
     exit;
@@ -346,14 +345,21 @@ if (isset($_GET['destroy'])) {
                         <!-- </ul> -->
                         <!-- </li> -->
                         <li class="nav-header">Menu รายชื่อผู้ป่วย</li>
-
                         <li class="nav-item">
-                            <a href="indexfromuse.php?onfrom=referoutOrigin" class="nav-link <?php echo ($_GET['onfrom'] == 'referoutOrigin') ? 'active' : '' ?>">
+                            <a href="indexfromuse.php?onfrom=referouttable" class="nav-link <?php echo ($_GET['onfrom'] == 'referouttable') ? 'active' : '' ?>">
+                                <i class="nav-icon fas fa-file"></i>
+                                <p>แสดงรายชื่อผู้ป่วยรับ Refer</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="indexfromuse.php?onfrom=referbacktable" class="nav-link <?php echo ($_GET['onfrom'] == 'referbacktable') ? 'active' : '' ?>">
                                 <i class="nav-icon fas fa-file"></i>
                                 <p>แสดงรายชื่อผู้ป่วยส่งต่อ</p>
                             </a>
                         </li>
-                        <li class="nav-item">
+
+
+                        <!-- <li class="nav-item">
                             <a href="indexfromuse.php?onfrom=referoutDestinationtable" class="nav-link <?php echo ($_GET['onfrom'] == 'referoutDestinationtable') ? 'active' : '' ?>">
                                 <i class="nav-icon fas fa-file"></i>
                                 <p>แสดงรายชื่อผู้ป่วยรับ Refer</p>
@@ -371,7 +377,7 @@ if (isset($_GET['destroy'])) {
                                 <i class=" nav-icon fas fa-file"></i>
                                 <p>แสดงรายชื่อผู้ป่วยยกเลิกการส่งตัว (รพ.ต้นทาง)-(รพ.ปลายทาง)</p>
                             </a>
-                        </li>
+                        </li> -->
 
                         <li class="nav-header">LABELS</li>
                         <?php if (isset($_GET['userfrom']) && $_GET['userfrom'] == 'admin') { ?>
@@ -406,7 +412,6 @@ if (isset($_GET['destroy'])) {
                 <div class="row">
                     <!-- Left col -->
                     <section class="col-lg-12">
-
                         <?php
                         if (isset($_GET['onfrom'])) {
                             $pageActive = ''; // กำหนดค่าเริ่มต้นของตัวแปร $pageActive
@@ -425,15 +430,20 @@ if (isset($_GET['destroy'])) {
                                 include($includedFile);
                                 $includedFileName = basename($includedFile);
                                 $pageActive = "active";
-                            } else if ($_GET['onfrom'] == "showdetailreferoutDestinationtable") {
+                            } else if ($_GET['onfrom'] == "showdetailreferout") {
                                 if ($_GET['idrefer'] != "") {
-                                    $includedFile = './form/FromHosDestination/referout/show.detail.php';
+                                    $includedFile = './form/FormReferOut/show.detail.php';
                                     include($includedFile);
                                     $includedFileName = basename($includedFile);
                                     $pageActive = "active";
                                 }
-                            } else if ($_GET['onfrom'] == 'referoutOrigin') {
-                                $includedFile = './form/FormHosMain/show.table.php';
+                            } else if ($_GET['onfrom'] == "referbacktable") {
+                                $includedFile = './form/FormReferBack/show.table.php';
+                                include($includedFile);
+                                $includedFileName = basename($includedFile);
+                                $pageActive = "active";
+                            } else if ($_GET['onfrom'] == 'referouttable') {
+                                $includedFile = './form/FormReferOut/show.table.php';
                                 include($includedFile);
                                 $includedFileName = basename($includedFile);
                                 $pageActive = "active";
@@ -616,6 +626,22 @@ if (isset($_GET['destroy'])) {
             showTableReferOutDestination();
         }
     });
+    // ? put ReferOut 
+
+    socket.on(`SendPutReferOut ${hosCode}`, function(status, msgrefeno, msgCodeGenrefer) {
+        toastr.warning(`มีการปรับปรุงข้อมูล ReferOut ${JSON.stringify(msgrefeno)}`, "", {
+            positionClass: "toast-top-full-width",
+            timeOut: false,
+            showMethod: "fadeIn",
+            hideMethod: "fadeOut",
+            closeButton: true,
+            toastClass: "toast-black"
+        });
+
+
+    });
+
+
     // ! ยกเลิก referout ของต้นทาง  // และปลายทาง เข้านี้
     socket.on(`cancleStatus ${hosCode}`, function(data) {
         toastr.warning(`${data.message}`, "", {
@@ -649,7 +675,7 @@ if (isset($_GET['destroy'])) {
             });
             const audio = new Audio("./sound_alert/com_linecorp_line_whistle.ogg");
             audio.autoplay = true;
-            showTableDesOrigin();
+            showTableReferOut();
         } else if (data.message == "susNotRecive") {
             toastr.warning(`รพ ปลายทางปฏิเสธการส่งตัว ${data.refNo}`, "", {
                 positionClass: "toast-top-full-width",
@@ -663,7 +689,7 @@ if (isset($_GET['destroy'])) {
             });
             const audio = new Audio("./sound_alert/com_linecorp_line_whistle.ogg");
             audio.autoplay = true;
-            showTableDesOrigin();
+            showTableReferOut();
 
         }
     });
@@ -682,7 +708,7 @@ if (isset($_GET['destroy'])) {
             });
             const audio = new Audio("./sound_alert/com_linecorp_line_whistle.ogg");
             audio.autoplay = true;
-            showTableDesOrigin();
+            showTableReferOut();
         }
     });
     // ?Socketio
@@ -699,6 +725,15 @@ if (isset($_GET['destroy'])) {
         });
         $('[data-mask]').inputmask()
         $('.select2').select2()
+        //Date picker
+        $('input[name="daterange"]').daterangepicker({
+            opens: 'left',
+            startDate: dateToday,
+            endDate: dateToday
+        }, function(start, end, label) {
+            console.log("A new date selection was made: " + start.format('DD-MM-YYYY') + ' to ' + end.format('DD-MM-YYYY'));
+        });
+
         $('#reservationtime').daterangepicker({
             "timePicker": true,
             "timePicker24Hour": true,
@@ -725,7 +760,6 @@ if (isset($_GET['destroy'])) {
             conscious();
             getStation(hosCode)
         } else if (onfrom === "formreferback") {
-
             ServiceStation();
             ward();
             pttype();
@@ -740,9 +774,8 @@ if (isset($_GET['destroy'])) {
             getStation(hosCode)
         } else if (onfrom === 'referoutDestinationtable') {
             showTableReferOutDestination()
-        } else if (onfrom === 'showdetailreferoutDestinationtable') {
+        } else if (onfrom === 'showdetailreferout') {
             getStation(hosCode)
-
             if (idrefer != "" && idrefer != undefined) {
                 showDetailReferOut()
             } else {
@@ -751,14 +784,13 @@ if (isset($_GET['destroy'])) {
                     title: 'ไม่ระบุเลขId หรือ เลข ID ไม่ตรงกัน',
                 })
                 setTimeout(function() {
-                    location.href = "indexfromuse.php?onfrom=referoutOrigin";
+                    location.href = "indexfromuse.php?onfrom=referouttable";
                 }, 3000);
             }
-        } else if (onfrom === 'referoutOrigin') {
-
-            showTableDesOrigin()
-        } else if (onfrom === 'referintable') {
-            showTableReferIn();
+        } else if (onfrom === 'referouttable') {
+            showTableReferOut()
+        } else if (onfrom === 'referbacktable') {
+            showTableReferBack();
         } else if (onfrom === 'referintablewait') {
             showTableReferOutDestination()
         } else if (onfrom === 'showdetailreferin') {
@@ -771,7 +803,7 @@ if (isset($_GET['destroy'])) {
                 })
                 setTimeout(function() {
 
-                    location.href = "indexfromuse.php?onfrom=referoutOrigin";
+                    location.href = "indexfromuse.php?onfrom=referouttable";
                 }, 3000);
             }
         } else if (onfrom === 'showdetailreferinOnsusecss') {
@@ -783,7 +815,7 @@ if (isset($_GET['destroy'])) {
                     title: 'ไม่ระบุเลขId หรือ เลข ID ไม่ตรงกัน',
                 })
                 setTimeout(function() {
-                    location.href = "indexfromuse.php?onfrom=referoutOrigin";
+                    location.href = "indexfromuse.php?onfrom=referouttable";
                 }, 3000);
             }
         } else if (onfrom == "referoutremovetable") {
@@ -851,7 +883,7 @@ if (isset($_GET['destroy'])) {
                 const lvActual = [];
                 lvActual.push(`<option selected="selected" value="0">--เลือกระดับความรุนแรง--</option>`)
                 for (let index = 0; index < response.response.length; index++) {
-                
+
                     lvActual.push(
                         `<option value="${response.response[index].level_value}" >${response.response[index].level_name}</option>`
                     );

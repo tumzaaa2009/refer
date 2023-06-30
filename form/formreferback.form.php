@@ -558,7 +558,6 @@
                   </div>
           </form>
       </div>
-
   <?php } else if ($_POST['data'] == "setting-config") { ?>
       <!-- //? หน้าคอนฟิกส์   / -->
       <div class="row" style="margin-top: 15px">
