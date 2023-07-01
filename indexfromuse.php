@@ -425,8 +425,8 @@ if (isset($_GET['destroy'])) {
                                 include($includedFile);
                                 $includedFileName = basename($includedFile);
                                 $pageActive = "active";
-                            } else if ($_GET['onfrom'] == 'referoutDestinationtable') {
-                                $includedFile = './form/FromHosDestination/referout/show.table.php';
+                            } else if ($_GET['onfrom'] == 'referouttable') {
+                                $includedFile = './form/FormReferOut/show.table.php';
                                 include($includedFile);
                                 $includedFileName = basename($includedFile);
                                 $pageActive = "active";
@@ -442,45 +442,50 @@ if (isset($_GET['destroy'])) {
                                 include($includedFile);
                                 $includedFileName = basename($includedFile);
                                 $pageActive = "active";
-                            } else if ($_GET['onfrom'] == 'referouttable') {
-                                $includedFile = './form/FormReferOut/show.table.php';
-                                include($includedFile);
-                                $includedFileName = basename($includedFile);
-                                $pageActive = "active";
-                            } else if ($_GET['onfrom'] == 'referintable') {
-                                $includedFile = './form/FormReferIn/table.referin.sus.php';
-                                include($includedFile);
-                                $includedFileName = basename($includedFile);
-                                $pageActive = "active";
+                            } else if ($_GET['onfrom'] == "showdetailreferback") {
+                                if ($_GET['idrefer'] != "") {
+                                    $includedFile = './form/FormReferBack/show.detail.php';
+                                    include($includedFile);
+                                    $includedFileName = basename($includedFile);
+                                    $pageActive = "active";
+                                }
                             }
+
+                            // else if ($_GET['onfrom'] == 'referintable') {
+                            //     $includedFile = './form/FormReferIn/table.referin.sus.php';
+                            //     include($includedFile);
+                            //     $includedFileName = basename($includedFile);
+                            //     $pageActive = "active";
+                            // }
                             // else if ($_GET['onfrom'] == 'referintablewait') {
                             //     $includedFile = './form/FormReferIn/table.referin.wait.php';
                             //     include($includedFile);
                             //     $includedFileName = basename($includedFile);
                             //     $pageActive = "active";
                             // }
-                            else if ($_GET['onfrom'] == "showdetailreferin") {
+                            // else if ($_GET['onfrom'] == "showdetailreferin") {
 
-                                if ($_GET['idrefer'] != "") {
-                                    $includedFile = './form/FormReferIn/show.detail.php';
-                                    include($includedFile);
-                                    $includedFileName = basename($includedFile);
-                                    $pageActive = "active";
-                                }
-                            } else if ($_GET['onfrom'] == "showdetailreferinOnsusecss") {
+                            //     if ($_GET['idrefer'] != "") {
+                            //         $includedFile = './form/FormReferIn/show.detail.php';
+                            //         include($includedFile);
+                            //         $includedFileName = basename($includedFile);
+                            //         $pageActive = "active";
+                            //     }
+                            // }
+                            //  else if ($_GET['onfrom'] == "showdetailreferinOnsusecss") {
 
-                                if ($_GET['idrefer'] != "") {
-                                    $includedFile = './form/FormReferIn/show.detail.onSuscess.php';
-                                    include($includedFile);
-                                    $includedFileName = basename($includedFile);
-                                    $pageActive = "active";
-                                }
-                            } else if ($_GET['onfrom'] == "referoutremovetable") {
-                                $includedFile = './form/CancleRefer/show.tabel.cancle.refer.php';
-                                include($includedFile);
-                                $includedFileName = basename($includedFile);
-                                $pageActive = "active";
-                            }
+                            //     if ($_GET['idrefer'] != "") {
+                            //         $includedFile = './form/FormReferIn/show.detail.onSuscess.php';
+                            //         include($includedFile);
+                            //         $includedFileName = basename($includedFile);
+                            //         $pageActive = "active";
+                            //     }
+                            // } else if ($_GET['onfrom'] == "referoutremovetable") {
+                            //     $includedFile = './form/CancleRefer/show.tabel.cancle.refer.php';
+                            //     include($includedFile);
+                            //     $includedFileName = basename($includedFile);
+                            //     $pageActive = "active";
+                            // }
                         }
                         ?>
                     </section>
@@ -772,8 +777,12 @@ if (isset($_GET['destroy'])) {
             CoordinateIsName();
             conscious();
             getStation(hosCode)
-        } else if (onfrom === 'referoutDestinationtable') {
-            showTableReferOutDestination()
+        }
+        // else if (onfrom === 'referoutDestinationtable') {
+        //     showTableReferOutDestination()
+        // } 
+        else if (onfrom === 'referouttable') {
+            showTableReferOut()
         } else if (onfrom === 'showdetailreferout') {
             getStation(hosCode)
             if (idrefer != "" && idrefer != undefined) {
@@ -787,28 +796,13 @@ if (isset($_GET['destroy'])) {
                     location.href = "indexfromuse.php?onfrom=referouttable";
                 }, 3000);
             }
-        } else if (onfrom === 'referouttable') {
-            showTableReferOut()
         } else if (onfrom === 'referbacktable') {
             showTableReferBack();
-        } else if (onfrom === 'referintablewait') {
-            showTableReferOutDestination()
-        } else if (onfrom === 'showdetailreferin') {
-            if (idrefer != "" && idrefer != undefined) {
-                showDetailReferOut()
-            } else {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'ไม่ระบุเลขId หรือ เลข ID ไม่ตรงกัน',
-                })
-                setTimeout(function() {
+        } else if (onfrom == 'showdetailreferback') {
 
-                    location.href = "indexfromuse.php?onfrom=referouttable";
-                }, 3000);
-            }
-        } else if (onfrom === 'showdetailreferinOnsusecss') {
             if (idrefer != "" && idrefer != undefined) {
-                showDetailReferInOnsusSecss()
+
+                showDetailReferBack()
             } else {
                 Swal.fire({
                     icon: 'error',
@@ -818,9 +812,38 @@ if (isset($_GET['destroy'])) {
                     location.href = "indexfromuse.php?onfrom=referouttable";
                 }, 3000);
             }
-        } else if (onfrom == "referoutremovetable") {
-            CanCelTableRefer();
         }
+        // else if (onfrom === 'referintablewait') {
+        //     showTableReferOutDestination()
+        // }
+        //  else if (onfrom === 'showdetailreferin') {
+        //     if (idrefer != "" && idrefer != undefined) {
+        //         showDetailReferOut()
+        //     } else {
+        //         Swal.fire({
+        //             icon: 'error',
+        //             title: 'ไม่ระบุเลขId หรือ เลข ID ไม่ตรงกัน',
+        //         })
+        //         setTimeout(function() {
+
+        //             location.href = "indexfromuse.php?onfrom=referouttable";
+        //         }, 3000);
+        //     }
+        // } else if (onfrom === 'showdetailreferinOnsusecss') {
+        //     if (idrefer != "" && idrefer != undefined) {
+        //         showDetailReferInOnsusSecss()
+        //     } else {
+        //         Swal.fire({
+        //             icon: 'error',
+        //             title: 'ไม่ระบุเลขId หรือ เลข ID ไม่ตรงกัน',
+        //         })
+        //         setTimeout(function() {
+        //             location.href = "indexfromuse.php?onfrom=referouttable";
+        //         }, 3000);
+        //     }
+        // } else if (onfrom == "referoutremovetable") {
+        //     CanCelTableRefer();
+        // }
     });
     // ?แปลง Date
     function formatDateThai(dateString) {
