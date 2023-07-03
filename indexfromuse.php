@@ -634,7 +634,7 @@ if (isset($_GET['destroy'])) {
     // ? put ReferOut 
 
     socket.on(`SendPutReferOut ${hosCode}`, function(status, msgrefeno, msgCodeGenrefer) {
-        toastr.warning(`มีการปรับปรุงข้อมูล ReferOut ${JSON.stringify(msgrefeno)}`, "", {
+        toastr.warning(`มีการปรับปรุงข้อมูล ReferOut ${ msgrefeno.messageRef} กรุณากด F5 เพื่อ Refersh ข้อมูล`, "", {
             positionClass: "toast-top-full-width",
             timeOut: false,
             showMethod: "fadeIn",
@@ -667,7 +667,8 @@ if (isset($_GET['destroy'])) {
 
 
     socket.on(`send_statusUpdate ${hosCode}`, function(data) {
-        console.log(data.message);
+        $("#UpdateRefRefer").hide();
+        $("#open-modal-case-referout-cancelorg").hide()
         if (data.message == "susOnrecive") {
             toastr.success(`รพ ปลายทางรับการส่งตัว ${data.refNo}`, "", {
                 positionClass: "toast-top-full-width",
@@ -678,6 +679,9 @@ if (isset($_GET['destroy'])) {
                 closeButton: true,
 
             });
+            $("#UpStatusReferOutDes").hide();
+            $("#open-modal-case-referout-cancelorg").hide();
+            $("#UpdateRefRefer").hide()
             const audio = new Audio("./sound_alert/com_linecorp_line_whistle.ogg");
             audio.autoplay = true;
             showTableReferOut();
@@ -702,7 +706,7 @@ if (isset($_GET['destroy'])) {
     socket.on(`send_statusreferIn ${hosCode} `, function(data) {
 
         if ((data.message = "ส่งตัวเคส ")) {
-            toastr.info(`รับการส่งตัวเคส ${data.refNo}`, "", {
+            toastr.info(`ส่งกลับเคส ${data.refNo}`, "", {
                 positionClass: "toast-top-full-width",
                 timeOut: false,
                 extendedTimeOut: "1000",

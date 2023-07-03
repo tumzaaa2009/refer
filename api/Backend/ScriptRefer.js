@@ -23,16 +23,20 @@ const getStationServiceDestinations = (value) => {
             option.replace("id='", "id='destination-")
           )
         );
+        $("#sendFromReferHoscodeUpdate").prop("disabled", false);
+        $("#sendFromReferOut").prop("disabled", false);
       } else {
         consultService = `<option id=''>รพ ปลายทางยังไม่ได้ลงทะเบียน หน่วยบริการ</option>`;
         $("#getStationServiceDestination").html(consultService);
+        $("#sendFromReferHoscodeUpdate").prop("disabled", true);
+        $("#sendFromReferOut").prop("disabled", true);
       }
     },
   });
 };
 
 // ? SendForm API
-const sendFromReferOut = () => {
+const sendFromReferOuts = () => {
   const form = document.getElementById("refer-out-form");
   const formData = new FormData(form);
   // เพิ่มเงื่อนไข validate ข้อมูลก่อนส่งข้อมูลผ่าน AJAX
@@ -175,7 +179,7 @@ const sendFromReferBack = () => {
     success: function (response) {
       if (response.message === "Suscess") {
         alert("บันทึกระบบเข้าสู่ datacenter เรียบร้อยครับ");
-        location.href = "indexfromuse.php?onfrom=referoutOrigin";
+        location.href = "indexfromuse.php?onfrom=referouttable";
       } else {
         alert("บันทึกไม่ผ่านโปรดตรวจสอบอีกครั้ง");
       }
@@ -220,7 +224,7 @@ function cancleReferoutOrg() {
           });
           $("#open-modal-case-referout-cancelorg").hide();
 
-          location.href = "indexfromuse.php?onfrom=referoutOrigin";
+          location.href = "indexfromuse.php?onfrom=referouttable";
         }
       },
     });
@@ -228,14 +232,17 @@ function cancleReferoutOrg() {
 }
 
 // ? sendform กรณีปลายทางไม่่รับเคส แล้วเปลี่ยนสถานปลายทาง ใหม่
-function sendFromReferHoscodeUpdate() {
+function sendFromReferhosCode() {
   const forms = document.getElementById("refer-out-form");
   const formData = new FormData(forms);
   if ($("#hosCodeRefer").val() === "0") {
     alert("กรุณาเลือกโรงพยาบาลที่จะส่งต่อ");
     return false;
   }
-
+  if ($("#sendFromReferhosCode".val) === "") {
+    alert("ระบบเหตุผล");
+    return false;
+  }
   $.ajax({
     headers: {
       "x-access-token": hosPassCode,
@@ -246,6 +253,7 @@ function sendFromReferHoscodeUpdate() {
     contentType: false,
     processData: false,
     success: function (response) {
+      console.log(response);
       if (response.message === "Success") {
         Swal.fire({
           position: "top-center",
@@ -263,7 +271,7 @@ function sendFromReferHoscodeUpdate() {
             `<a href="indexfromuse.php?onfrom=showdetailreferoutDestinationtable&idrefer=${response.refNo}">ติดตามเอกสารติดตามการส่งตัวใหม่ เลขที่ ${response.referNo}</a>`
           );
           $("#open-modal-case-referout-cancelorg").hide();
-          location.href = "indexfromuse.php?onfrom=referoutOrigin";
+          location.href = "indexfromuse.php?onfrom=referouttable";
         }, 2000);
       }
     },
@@ -365,13 +373,12 @@ function UpStatusReferOutIsSave() {
   `,
   }).then((result) => {
     if (result.isConfirmed) {
-      // Swal.fire("Saved!", "", "success");
-      statusRecive = 1;
+      statusRecive = 11;
     } else if (result.isDenied) {
       const reason = $("#reasonInput").val();
-      cancleCase = reason;
       if (reason != "") {
-        statusRecive = -1;
+        statusRecive = -11;
+        cancleCase = reason;
       } else {
         Swal.fire({
           title: "โปรดระบุเหตุผล",
@@ -417,7 +424,7 @@ function UpStatusReferOutIsSave() {
             closeButton: true,
           });
           setTimeout(function () {
-            location.href = "indexfromuse.php?onfrom=referoutOrigin";
+            location.href = "indexfromuse.php?onfrom=referouttable";
           }, 1.5);
         }
       },
@@ -432,6 +439,7 @@ const showTableReferOut = () => {
   const hosrefer = formData.get("hosrefer");
   const cid = formData.get("cid");
   const daterange = formData.get("daterange");
+  const statusRefer = formData.get("statusRefer");
   let data = [];
   if (refno != "" || hosrefer != "" || cid != "" || daterange != "") {
     const dates = daterange.split(" - ");
@@ -442,9 +450,9 @@ const showTableReferOut = () => {
       cid: cid,
       dateStart: dates[0],
       dateEnd: dates[1],
+      statusRefer: statusRefer,
     };
   }
-
   $.ajax({
     type: "POST",
     url: "https://rh4cloudcenter.moph.go.th:3000/referapi/showtablereferout",
@@ -476,8 +484,6 @@ const showTableReferOut = () => {
       });
       if (response.status == 200) {
         let dateString = ` `;
-        console.log(response);
-
         response.message.forEach(function (item) {
           const dateTimeString = item.refer_date;
           const date = new Date(dateTimeString);
@@ -487,17 +493,21 @@ const showTableReferOut = () => {
           dateString = `${day}-${month}-${year}`;
           let IsSave = "";
           let typeRefer;
-
-          if (item.is_save == -1) {
-            IsSave = `<span  data-bs-toggle="tooltip" data-bs-placement="bottom" title='ปฏิเสธการส่งตัว'>
-                        <i class="fa fa-exclamation-triangle" aria-hidden="true" style="color: black;"></i></span>`;
-          } else if (item.is_save == 0) {
+          if (item.is_save == -11) {
+            IsSave = `<span  data-bs-toggle="tooltip" data-bs-placement="bottom" title='ยกเลิกส่งตัวของปลายทาง'>
+                       <i class="fa fa-exclamation-circle" aria-hidden="true" color="black"></i></span>`;
+          } else if (item.is_save == -10) {
+            IsSave = `<span  data-bs-toggle="tooltip" data-bs-placement="bottom" title='ยกเลิกการส่งตัว'>
+                       <i class="fa fa-exclamation-circle" aria-hidden="true" color="black"></i></span>`;
+          } else if (item.is_save == 10) {
             IsSave =
               IsSave = `<span  data-bs-toggle="tooltip" data-bs-placement="bottom" title='รอลงรับ Refer'><i class="fa fa-times" aria-hidden="true" style="color: black;"></i></span>`;
-          } else if (item.is_save == 1) {
+          } else if (item.is_save == 11) {
             IsSave = `<span  data-bs-toggle="tooltip" data-bs-placement="bottom" title='ยืนยันการรับตัว'><i class="fa fa-check" aria-hidden="true" style="color: black;"></i></span>`;
-          } else if (item.is_save == 2) {
-            IsSave = `<span  data-bs-toggle="tooltip" data-bs-placement="bottom" title='รับการส่งตัวกลับ'>
+          } else if (item.is_save == 111) {
+            IsSave = `<span  data-bs-toggle="tooltip" data-bs-placement="bottom" title='ยืนยันการรับตัว'><i class="fa fa-exclamation-triangle" aria-hidden="true" style="color: black;"></i></i></span>`;
+          } else if (item.is_save == 14) {
+            IsSave = `<span  data-bs-toggle="tooltip" data-bs-placement="bottom" title='รับส่งกลับแล้ว'>
                         <i class="fa fa-ambulance" aria-hidden="true"></i></span>`;
           } else if (item.is_save == 3) {
             IsSave = `<span  data-bs-toggle="tooltip" data-bs-placement="bottom" title='เปลี่ยนสถานที่ปลายทาง'><i class="fa fa-exchange-alt"></i></span>`;
@@ -515,7 +525,9 @@ const showTableReferOut = () => {
               item.refer_no
             }</td> 
             <td align="center">${IsSave}</td> 
+            <td>${item.refer_name}</td>
             <td>${item.location_org}</td>
+            <td>${item.refer_hosp_name}</td>
             <td>${item.location_des}</td>
             <td>${item.clinicgroup}</td>
             <td>${item.pttype_id}</td>
@@ -814,23 +826,26 @@ function showDetailReferOut() {
         $("#ccDestination").text(response.message[0].ccDestination);
         $("#UpStatusReferOutDesResive").hide();
 
-        if (response.message[0].is_save == 1) {
+        if (response.message[0].is_save == 11) {
           $("#UpStatusReferOutDes").hide();
           $("#open-modal-case-referout-cancelorg").hide();
           if (hosCode == referHoscode) {
             $("#UpStatusReferOutDesResive").show();
+            $("#open-modal-case-referin").show();
           } else {
             $("#UpStatusReferOutDesResive").hide();
             $("#open-modal-case-referin").hide();
             $("#UpStatusReferOutDesResive").hide();
             $("#UpStatusReferOutDes").hide();
           }
-        } else if (response.message[0].is_save == 0) {
+        } else if (response.message[0].is_save == 10) {
+          // ? ส่งเคส ---------------------------------------- Refer
           $("#UpdateRefRefer").show();
           $("#open-modal-case-referin").hide();
           $("#UpStatusReferOutDesResive").hide();
           if (hosCode == referHoscode) {
             $("#UpStatusReferOutDes").show();
+            $("#UpdateRefRefer").hide();
           } else {
             $("#UpStatusReferOutDes").hide();
           }
@@ -839,45 +854,46 @@ function showDetailReferOut() {
           } else {
             $("#open-modal-case-referout-cancelorg").hide();
           }
-        } else if (response.message[0].is_save == -1) {
-          // ?? กรณี ที่ รพ ต้นทาง == ข้อมูลใบส่งตัว แล้วให้เป็น modal เพื่อเปลี่ยนสถานะส่งตัว
-          if (response.message[0].refer_code == hosCode) {
-            $("#open-modal-case-referout-cancelorg").show();
-            $("#referSus").html(
-              `<button type="button" class="btn btn-default" data-bs-toggle="modal" id="open-modal-case-referHocode" data-bs-target="#mmmodalReferCode">    เปลี่ยนสถานพยาบาลปลายทาง  </button>`
-            );
+        } else if (response.message[0].is_save == 111) {
+          // ? Putข้อความเคส ---------------------------------------- Refer
+          $("#UpdateRefRefer").show();
+          $("#open-modal-case-referin").hide();
+          $("#UpStatusReferOutDesResive").hide();
+          if (hosCode == referHoscode) {
+            $("#UpStatusReferOutDes").show();
+            $("#UpdateRefRefer").hide();
+            $("#open-modal-case-referin").show();
           } else {
-            $("#referSus").html("ปฏิเสธการส่งตัว").css("color", "black");
+            $("#UpStatusReferOutDes").hide();
+          }
+          if (hosCode == response.message[0].refer_code) {
+            $("#open-modal-case-referout-cancelorg").show();
+          } else {
             $("#open-modal-case-referout-cancelorg").hide();
           }
+        } else if (response.message[0].is_save == -10) {
+          // ?? กรณี ที่ รพ ต้นทาง == ข้อมูลใบส่งตัว แล้วให้เป็น modal เพื่อเปลี่ยนสถานะส่งตัว
+          $("#cancleRefer-status-10-11").show();
+          $("#cancleRefer-status-10-11").html(
+            `<h2>เหตุผลการยกเลิก : ${response.message[0].cancle_org}</h2>`
+          );
+
           $("#open-modal-case-referin").hide();
           $("#UpStatusReferOutDesResive").hide();
           $("#UpStatusReferOutDes").hide();
-        } else if (response.message[0].is_save == -2) {
+        } else if (response.message[0].is_save == -11) {
+          // ?? กรณี ที่ รพ ต้นทาง == ข้อมูลใบส่งตัว แล้วให้เป็น modal เพื่อเปลี่ยนสถานะส่งตัว
+          $("#cancleRefer-status-10-11").show();
+          $("#cancleRefer-status-10-11").html(
+            `<h2>เหตุผลการยกเลิกปลายทาง : ${response.message[0].cancle_des}</h2>`
+          );
+          if (hosCode == referHoscode) {
+            $("#open-modal-case-referout-cancelorg").show();
+          }
+          $("#open-modal-case-referHocode").show();
           $("#open-modal-case-referin").hide();
           $("#UpStatusReferOutDesResive").hide();
           $("#UpStatusReferOutDes").hide();
-          $("#open-modal-case-referout-cancelorg").hide();
-          $("#referSus")
-            .html(`${response.message[0].cancle_org}`)
-            .css("color", "red");
-        } else if (response.message[0].is_save == 3) {
-          if (response.hosDes.length > 0)
-            if (response.message[0].refer_code == hosCode) {
-              $("#referSus").html(
-                `<a href="indexfromuse.php?onfrom=showdetailreferoutDestinationtable&idrefer=${response.hosDes[0].codegen_refer_no}">ติดตามเอกสารติดตามการส่งตัวใหม่ เลขที่ ${response.hosDes[0].refer_no}</a>`
-              );
-            }
-          $("#open-modal-case-referin").hide();
-          $("#UpStatusReferOutDesResive").hide();
-          $("#UpStatusReferOutDes").hide();
-          $("#open-modal-case-referout-cancelorg").hide();
-        } else {
-          $("#open-modal-case-referin").hide();
-          $("#UpStatusReferOutDesResive").hide();
-          $("#UpStatusReferOutDes").hide();
-          $("#open-modal-case-referout-cancelorg").hide();
-          $("#referSus").html("ยืนยันการรับตัว").css("color", "green");
         }
       }
     },
@@ -913,6 +929,8 @@ async function SendReferIn() {
       inputDeriveryCase: inputDeriveryCase,
     },
     success: function (response) {
+      $("#mmmodal").modal("hide");
+      $(".modal-backdrop").fadeOut();
       if (response.send === "true") {
         toastr.success(`${response.msg}`, "", {
           positionClass: "toast-top-center",
@@ -922,10 +940,11 @@ async function SendReferIn() {
           hideMethod: "fadeOut",
           closeButton: true,
         });
-
+        $("#open-modal-case-referin").hide();
+        $(".modal-backdrop").fadeOut();
         $("#UpStatusReferOutDesResive").hide();
         $("#UpStatusReferOutDes").hide();
-        $("#open-modal-case-referin").hide();
+
         $("#referSus").html("รับการส่งตัวแล้ว").css("color", "green");
       } else if (response.send === "info") {
         toastr.info(`${response.msg}`, "", {
@@ -1289,555 +1308,3 @@ const showDetailReferBack = () => {
     },
   });
 };
-// // ? show Detail Referin
-// function showDetailReferIn() {
-//   let dateString = ` `;
-//   let expDateString = ``;
-//   $.ajax({
-//     type: "POST",
-//     url: "https://rh4cloudcenter.moph.go.th:3000/referapi/showDetailReferin",
-//     data: {
-//       showDetailReferIn: referId,
-//     },
-//     dataType: "JSON",
-//     success: function (response) {
-//       const dateTimeString = response.message[0].refer_date;
-//       const date = new Date(dateTimeString);
-//       const day = date.getUTCDate().toString().padStart(2, "0");
-//       const month = (date.getUTCMonth() + 1).toString().padStart(2, "0");
-//       const year = date.getUTCFullYear().toString();
-//       dateString = `${day}-${month}-${year}`;
-
-//       const expdateTimeString = response.message[0].expire_date;
-//       const expDate = new Date(expdateTimeString);
-//       const expDay = expDate.getUTCDate().toString().padStart(2, "0");
-//       const expMonth = (expDate.getUTCMonth() + 1).toString().padStart(2, "0");
-//       const expYear = expDate.getUTCFullYear().toString();
-//       expDateString = `${expDay}/${expMonth}/${expYear}`;
-
-//       if (response.status == 200) {
-//         const json = JSON.parse(response.message[0].image_api);
-//         const count = Object.keys(json).length;
-//         $("#countPictureXray").html(`(${count})`);
-//         for (let index = 0; index < count; index++) {
-//           if (count > 0) {
-//             const firstImagePath = json[0].pathnameId;
-//             $("#col-section-1").html(
-//               `<div class="image-container">
-//   <a href="${firstImagePath}" target="_blank" data-lightbox="image-1" data-title="${json[0].name}"><img class="img-fluid" crossorigin="anonymous" src="${firstImagePath}" alt="${json[0].name}"></a><button class="close-button">&times;</button></div>
-// `
-//             );
-//           }
-
-//           if (count > 1) {
-//             let otherImagesHTML = "";
-//             for (let i = 1; i < count; i++) {
-//               const imagePath = json[i].pathnameId;
-//               otherImagesHTML += `  <div class="col-6"><a href="${imagePath}" target="_blank" data-lightbox="image-1"  ><img class="img-fluid mb-3" crossorigin="anonymous" src="${imagePath}" alt="Photo"></a></div>`;
-//             }
-//             $("#col-section-2").html(otherImagesHTML);
-//           }
-//         }
-//         //* jpg
-
-//         const icd10Arr = JSON.parse(response.message[0].icd10);
-//         const countIcd10 = Object.keys(icd10Arr).length;
-//         let ict10Detail = [];
-
-//         for (let index = 0; index < countIcd10; index++) {
-//           if (index === countIcd10 - 1) {
-//             // ถ้าเป็นตัวสุดท้ายให้ใส่ ) เพิ่มเติม
-//             if (icd10Arr[0].name == undefined) {
-//               ict10Detail.push(`ไม่พบรายการ`);
-//             } else {
-//               ict10Detail.push(`(${index + 1}.${icd10Arr[index].name})`);
-//             }
-//           } else {
-//             // ถ้าไม่ใช่ตัวสุดท้ายให้ใส่ , ด้วย
-//             ict10Detail.push(`(${index + 1}.${icd10Arr[index].name}),`);
-//           }
-//         }
-
-//         $("#trDetailIcd10").html(ict10Detail.join("")); // ใช้ join เพื่อรวม array เป็น string โดยไม่มีตัวคั่น
-
-//         // * icd 10
-
-//         const detaildrugArr = response.message[0].detaildrug;
-
-//         if (detaildrugArr != null) {
-//           const jsonDataDurg = JSON.parse(detaildrugArr);
-//           const coutDrug = Object.keys(jsonDataDurg).length;
-//           const drugArray = [];
-//           if (jsonDataDurg != null) {
-//             for (let index = 0; index < coutDrug; index++) {
-//               drugArray.push(
-//                 `<div class="col"><ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false"><li class="nav-item"><a class="nav-link"><i class="fas fa-angle-left right"></i>${jsonDataDurg[index].date}</a><ul class="nav nav-treeview"><li class="nav-item"><div class="table-responsive"><table class="table table-bordered"><thead><tr><th>Drug Name</th><th>ประเภทยา</th><th>Unit</th></tr></thead><tbody>
-//               <tr><td>${jsonDataDurg[index].drugname}</td><td>${jsonDataDurg[index].therapeutic}</td><td>${jsonDataDurg[index].unit}</td></tr></tbody></table></div></li></ul></li></ul></div>`
-//               );
-//             }
-//           }
-
-//           $("#treeviewDes").html(drugArray);
-//         }
-//         const detailLabs = response.message[0].detail_labs;
-//         if (detailLabs != null) {
-//           const jsonDataLabs = JSON.parse(detailLabs);
-//           const groupedDataLabs = groupByDate(jsonDataLabs);
-
-//           const labsArray = Object.keys(groupedDataLabs).map((date) => {
-//             const labs = groupedDataLabs[date];
-//             const labsListItems = labs
-//               .map((lab) => {
-//                 return `<tr><td>${lab.lab_items_code}</td><td>${lab.lab_items_name}</td><td>${lab.lab_items_normal_value}</td></tr>`;
-//               })
-//               .join("");
-//             return `<div class="col">
-//                     <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
-//                       <li class="nav-item">
-//                         <a class="nav-link"><i class="fas fa-angle-left right"></i>${date}</a>
-//                         <ul class="nav nav-treeview">
-//                           <li class="nav-item">
-//                             <div class="table-responsive">
-//                               <table class="table table-bordered">
-//                                 <thead>
-//                                   <tr>
-//                                     <th>Drug Name</th>
-//                                     <th>ประเภทยา</th>
-//                                     <th>Unit</th>
-//                                   </tr>
-//                                 </thead>
-//                                 <tbody>${labsListItems}</tbody>
-//                               </table>
-//                             </div>
-//                           </li>
-//                         </ul>
-//                       </li>
-//                     </ul>
-//                   </div>`;
-//           });
-
-//           $("#treeviewLabs").html(labsArray);
-//         }
-
-//         //* labs
-//         const consultfilesArray = response.message[0].counsult_api;
-//         if (consultfilesArray != null) {
-//           const jsonDataConsult = JSON.parse(consultfilesArray);
-//           const consultArray = Object.keys(jsonDataConsult).map(
-//             (counsultFile) => {
-//               return `
-//                   <div class="col-md-auto">
-//                     <a href="${jsonDataConsult[counsultFile].pathnameId}"  target="_blank">${jsonDataConsult[counsultFile].name}</a>
-//                   </div>
-//                `;
-//             }
-//           );
-//           $("#treeviewConsultFile").html(
-//             ` <div class="row" > ${consultArray}</div>`
-//           );
-//         }
-//         // * treeviewConsultFile
-
-//         $("#refer_no").val(response.message[0].refer_no);
-//         $("#refer_code").val(response.message[0].refer_code);
-
-//         $("#hn").val(response.message[0].hn);
-//         $("#cid").val(response.message[0].cid);
-//         $("#age").val(response.message[0].age);
-
-//         $("#refer_time").val(
-//           `${response.message[0].formatteStartDate} เวลา:${response.message[0].refer_time}`
-//         );
-
-//         $("#pname").val(response.message[0].pname);
-//         $("#fname").val(response.message[0].fname);
-//         $("#lname").val(response.message[0].lname);
-//         $("#aligy").val(response.message[0].drug_aligy);
-
-//         $("#hosReferDes").val(response.message[0].refer_hosp_name);
-//         $("#reservationtimeExpireDes").val(
-//           `${expDateString} เวลา ${response.message[0].expire_time}`
-//         );
-
-//         $("#getStationServiceDestinationDes").val(
-//           `${response.message[0].location_des}`
-//         );
-//         $("#getStationServiceDestinationDes").val(
-//           `${response.message[0].location_des}`
-//         );
-//         $("#getStationServiceDestinationDes").val(
-//           `${response.message[0].location_des}`
-//         );
-//         $("#lvAcityDes").val(`${response.message[0].level_actual}`);
-//         $("#lvAcityDes").css(
-//           "background-color",
-//           response.message[0].level_actual_color
-//         );
-//         $("#clinicgroupDes").val(`${response.message[0].clinicgroup}`);
-//         $("#TypeptDes").val(`${response.message[0].typept}`);
-//         $("#loadsDes").val(`${response.message[0].loads}`);
-//         $("#servicePlaneDes").val(`${response.message[0].service_plane}`);
-//         $("#carReferDes").val(`${response.message[0].car_refer}`);
-//         $("#causeReferoutDes").val(`${response.message[0].cause_referout}`);
-//         $("#otherCauseReferout").val(
-//           `${response.message[0].cause_referout_other}`
-//         );
-//         $("#doctorNameDes").val(response.message[0].doctor_name);
-//         $("#coordinateIs").val(response.message[0].coordinate_name);
-//         $("#conscious").val(response.message[0].conscious);
-//         $("#e").val(response.message[0].e);
-//         $("#v").val(response.message[0].v);
-//         $("#m").val(response.message[0].m);
-//         $("#pupilR").val(response.message[0].pupil_left);
-//         $("#pupilL").val(response.message[0].pupil_right);
-//         $("#Tc").val(response.message[0].t);
-//         $("#prF").val(response.message[0].p);
-//         $("#pfM").val(response.message[0].r);
-//         $("#bpmmhg").val(response.message[0].bp);
-//         $("#spo2").val(response.message[0].spo2);
-//         $("#cc").text(response.message[0].cc);
-//         $("#managementDes").text(response.message[0].management);
-//         $("#code_gen_refer").val(response.message[0].codegen_refer_no);
-//         if (response.message[0].refer_code == hosCode) {
-//           $("#ccMain").prop("readonly", false);
-//         } else {
-//           $("#ccMain").prop("readonly", true);
-//         }
-
-//         $("#Diagonosis").text(response.message[0].dianosis);
-
-//         if (response.message[0].refer_code == hosCode) {
-//           $("#Diagonosis").prop("readonly", false);
-//         } else {
-//           $("#Diagonosis").prop("readonly", true);
-//         }
-
-//         $("#ccMain").text(response.message[0].ccmain);
-
-//         if (response.message[0].refer_code == hosCode) {
-//           $("#ccMain").prop("readonly", false);
-//         } else {
-//           $("#ccMain").prop("readonly", true);
-//         }
-
-//         $("#ccDestination").text(response.message[0].ccDestination);
-//         if (response.message[0].is_save == 1) {
-//           $("#UpStatusReferOutDes").hide();
-//           $("#UpStatusReferOutDesResive").show();
-//           $("#open-modal-case-referout-cancelorg").hide();
-//         } else if (response.message[0].is_save == 0) {
-//           $("#UpStatusReferOutDesResive").hide();
-//           $("#UpStatusReferOutDes").show();
-//         } else {
-//           $("#UpStatusReferOutDesResive").hide();
-//           $("#UpStatusReferOutDes").hide();
-//           $("#referSus").html("รับการส่งตัวแล้ว").css("color", "green");
-//         }
-//       }
-//     },
-//   });
-// }
-
-// function showDetailReferInOnsusSecss() {
-//   let dateString = ` `;
-//   let expDateString = ``;
-
-//   $.ajax({
-//     type: "POST",
-//     url: "https://rh4cloudcenter.moph.go.th:3000/referapi/showDetailReferin",
-//     data: {
-//       showDetailReferIn: referId,
-//     },
-//     dataType: "JSON",
-//     success: function (response) {
-//       const dateTimeString = response.message[0].refer_date;
-//       const date = new Date(dateTimeString);
-//       const day = date.getUTCDate().toString().padStart(2, "0");
-//       const month = (date.getUTCMonth() + 1).toString().padStart(2, "0");
-//       const year = date.getUTCFullYear().toString();
-//       dateString = `${day}-${month}-${year}`;
-
-//       const expdateTimeString = response.message[0].expire_date;
-//       const expDate = new Date(expdateTimeString);
-//       const expDay = expDate.getUTCDate().toString().padStart(2, "0");
-//       const expMonth = (expDate.getUTCMonth() + 1).toString().padStart(2, "0");
-//       const expYear = expDate.getUTCFullYear().toString();
-//       expDateString = `${expDay}/${expMonth}/${expYear}`;
-
-//       if (response.status == 200) {
-//         const json = JSON.parse(response.message[0].image_api);
-//         const count = Object.keys(json).length;
-//         $("#countPictureXray").html(`(${count})`);
-//         for (let index = 0; index < count; index++) {
-//           if (count > 0) {
-//             const firstImagePath = json[0].pathnameId;
-//             $("#col-section-1").html(
-//               `<a href="${firstImagePath}" target="_blank"><img class="img-fluid" crossorigin="anonymous" src="${firstImagePath}" alt="Photo"></a>`
-//             );
-//           }
-
-//           if (count > 1) {
-//             let otherImagesHTML = "";
-//             for (let i = 1; i < count; i++) {
-//               const imagePath = json[i].pathnameId;
-//               otherImagesHTML += `  <div class="col-6"> <a href="${imagePath}" target="_blank"><img class="img-fluid mb-3" crossorigin="anonymous" src="${imagePath}" alt="Photo"></a> </div>`;
-//             }
-//             $("#col-section-2").html(otherImagesHTML);
-//           }
-//         }
-//         //* jpg
-
-//         const icd10Arr = JSON.parse(response.message[0].icd10);
-//         const countIcd10 = Object.keys(icd10Arr).length;
-//         let ict10Detail = [];
-
-//         for (let index = 0; index < countIcd10; index++) {
-//           if (index === countIcd10 - 1) {
-//             // ถ้าเป็นตัวสุดท้ายให้ใส่ ) เพิ่มเติม
-//             if (icd10Arr[0].name == undefined) {
-//               ict10Detail.push(`ไม่พบรายการ`);
-//             } else {
-//               ict10Detail.push(`(${index + 1}.${icd10Arr[index].name})`);
-//             }
-//           } else {
-//             // ถ้าไม่ใช่ตัวสุดท้ายให้ใส่ , ด้วย
-//             ict10Detail.push(`(${index + 1}.${icd10Arr[index].name}),`);
-//           }
-//         }
-//         $("#trDetailIcd10").html(ict10Detail.join(""));
-
-//         // * icd 10
-
-//         const detaildrugArr = response.message[0].detaildrug;
-
-//         if (detaildrugArr != null) {
-//           const jsonDataDurg = JSON.parse(detaildrugArr);
-//           const coutDrug = Object.keys(jsonDataDurg).length;
-//           const drugArray = [];
-//           if (jsonDataDurg != null) {
-//             for (let index = 0; index < coutDrug; index++) {
-//               drugArray.push(
-//                 `<div class="col"><ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false"><li class="nav-item"><a class="nav-link"><i class="fas fa-angle-left right"></i>${jsonDataDurg[index].date}</a><ul class="nav nav-treeview"><li class="nav-item"><div class="table-responsive"><table class="table table-bordered"><thead><tr><th>Drug Name</th><th>ประเภทยา</th><th>Unit</th></tr></thead><tbody>
-//               <tr><td>${jsonDataDurg[index].drugname}</td><td>${jsonDataDurg[index].therapeutic}</td><td>${jsonDataDurg[index].unit}</td></tr></tbody></table></div></li></ul></li></ul></div>`
-//               );
-//             }
-//           }
-
-//           $("#treeviewDes").html(drugArray);
-//         }
-//         console.log(response.message[0]);
-//         const detailLabs = response.message[0].detail_labs;
-
-//         if (detailLabs != null) {
-//           const jsonDataLabs = JSON.parse(detailLabs);
-//           const groupedDataLabs = groupByDate(jsonDataLabs);
-
-//           const labsArray = Object.keys(groupedDataLabs).map((date) => {
-//             const labs = groupedDataLabs[date];
-//             const labsListItems = labs
-//               .map((lab) => {
-//                 return `<tr><td>${lab.lab_items_code}</td><td>${lab.lab_items_name}</td><td>${lab.lab_items_normal_value}</td></tr>`;
-//               })
-//               .join("");
-//             return `<div class="col">
-//                     <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
-//                       <li class="nav-item">
-//                         <a class="nav-link"><i class="fas fa-angle-left right"></i>${date}</a>
-//                         <ul class="nav nav-treeview">
-//                           <li class="nav-item">
-//                             <div class="table-responsive">
-//                               <table class="table table-bordered">
-//                                 <thead>
-//                                   <tr>
-//                                     <th>Drug Name</th>
-//                                     <th>ประเภทยา</th>
-//                                     <th>Unit</th>
-//                                   </tr>
-//                                 </thead>
-//                                 <tbody>${labsListItems}</tbody>
-//                               </table>
-//                             </div>
-//                           </li>
-//                         </ul>
-//                       </li>
-//                     </ul>
-//                   </div>`;
-//           });
-
-//           $("#treeviewLabs").html(labsArray);
-//         }
-
-//         //* labs
-//         const consultfilesArray = response.message[0].counsult_api;
-//         if (consultfilesArray != null) {
-//           const jsonDataConsult = JSON.parse(consultfilesArray);
-//           console.log(jsonDataConsult);
-//           const consultArray = Object.keys(jsonDataConsult).map(
-//             (counsultFile) => {
-//               return `
-//                   <div class="col-md-auto">
-//                     <a href="${jsonDataConsult[counsultFile].pathnameId}"  target="_blank">${jsonDataConsult[counsultFile].name}</a>
-//                   </div>
-//                `;
-//             }
-//           );
-//           $("#treeviewConsultFile").html(
-//             ` <div class="row" > ${consultArray}</div>`
-//           );
-//         }
-//         // *consultfilesArray
-
-//         $("#refer_no").val(response.message[0].refer_no);
-//         $("#refer_code").val(response.message[0].refer_code);
-
-//         $("#hn").val(response.message[0].hn);
-//         $("#cid").val(response.message[0].cid);
-//         $("#age").val(response.message[0].age);
-
-//         $("#refer_time").val(
-//           `${response.message[0].formatteStartDate} เวลา:${response.message[0].refer_time}`
-//         );
-
-//         $("#pname").val(response.message[0].pname);
-//         $("#fname").val(response.message[0].fname);
-//         $("#lname").val(response.message[0].lname);
-//         $("#aligy").val(response.message[0].drug_aligy);
-
-//         $("#doctorname").val(response.message[0].doctor_name);
-//         $("#hosReferDes").val(response.message[0].refer_hosp_name);
-
-//         $("#reservationtimeExpireDes").val(
-//           `${response.message[0].formatteStartDate}  เวลา ${response.message[0].expire_time}`
-//         );
-
-//         $("#getStationServiceDestinationDes").val(
-//           `${response.message[0].location_des}`
-//         );
-//         $("#getStationServiceDestinationDes").val(
-//           `${response.message[0].location_des}`
-//         );
-//         $("#getStationServiceDestinationDes").val(
-//           `${response.message[0].location_des}`
-//         );
-//         $("#lvAcityDes").val(`${response.message[0].level_actual}`);
-//         $("#lvAcityDes").css(
-//           "background-color",
-//           response.message[0].level_actual_color
-//         );
-//         $("#clinicgroupDes").val(`${response.message[0].clinicgroup}`);
-//         $("#TypeptDes").val(`${response.message[0].typept}`);
-//         $("#loadsDes").val(`${response.message[0].loads}`);
-//         $("#servicePlaneDes").val(`${response.message[0].service_plane}`);
-//         $("#carReferDes").val(`${response.message[0].car_refer}`);
-//         $("#causeReferoutDes").val(`${response.message[0].cause_referout}`);
-//         $("#otherCauseReferout").val(
-//           `${response.message[0].cause_referout_other}`
-//         );
-//         $("#codeReferDes").val(`${response.message[0].refer_hospcode}`);
-//         $("#doctorNameDes").val(response.message[0].doctor_name);
-//         $("#coordinateIs").val(response.message[0].coordinate_name);
-//         $("#conscious").val(response.message[0].conscious);
-//         $("#e").val(response.message[0].e);
-//         $("#v").val(response.message[0].v);
-//         $("#m").val(response.message[0].m);
-//         $("#pupilR").val(response.message[0].pupil_left);
-//         $("#pupilL").val(response.message[0].pupil_right);
-//         $("#Tc").val(response.message[0].t);
-//         $("#prF").val(response.message[0].p);
-//         $("#pfM").val(response.message[0].r);
-//         $("#bpmmhg").val(response.message[0].bp);
-//         $("#spo2").val(response.message[0].spo2);
-//         $("#cc").text(response.message[0].cc);
-//         $("#managementDes").text(response.message[0].management);
-//         $("#DiagonosisDes").text(response.message[0].dianosis_des);
-//         $("#code_gen_refer").val(response.message[0].codegen_refer_no);
-//         if (response.message[0].refer_code == hosCode) {
-//           $("#ccMain").prop("readonly", false);
-//         } else {
-//           $("#ccMain").prop("readonly", true);
-//         }
-
-//         $("#Diagonosis").text(response.message[0].dianosis);
-
-//         if (response.message[0].refer_code == hosCode) {
-//           $("#Diagonosis").prop("readonly", false);
-//         } else {
-//           $("#Diagonosis").prop("readonly", true);
-//         }
-
-//         if (`${response.message[0].refer_hospcode}` == `${hosCode}`) {
-//           $("#DiagonosisDes").prop("readonly", false);
-//           $("#ccDestination").prop("readonly", false);
-//         } else {
-//           $("#DiagonosisDes").prop("readonly", true);
-//           $("#ccDestination").prop("readonly", true);
-//         }
-
-//         $("#ccMain").text(response.message[0].ccmain);
-
-//         if (response.message[0].refer_code == hosCode) {
-//           $("#ccMain").prop("readonly", false);
-//         } else {
-//           $("#ccMain").prop("readonly", true);
-//         }
-//         const referHoscode = response.message[0].refer_hospcode;
-//         $("#ccDestination").text(response.message[0].ccDestination);
-//         $("#UpStatusReferOutDesResive").hide();
-//         if (response.message[0].is_save == 2) {
-//           $("#open-modal-case-referin").hide();
-//           $("#UpStatusReferOutDesResive").hide();
-//           $("#UpStatusReferOutDes").hide();
-//           $("#UpStatusReferOutDesResive").hide();
-//         }
-//         $("#modalreferInSus").html(
-//           `
-//  <div class="mb-3 col-sm-12" style="  text-align: left;">
-//   <label for="deliveryName" class="col-form-label" >นำส่งโดย</label>
-//   <div class="col-sm-12">
-//     <input type="text" class="form-control" id="deliveryName" value="${response.message[0].derivery_name}" disabled>
-//   </div>
-// </div>
-//  <div class="mb-3 col-sm-12" style="  text-align: left;">
-//   <label for="otherReason" class="col-form-label">เหตุผลอื่น</label>
-//   <div class="col-sm-10">
-//     <input type="text" class="form-control" id="otherReason" value="${response.message[0].derivery_service_other}" disabled>
-//   </div>
-// </div>
-//  <div class="mb-3 col-sm-12" style="  text-align: left;">
-//   <label for="deliveryReason" class="col-form-label">เหตุผลในการส่งตัว</label>
-//   <div class="col-sm-10">
-//     <textarea class="form-control" id="deliveryReason" rows="3" disabled>${response.message[0].other_refer_case_refer_in}</textarea>
-//   </div>
-// </div>
-//           `
-//         );
-//       }
-//     },
-//   });
-// }
-
-// function CanCelTableRefer() {
-//   const cancleTableRefer = 1;
-//   $.ajax({
-//     type: "POST",
-//     url: "https://rh4cloudcenter.moph.go.th:3000/referapi/canclerefer",
-//     data: { referHoscode: hosCode },
-//     dataType: "JSON",
-//     success: function (response) {
-//       const arrayReferTable = [];
-
-//       if (response.status == 200) {
-//         response.resTableOut.forEach((item) => {
-//           arrayReferTable.push(
-//             `<tr><td>${item.dateRefer}</td><td>${item.referNo}</td><td>${item.commentOrg}</td><td>${item.dateOrg}</td><td>${item.referHopsNameDes}</td><td>${item.commentDes}</td><td>${item.dateDes}</td><td><a class="btn btn-primary" href="indexfromuse.php?onfrom=showdetailreferoutDestinationtable&idrefer=${item.codeGenReferNo}">รายละเอียด</a></td></tr>`
-//           );
-//         });
-//       }
-//       const table = $("#showTabelCancleRefer").DataTable({
-//         destroy: true, // ลบข้อมูลเก่าออกเมื่อเปลี่ยนข้อมูลใหม่
-//       });
-//       table.clear().draw(); // ล้างข้อมูลเก่าทั้งหมดใน DataTable
-//       table.rows.add($(arrayReferTable.join(""))).draw(); // เพิ่มข้อมูลใหม่เข้า DataTable
-//     },
-//   });
-// }

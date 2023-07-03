@@ -720,7 +720,7 @@
                       </div>
                       <!-- /.card-body -->
                       <div class="card-footer">
-                          <button type="button" onclick="sendFromReferOut()" class="btn btn-primary">ยืนยันการส่ง</button>
+                          <button type="button" onclick="sendFromReferOuts()" class="btn btn-primary" id="sendFromReferOut">ยืนยันการส่ง</button>
                       </div>
                   </div>
           </form>

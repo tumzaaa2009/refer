@@ -1,5 +1,8 @@
 <form enctype="multipart/form-data" id="refer-out-form">
     <div class="card-body">
+        <div class="col-12" align="center" id="cancleRefer-status-10-11" style="display: none;color:red">
+
+        </div>
         <div class="form-group row">
             <label for="เลขที่ใบส่งตัว" class="col-md-auto col-form-label mb-1">เลขที่ใบส่งตัว</label>
             <div class="col-md-auto">
@@ -249,22 +252,20 @@
                                                                 </div>
                                                             </div>
                                                         </div>
-
                                                         <textarea name="ccDestination" class="col-md-12" id="ccDestination" title="Contents">ccDestination</textarea>
-
                                                     </div>
 
                                                 </div>
                                             </div>
-
-
                                             <div class="col-md-auto">
-                                                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-xl-icd-10">
+                                                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
                                                     รายละเอียด ICD10
                                                 </button>
                                             </div>
+                                            <!-- Button trigger modal -->
 
-                                            <div class="modal fade" id="modal-xl-icd-10">
+                                            <!-- Modal -->
+                                            <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                                                 <div class="modal-dialog modal-xl">
                                                     <div class="modal-content">
                                                         <div class="modal-header">
@@ -284,41 +285,31 @@
                                                                 <!-- /.card -->
                                                             </div>
                                                         </div>
-
-
                                                         <div class="modal-footer justify-content-between">
-                                                            <button type="button" class="btn btn-default" data-dimdiss="modal">Close</button>
+                                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                                                         </div>
                                                     </div>
-                                                    <!-- /.modal-content -->
                                                 </div>
-                                                <!-- /.modal-dialog -->
                                             </div>
+
                                             <!-- /.modal icd 10 -->
-                                            <div align="right">
-                                                <button type="button" id="UpStatusReferOutDes" class="btn btn-success btn-lg" onclick="UpStatusReferOutIsSave()">
-                                                    Refer </button>
-                                            </div>
-                                            <div></div>
-                                            <!-- //? การส่งตัวกลับ  -->
+                                            <!--//* เพิ่ม ใหม่ update case ได้  //! ยกเลิการส่งตัว Update Is Put case  -------------------------------------->
                                             <div align="right">
                                                 <span id="referSus"></span>
-                                                <button type="button" class="btn btn-default" data-bs-toggle="modal" id="open-modal-case-referin" data-bs-target="#mmmodal">
+                                                <button type="button" class="btn btn-primary" data-bs-toggle="modal" style="display: none;" id="open-modal-case-referHocode" data-bs-target="#mmmodalReferCode"> เปลี่ยนสถานพยาบาลปลายทาง </button>
+                                                <button type="button" class="btn btn-default" data-bs-toggle="modal" style="display: none;" id="open-modal-case-referin" data-bs-target="#mmmodal">
                                                     ส่งตัวกลับ
                                                 </button>
-                                            </div>
-                                            <!--//* เพิ่ม ใหม่ update case ได้ -->
-
-                                            <!-- //! ยกเลิการส่งตัว  -->
-                                            <div align="right">
+                                                <button type="button" id="UpStatusReferOutDes" style="display:none;" class="btn btn-success btn-lg" onclick="UpStatusReferOutIsSave()">
+                                                    Refer </button>
                                                 <button type="button" class="btn btn-primary" style="display:none;" id="UpdateRefRefer" onclick="PutCaseReferOut()"> Update Case ส่งตัว </button>
                                                 <span id="referCancle"></span>
-                                                <button type="button" class="btn btn-danger" data-bs-toggle="modal" id="open-modal-case-referout-cancelorg" data-bs-target="#mmmodalCancleOrg">
+                                                <button type="button" class="btn btn-danger" data-bs-toggle="modal" style="display: none;" id="open-modal-case-referout-cancelorg" data-bs-target="#mmmodalCancleOrg">
                                                     ยกเลิกการส่งตัว
                                                 </button>
                                             </div>
                                             <!-- //! Modlaยกเลิการส่งตัว  -->
-                                            <div class="modal fade" id='mmmodalCancleOrg' tabindex="-1">
+                                            <div class="modal fade" id='mmmodalCancleOrg' tabindex="-1" aria-hidden="true">
                                                 <div class="modal-dialog modal-xl">
                                                     <div class="modal-content">
                                                         <div class="modal-header">
@@ -332,41 +323,45 @@
                                                             </div>
                                                         </div>
                                                         <div class="modal-footer justify-content-between">
-                                                            <button type="button" class="btn btn-secondary" data-bs-dimdiss="modal">Close</button>
+                                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                                                             <button type="button" class="btn btn-success" id="cancleReferOutOrg" onclick="cancleReferoutOrg()">ยืนยันการยกเลิก</button>
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
 
-
                                             <!-- //? กรณีที่ ปลายทางปฏิเสธเคส แต่ ต้นทางจะเปลี่ยนปลายทาง รพ ใหม่  -->
-                                            <div class="modal fade" id='mmmodalReferCode' tabindex="-1">
+                                            <div class="modal fade" id='mmmodalReferCode' tabindex="-1" aria-hidden="true">
                                                 <div class="modal-dialog modal-xl">
                                                     <div class="modal-content">
-                                                        <div class="modal-header">
-                                                            <h4 class="modal-title">เปลี่ยนสถานพยาบาลปลายทาง</h4>
-                                                            <button type="button" class="btn-close" data-bs-dimdiss="modal" aria-label="Close"></button>
-                                                        </div>
                                                         <div class="modal-body">
-                                                            <label class="col-md-autocol-form-label">สถานพยาบาลปลายทาง</label>
-                                                            <div class=" col-md-auto">
-                                                                <select class="form-control select2" id="hosCodeRefer" name="hosCodeRefer" style="width: 100%;" data-dropdown-parent="#mmmodalReferCode">
+                                                            <div class="row">
+                                                                <div class=" col-md-6">
+                                                                    <label class="col-md-autocol-form-label">สถานพยาบาลปลายทาง</label>
+                                                                    <select class="form-control " id="hosCodeRefer" onchange="getStationServiceDestinations(this.value)" name="hosCodeRefer" style="width: 100%;">
 
-                                                                </select>
-                                                                <input type="hidden" id="codeGenRefer" name="codeGenRefer" />
+                                                                    </select>
+                                                                </div>
+                                                                <div class=" col-md-6">
+                                                                    <label class="col-md-autocol-form-label">จุดบริการปลายทาง</label>
+                                                                    <select class="form-control " id="getStationServiceDestination" name="getStationServiceDestination"></select>
+                                                                </div>
+                                                                <div class="form-group" id="OtherCase"  >
+                                                                    <label for="exampleInputEmail1">Other Case</label>
+                                                                    <input type="text" class="form-control" id="inputOtherCase" name="inputOtherCase">
+                                                                </div>
                                                             </div>
-
                                                         </div>
                                                         <div class="modal-footer justify-content-between">
-                                                            <button type="button" class="btn btn-secondary" data-bs-dimdiss="modal">Close</button>
-                                                            <button type="button" class="btn btn-success " onclick="sendFromReferHoscodeUpdate()">ยืนยันการส่ง</button>
+                                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                                            <button type="button" class="btn btn-success" id="sendFromReferHoscodeUpdate" onclick="sendFromReferhosCode()">ยืนยันการส่ง</button>
+
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
                                             <!-- //? เหตุผลการส่งตัว -->
-                                            <div class="modal fade" id='mmmodal' tabindex="-1">
+                                            <div class="modal fade" id='mmmodal' tabindex="-1" aria-hidden="true">
                                                 <div class="modal-dialog modal-xl">
                                                     <div class="modal-content">
                                                         <div class="modal-header">
@@ -390,7 +385,7 @@
                                                             </div>
                                                         </div>
                                                         <div class="modal-footer justify-content-between">
-                                                            <button type="button" class="btn btn-secondary" data-bs-dimdiss="modal">Close</button>
+                                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                                                             <button type="button" id="UpStatusReferOutDesResive" class="btn btn-success " onclick="SendReferIn()">ยืนยันการส่งตัว</button>
                                                         </div>
                                                     </div>

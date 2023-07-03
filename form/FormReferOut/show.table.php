@@ -53,6 +53,22 @@
                             <input type="text" name="daterange" class="form-control" />
                         </div>
                         <div class="col-sm">
+                            <div class="form-group">
+                                <label>สถานะการรับ Refer</label>
+                                <select class="form-control" name="statusRefer">
+                                    <option value="" selected>ทั้งหมด</option>
+                                    <option value="-11">ปฏิเสธการส่งตัว-ยกเลิกเคส(รพปลายทาง)</option>
+                                    <option value="-10">ปฏิเสธการส่งตัว-ยกเลิกเคส(รพต้นทาง)</option>
+                                    <option value="10">รอลงรับ Refer </option>
+                                    <option value="11"> รับ Refer </option>
+                                    <option value="111">ข้อมูลมีการ Update </option>
+                                    <option value="12"> รอลงรับ ส่งกลับ </option>
+                                    <option value="13">รับกลับ </option>
+                                    <option value="14">ส่งกลับแล้ว </option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-sm">
                             <label style="text-align: center;">การค้นหา/ล้างข้อมูล</label>
                             <div class="row">
                                 <div class="col-sm">
@@ -83,7 +99,13 @@
                             สถานะการส่ง
                         </th>
                         <th colspan="1">
+                            <div align="center">รพ.ต้นทาง</div>
+                        </th>
+                        <th colspan="1">
                             <div align="center">ห้องตรวจต้นทาง</div>
+                        </th>
+                        <th colspan="1">
+                            <div align="center">รพ.ปลายทาง</div>
                         </th>
                         <th colspan="1">
                             <div align="center">ห้องตรวจปลายทาง</div>
