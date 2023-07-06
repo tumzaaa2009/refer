@@ -34,41 +34,41 @@
                    <div class="form-group row">
                        <label for="เลขที่ใบส่งตัว" class="col-md-auto col-form-label mb-1">เลขที่ใบส่งตัว</label>
                        <div class="col-md-auto">
-                           <input type="text" class="form-control" name="refer_no" id="refer_no">
+                           <input type="text" class="form-control" name="refer_no" id="refer_no" readonly>
                            <input type="hidden" class="form-control" name="refer_code" id="refer_code">
                            <input type="hidden" class="form-control" name="code_gen_refer" id="code_gen_refer">
                        </div>
                        <label for="เลขที่ใบส่งตัว" class="col-md-auto col-form-label mb-1">Hn</label>
                        <div class="col-md-auto">
-                           <input type="text" class="form-control" name="hn" id="hn">
+                           <input type="text" class="form-control" name="hn" id="hn" readonly>
                        </div>
                        <label for="เลขที่ใบส่งตัว" class="col-md-auto col-form-label mb-1">บัตรประชาชน:</label>
                        <div class="col-md-auto">
-                           <input type="text" class="form-control" id="cid" name="cid">
+                           <input type="text" class="form-control" id="cid" name="cid" readonly>
                        </div>
                        <label for="อายุ" class="col-md-auto col-form-label mb-1">อายุ:</label>
                        <div class="col-md-auto">
-                           <input type="text" class="form-control" id="age" name="age">
+                           <input type="text" class="form-control" id="age" name="age" readonly>
                        </div>
                        <label for="อายุ" class="col-md-auto col-form-label mb-1">วันที่ส่ง และ เวลาส่ง :</label>
                        <div class="col-md-auto">
-                           <input type="text" class="form-control" id="refer_time" name="refer_time">
+                           <input type="text" class="form-control" id="refer_time" name="refer_time" readonly>
                        </div>
                        <label for="อายุ" class="col-md-auto col-form-label mb-1">คำนำหน้า:</label>
                        <div class="col-md-auto">
-                           <input type="text" class="form-control" id="pname" name="pname">
+                           <input type="text" class="form-control" id="pname" name="pname" readonly>
                        </div>
                        <label for="อายุ" class="col-md-auto col-form-label mb-1">ชื่อ:</label>
                        <div class="col-md-auto">
-                           <input type="text" class="form-control" id="fname" name="fname">
+                           <input type="text" class="form-control" id="fname" name="fname" readonly>
                        </div>
                        <label for="อายุ" class="col-md-auto col-form-label mb-1  ">นามสกุล:</label>
                        <div class="col-md-auto">
-                           <input type="text" class="form-control" id="lname" name="Lname">
+                           <input type="text" class="form-control" id="lname" name="Lname" readonly>
                        </div>
                        <div class="col-md-6">
                            <label>แพ้ยา:</label>
-                           <input type="text" class="form-control" id="aligy" name="aligy">
+                           <input type="text" class="form-control" id="aligy" name="aligy" readonly>
                        </div>
 
                    </div>
@@ -228,19 +228,21 @@
                                                        <div class="row">
                                                            <div class="col-md-12">
                                                                <label>ขอให้ดำเนินการดังต่อไปนี้</label>
-                                                               <textarea name="suggestionDianosis" class="col-md-12" id="suggestionDianosis" title="Diagonosis"></textarea>
+                                                               <textarea name="suggestionDianosis" class="col-md-12" id="suggestionDianosis" title="Diagonosis" readonly></textarea>
                                                            </div>
                                                        </div>
                                                    </div>
                                                </div>
                                            </div>
                                            <div class="col-md-auto">
-                                               <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-xl-icd-10">
+                                               <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal" aria-hidden="true">
                                                    รายละเอียด ICD10
                                                </button>
                                            </div>
+                                           <!-- Button trigger modal -->
 
-                                           <div class="modal fade" id="modal-xl-icd-10">
+                                           <!-- Modal -->
+                                           <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel">
                                                <div class="modal-dialog modal-xl">
                                                    <div class="modal-content">
                                                        <div class="modal-header">
@@ -260,15 +262,11 @@
                                                                <!-- /.card -->
                                                            </div>
                                                        </div>
-
-
                                                        <div class="modal-footer justify-content-between">
-                                                           <button type="button" class="btn btn-default" data-dimdiss="modal">Close</button>
+                                                           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                                                        </div>
                                                    </div>
-                                                   <!-- /.modal-content -->
                                                </div>
-                                               <!-- /.modal-dialog -->
                                            </div>
                                            <!-- /.modal -->
 

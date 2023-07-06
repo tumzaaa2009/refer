@@ -52,8 +52,8 @@ function Ward()
 function LvActual()
 {
     global  $objconnectRefer;
-
-    $selectLvActual = "SELECT * FROM level WHERE staion_name ='" . $_POST['lvActual'] . "' ORDER BY level_id ASC";
+// WHERE staion_name ='" . $_POST['lvActual'] . "'
+    $selectLvActual = "SELECT * FROM level  ORDER BY level_id ASC";
     $queryStationWard = mysqli_query($objconnectRefer, $selectLvActual);
     $lv = array();
     while ($rowStationService = mysqli_fetch_array($queryStationWard)) {

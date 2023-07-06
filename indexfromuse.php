@@ -88,6 +88,8 @@ if (isset($_GET['destroy'])) {
     <!-- sweetalert2 -->
     <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.10/dist/sweetalert2.min.css" rel="stylesheet">
 
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-timepicker/0.5.2/css/bootstrap-timepicker.min.css">
+
     <style>
         body {
             margin: 0;
@@ -590,8 +592,8 @@ if (isset($_GET['destroy'])) {
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.10/dist/sweetalert2.all.min.js"></script>
     <!-- ??Api -->
     <script src="./api/Backend/ScriptRefer.js"></script>
-    <!-- Fancy -->
-
+    <!-- Timepicker -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-timepicker/0.5.2/js/bootstrap-timepicker.min.js"></script>
 
 </body>
 
@@ -603,6 +605,8 @@ if (isset($_GET['destroy'])) {
     const callPathRefer = '<?php echo $callPathRefer; ?>'
     const callPathHis = '<?php echo $callPathHis; ?>'
     let dateToday = new Date();
+    var onfrom = '<?php echo isset($_GET['onfrom']) ? $_GET['onfrom'] : ""; ?>';
+    var idrefer = '<?php echo isset($_GET['idrefer']) ? $_GET['idrefer'] : ""; ?>';
     // ?Socketio
     var socket = io.connect("https://rh4cloudcenter.moph.go.th:3000", {
         transport: ["websocket", "polling", "flashsocket"],
@@ -628,13 +632,15 @@ if (isset($_GET['destroy'])) {
             });
             const audio = new Audio("./sound_alert/com_linecorp_line_whistle.ogg");
             audio.autoplay = true;
-            showTableReferOutDestination();
+            if (onfrom == "referouttable") {
+                showTableReferOut()
+            }
         }
     });
     // ? put ReferOut 
 
     socket.on(`SendPutReferOut ${hosCode}`, function(status, msgrefeno, msgCodeGenrefer) {
-        toastr.warning(`มีการปรับปรุงข้อมูล ReferOut ${ msgrefeno.messageRef} กรุณากด F5 เพื่อ Refersh ข้อมูล`, "", {
+        toastr.warning(`ต้นทางมีการปรับปรุงข้อมูล ReferOut ${ msgrefeno.messageRef} `, "", {
             positionClass: "toast-top-full-width",
             timeOut: false,
             showMethod: "fadeIn",
@@ -642,10 +648,23 @@ if (isset($_GET['destroy'])) {
             closeButton: true,
             toastClass: "toast-black"
         });
-
-
+        if (onfrom == "showdetailreferout") {
+            showDetailReferOut()
+        }
     });
-
+    socket.on(`SendPutReferOutDes ${hosCode}`, function(status, msgrefeno, msgCodeGenrefer) {
+        toastr.warning(`ปลายทางมีการอัพเดทข้อมูล ReferOut ${ msgrefeno.messageRef} `, "", {
+            positionClass: "toast-top-full-width",
+            timeOut: false,
+            showMethod: "fadeIn",
+            hideMethod: "fadeOut",
+            closeButton: true,
+            toastClass: "toast-black"
+        });
+        if (onfrom == "showdetailreferout") {
+            showDetailReferOut()
+        }
+    });
 
     // ! ยกเลิก referout ของต้นทาง  // และปลายทาง เข้านี้
     socket.on(`cancleStatus ${hosCode}`, function(data) {
@@ -660,7 +679,9 @@ if (isset($_GET['destroy'])) {
         });
         const audio = new Audio("./sound_alert/com_linecorp_line_whistle.ogg");
         audio.autoplay = true;
-        showTableReferOutDestination();
+        if (onfrom == "referouttable") {
+            showTableReferOut()
+        }
 
     });
 
@@ -698,7 +719,9 @@ if (isset($_GET['destroy'])) {
             });
             const audio = new Audio("./sound_alert/com_linecorp_line_whistle.ogg");
             audio.autoplay = true;
-            showTableReferOut();
+            if (onfrom == "referouttable") {
+                showTableReferOut()
+            }
 
         }
     });
@@ -727,7 +750,11 @@ if (isset($_GET['destroy'])) {
         $('.image-container').click(function() {
             $('.close-button').fadeIn();
         });
-
+        $('#timepicker').timepicker({
+            minuteStep: 60,
+            showMeridian: false,
+            defaultTime: '00:00'
+        });
         $('.close-button').click(function(event) {
             event.stopPropagation();
             $('.close-button').fadeOut();
@@ -738,23 +765,56 @@ if (isset($_GET['destroy'])) {
         $('input[name="daterange"]').daterangepicker({
             opens: 'left',
             startDate: dateToday,
-            endDate: dateToday
+            endDate: dateToday,
+            locale: {
+                format: 'DD MMM YY',
+                daysOfWeek: ['อา', 'จ', 'อ', 'พ', 'พฤ', 'ศ', 'ส'],
+                monthNames: [
+                    'มกราคม',
+                    'กุมภาพันธ์',
+                    'มีนาคม',
+                    'เมษายน',
+                    'พฤษภาคม',
+                    'มิถุนายน',
+                    'กรกฎาคม',
+                    'สิงหาคม',
+                    'กันยายน',
+                    'ตุลาคม',
+                    'พฤศจิกายน',
+                    'ธันวาคม'
+                ],
+
+            }
         }, function(start, end, label) {
             console.log("A new date selection was made: " + start.format('DD-MM-YYYY') + ' to ' + end.format('DD-MM-YYYY'));
         });
-
         $('#reservationtime').daterangepicker({
             "timePicker": true,
             "timePicker24Hour": true,
-            "timePickerSeconds": true,
+            "timePickerSeconds": false,
             minDate: dateToday,
             locale: {
                 format: 'DD/MM/YYYY HH:mm',
+                daysOfWeek: ['อา', 'จ', 'อ', 'พ', 'พฤ', 'ศ', 'ส'],
+                monthNames: [
+                    'มกราคม',
+                    'กุมภาพันธ์',
+                    'มีนาคม',
+                    'เมษายน',
+                    'พฤษภาคม',
+                    'มิถุนายน',
+                    'กรกฎาคม',
+                    'สิงหาคม',
+                    'กันยายน',
+                    'ตุลาคม',
+                    'พฤศจิกายน',
+                    'ธันวาคม'
+                ],
+
             }
         })
 
-        var onfrom = '<?php echo isset($_GET['onfrom']) ? $_GET['onfrom'] : ""; ?>';
-        var idrefer = '<?php echo isset($_GET['idrefer']) ? $_GET['idrefer'] : ""; ?>';
+
         if (onfrom === "formreferout") {
             ServiceStation();
             ward();
@@ -768,6 +828,7 @@ if (isset($_GET['destroy'])) {
             CoordinateIsName();
             conscious();
             getStation(hosCode)
+            LevelActual()
         } else if (onfrom === "formreferback") {
             ServiceStation();
             ward();
@@ -790,6 +851,11 @@ if (isset($_GET['destroy'])) {
         } else if (onfrom === 'showdetailreferout') {
             getStation(hosCode)
             if (idrefer != "" && idrefer != undefined) {
+                ServicePlane();
+                CoordinateIsNameDes()
+                Loads();
+                Typept();
+                LevelActual()
                 showDetailReferOut()
             } else {
                 Swal.fire({
@@ -817,38 +883,12 @@ if (isset($_GET['destroy'])) {
                 }, 3000);
             }
         }
-        // else if (onfrom === 'referintablewait') {
-        //     showTableReferOutDestination()
-        // }
-        //  else if (onfrom === 'showdetailreferin') {
-        //     if (idrefer != "" && idrefer != undefined) {
-        //         showDetailReferOut()
-        //     } else {
-        //         Swal.fire({
-        //             icon: 'error',
-        //             title: 'ไม่ระบุเลขId หรือ เลข ID ไม่ตรงกัน',
-        //         })
-        //         setTimeout(function() {
 
-        //             location.href = "indexfromuse.php?onfrom=referouttable";
-        //         }, 3000);
-        //     }
-        // } else if (onfrom === 'showdetailreferinOnsusecss') {
-        //     if (idrefer != "" && idrefer != undefined) {
-        //         showDetailReferInOnsusSecss()
-        //     } else {
-        //         Swal.fire({
-        //             icon: 'error',
-        //             title: 'ไม่ระบุเลขId หรือ เลข ID ไม่ตรงกัน',
-        //         })
-        //         setTimeout(function() {
-        //             location.href = "indexfromuse.php?onfrom=referouttable";
-        //         }, 3000);
-        //     }
-        // } else if (onfrom == "referoutremovetable") {
-        //     CanCelTableRefer();
-        // }
     });
+
+
+
+
     // ?แปลง Date
     function formatDateThai(dateString) {
         const date = new Date(dateString);
@@ -903,7 +943,7 @@ if (isset($_GET['destroy'])) {
             type: "POST",
             url: `${callPathRefer}`,
             data: {
-                lvActual: value,
+                lvActual: 1,
             },
             dataType: "JSON",
             success: function(response) {
@@ -1104,7 +1144,7 @@ if (isset($_GET['destroy'])) {
     const ChangeLocation = (value) => {
 
         ward(value.value)
-        LevelActual(value.value)
+        // LevelActual(value.value)
     }
 
     const ward = (value) => {
@@ -1243,9 +1283,9 @@ if (isset($_GET['destroy'])) {
     const ValueOtherCaseReferOut = (params) => {
 
         if (params == "อื่นๆ") {
-            $("#otherCauseReferBack").show();
+            $("#otherCauseReferout").show();
         } else {
-            $("#otherCauseReferBack").hide();
+            $("#otherCauseReferout").hide();
         }
     };
     // * Ajax other Case Refer Back 
@@ -1291,7 +1331,24 @@ if (isset($_GET['destroy'])) {
             },
             dataType: "JSON",
             success: function(response) {
+
                 $("#coordinateIs").html(response);
+                console.log(document.getElementById("coordinateIs"))
+            },
+        });
+    };
+    const CoordinateIsNameDes = () => {
+        $.ajax({
+            type: "POST",
+            url: `${callPathRefer}`,
+            data: {
+                CoordinateName: "on",
+            },
+            dataType: "JSON",
+            success: function(response) {
+
+                $("#coordinateIsDes").html(response);
+
             },
         });
     };
@@ -1300,8 +1357,9 @@ if (isset($_GET['destroy'])) {
     const TrumaAdd = () => {
         const tableBody = document.querySelector("#TrumaTable tbody");
         const newRow = document.createElement("tr");
-        let numCount = ++rowCount
+        let numCount = ++rowCount;
         newRow.innerHTML = `
+        <td><input class="form-control timepicker" type="text" name="timeTruma" /></td>
         <td><input class="form-control" type="text" name="e" /></td>
         <td><input class="form-control" type="text" name="v" /></td>
         <td><input class="form-control" type="text" name="m" /></td>
@@ -1313,11 +1371,18 @@ if (isset($_GET['destroy'])) {
         <td><input class="form-control" type="text" name="bp" placeholder="bp" /></td>
         <td><input class="form-control" type="text" name="mmHg" placeholder="mmhg" /></td>
         <td><input class="form-control" type="text" name="spo2" /></td>
-        <td><button class="btn btn-danger" onclick="deleteTurmaTr(this,${numCount})">Delete</button></td>
-    `;
+        <td><button class="btn btn-danger" onclick="deleteTurmaTr(this, ${numCount})">Delete</button></td>
+        `;
 
         $("#numTruma").val(numCount);
         tableBody.appendChild(newRow);
+
+        // เรียกใช้งาน jQuery timepicker สำหรับอิลิเมนต์ที่มีคลาส .timepicker ในแถวล่าสุด
+        $(newRow).find(".timepicker").timepicker({
+            minuteStep: 60,
+            showMeridian: false,
+            defaultTime: '00:00'
+        });
     }
 
     const deleteTurmaTr = (btn, count) => {

@@ -42,10 +42,10 @@
             <div class="col-md-auto">
                 <input type="text" class="form-control" id="aligy" name="aligy">
             </div>
-            <label for="แพทย์ผู้สั่ง" class="col-md-auto col-form-label mb-1  ">แพทย์ผู้สั่ง:</label>
+            <!-- <label for="แพทย์ผู้สั่ง" class="col-md-auto col-form-label mb-1  ">แพทย์ผู้สั่ง:</label>
             <div class="col-md-auto">
                 <input type="text" class="form-control" id="doctorname" name="doctorname">
-            </div>
+            </div> -->
 
         </div>
         <div class="col-md-12">
@@ -67,8 +67,9 @@
                                 <div class="tab-content" id="custom-tabs-one-tabContent">
                                     <div class="tab-pane fade active show" id="custom-tabs-one-home" role="tabpanel" aria-labelledby="custom-tabs-one-home-tab">
                                         <!-- //! ข้อมูลส่งต่อทั่วไป */ -->
+                                        <h3>ข้อมูลรพ.ต้นทาง</h3>
                                         <div class="form-group row">
-                                            <label class="col-md-autocol-form-label">ชื่อถสานพยาบาลปลายทาง</label>
+                                            <label class="col-md-autocol-form-label">ชื่อสถานพยาบาลปลายทาง</label>
                                             <div class=" col-md-4">
                                                 <input type="text " class="form-control" id="hosReferDes" name="hosReferDes" style="width: 100%;" />
                                             </div>
@@ -172,7 +173,72 @@
                                                     </div>
                                                 </div>
                                             </div>
+                                            <h3 class="mt-3">ข้อมูล รพ ปลายทาง</h3>
+                                            <div class="col-md">
+                                                <!-- select -->
+                                                <div class="form-group ">
+                                                    <label class="col-md-6-form-label">ประเภทผู้ป่วย :</label>
+                                                    <select class="form-control select2" name="Typept_Des" id="Typept" width="100%;" disabled> </select>
+                                                </div>
+                                            </div>
+                                            <div class="col-md">
+                                                <div class="form-group">
+                                                    <label class="col-md-autocol-form-label">Level of Acuity:</label>
+                                                    <select class="form-control lvlactual" width="100%;" name="levelActual_Des" id="levelActual" disabled onchange="updateColor()">
+                                                    </select>
+                                                    <input type="hidden" name="colorLvAc">
+                                                </div>
+                                            </div>
+                                            <div class="col-md">
+                                                <div class="form-group">
+                                                    <label class="col-md-autocol-form-label">ชนิดเตียง</label>
+                                                    <select class="form-control" name="bedHosDes" id="bedHos" disabled>
+                                                        <option value="0">ระบุชนิดเตียง</option>
+                                                        <option value="Hydolic">Hydolic</optionอ>
+                                                        <option value="ธรรมดา">ธรรมดา</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="col-md">
+                                                <div class="form-group">
+                                                    <label>วิธีการนำส่ง :</label>
+                                                    <select class="form-control load_des" id="loads" name="loads_des" width="100%;" disabled> </select>
+                                                </div>
+                                            </div>
+                                            <div class="col-md">
+                                                <div class="form-group">
+                                                    <label>ระบบการประสานงาน (contract is)</label>
+                                                    <select class="form-control  " style="width: 100%;" name="coordinateIsDes" id="coordinateIsDes" disabled>
 
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="col-md">
+                                                <div class="form-group">
+                                                    <label>เสียชีวิต</label>
+                                                    <select class="form-control" name="deadCase" id="deadCase" disabled>
+                                                        <option value=""></option>
+                                                        <option value="ก่อนนำส่ง">ก่อนนำส่ง</optionอ>
+                                                        <option value="ระหว่างนำส่ง">ระหว่างนำส่ง</option>
+                                                        <option value="ที่ ER">ที่ ER</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <div class="form-group">
+                                                        <label>Service Plane :</label>
+                                                        <select class="form-control select2" name="sevicePlanDes" id="servicePlane" width="100%;" multiple="multiple" disabled> </select>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <div class="form-group">
+                                                        <label>ช่วงเวลาประสานงาน :</label>
+                                                        <i class="far fa-clock"></i> <input type="text" class="form-control float-left" id="reservationtime" name="reservationtimeExpireDes" disabled>
+                                                    </div>
+                                                </div>
+                                            </div>
                                             <div class="col-md-12 col-lg-12">
                                                 <div class="form-group ">
                                                     <div class="row">
@@ -184,6 +250,7 @@
                                                                 <table id="example2" class="table crollable-table">
                                                                     <thead>
                                                                         <tr>
+                                                                            <th>เวลา</th>
                                                                             <th>E</th>
                                                                             <th>V</th>
                                                                             <th>M</th>
@@ -213,11 +280,11 @@
                                                         <div align="left">
                                                             <label>CC\Pl\Physical Examination</label>
                                                         </div>
-                                                        <textarea name="cc" id="cc" title="Contents" class="col-md-12"></textarea>
+                                                        <textarea name="cc" id="cc" title="Contents" class="col-md-12" readonly></textarea>
                                                     </div>
                                                     <div class="col-md-auto col-lg-auto">
                                                         <label>Management</label>
-                                                        <textarea title="Contents" name="managementDes" id="managementDes" class="col-md-12"></textarea>
+                                                        <textarea title="Contents" name="managementDes" id="managementDes" class="col-md-12" readonly></textarea>
                                                     </div>
                                                     <div class="col-md-auto col-lg-auto">
                                                         <div align="left">
@@ -227,11 +294,11 @@
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                        <textarea name="digonosis" id="Diagonosis" class="col-md-12" title="Diagonosis"></textarea>
+                                                        <textarea name="digonosis" id="Diagonosis" class="col-md-12" title="Diagonosis" readonly></textarea>
                                                         <div class="col-md-auto">
                                                             <label>Diagonosis ปลายทาง</label>
                                                         </div>
-                                                        <textarea name="digonosisDes" id="DiagonosisDes" class="col-md-12"></textarea>
+                                                        <textarea name="digonosisDes" id="DiagonosisDes" class="col-md-12" readonly></textarea>
 
                                                     </div>
                                                 </div>
@@ -242,7 +309,7 @@
                                                         <div align="left">
                                                             <label>Memo ต้นทาง</label>
                                                         </div>
-                                                        <textarea name="ccMain" id="ccMain" class="col-md-12" title="Contents">ccMain</textarea>
+                                                        <textarea name="ccMain" id="ccMain" class="col-md-12" title="Contents" readonly>ccMain</textarea>
                                                     </div>
                                                     <div class="col-md-12">
                                                         <div align="left">
@@ -252,20 +319,20 @@
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                        <textarea name="ccDestination" class="col-md-12" id="ccDestination" title="Contents">ccDestination</textarea>
+                                                        <textarea name="ccDestination" class="col-md-12" id="ccDestination" title="Contents" readonly>ccDestination</textarea>
                                                     </div>
 
                                                 </div>
                                             </div>
                                             <div class="col-md-auto">
-                                                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                                                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal" aria-hidden="true">
                                                     รายละเอียด ICD10
                                                 </button>
                                             </div>
                                             <!-- Button trigger modal -->
 
                                             <!-- Modal -->
-                                            <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                            <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel">
                                                 <div class="modal-dialog modal-xl">
                                                     <div class="modal-content">
                                                         <div class="modal-header">
@@ -296,11 +363,13 @@
                                             <!--//* เพิ่ม ใหม่ update case ได้  //! ยกเลิการส่งตัว Update Is Put case  -------------------------------------->
                                             <div align="right">
                                                 <span id="referSus"></span>
+                                                <button type="button" class="btn btn-primary" onclick="PutRefDes()" style="display: none;" id="UpdateCaseRefDes"> Updateข้อมูลสถานพยาบาลปลายทาง </button>
+
                                                 <button type="button" class="btn btn-primary" data-bs-toggle="modal" style="display: none;" id="open-modal-case-referHocode" data-bs-target="#mmmodalReferCode"> เปลี่ยนสถานพยาบาลปลายทาง </button>
                                                 <button type="button" class="btn btn-default" data-bs-toggle="modal" style="display: none;" id="open-modal-case-referin" data-bs-target="#mmmodal">
                                                     ส่งตัวกลับ
                                                 </button>
-                                                <button type="button" id="UpStatusReferOutDes" style="display:none;" class="btn btn-success btn-lg" onclick="UpStatusReferOutIsSave()">
+                                                <button type="button" id="UpStatusReferOutDes" style="display:none;" class="btn btn-success " onclick="UpStatusReferOutIsSave()">
                                                     Refer </button>
                                                 <button type="button" class="btn btn-primary" style="display:none;" id="UpdateRefRefer" onclick="PutCaseReferOut()"> Update Case ส่งตัว </button>
                                                 <span id="referCancle"></span>
@@ -346,7 +415,7 @@
                                                                     <label class="col-md-autocol-form-label">จุดบริการปลายทาง</label>
                                                                     <select class="form-control " id="getStationServiceDestination" name="getStationServiceDestination"></select>
                                                                 </div>
-                                                                <div class="form-group" id="OtherCase"  >
+                                                                <div class="form-group" id="OtherCase">
                                                                     <label for="exampleInputEmail1">Other Case</label>
                                                                     <input type="text" class="form-control" id="inputOtherCase" name="inputOtherCase">
                                                                 </div>

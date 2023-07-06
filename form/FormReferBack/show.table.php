@@ -55,6 +55,16 @@
                             <input type="text" name="daterange" class="form-control" />
                         </div>
                         <div class="col-sm">
+                            <div class="form-group">
+                                <label>สถานะการรับ Refer</label>
+                                <select class="form-control" name="statusRefer">
+                                    <option value="" selected>ทั้งหมด</option>
+                                    <option value="10">เฉพาะส่งต่อ</option>
+                                    <option value="11">เฉพาะส่งกลับ</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-sm">
                             <label style="text-align: center;">การค้นหา/ล้างข้อมูล</label>
                             <div class="row">
                                 <div class="col-sm">
