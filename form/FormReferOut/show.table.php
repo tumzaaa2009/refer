@@ -55,6 +55,7 @@
                                 <label>สถานะการรับ Refer</label>
                                 <select class="form-control" name="statusRefer">
                                     <option value="" selected>ทั้งหมด</option>
+                                    <option value="-110">รพต้นทาง-ปลายทางส่งเคสไปยังปลายทางใหม่</option>
                                     <option value="-11">ปฏิเสธการส่งตัว-ยกเลิกเคส(รพปลายทาง)</option>
                                     <option value="-10">ปฏิเสธการส่งตัว-ยกเลิกเคส(รพต้นทาง)</option>
                                     <option value="10">รอลงรับ Refer </option>

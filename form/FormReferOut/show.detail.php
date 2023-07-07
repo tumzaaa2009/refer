@@ -53,10 +53,12 @@
                 <div class="card-header   p-2">
                     <ul class="nav nav-pills">
                         <li class="nav-item"><a class="nav-link active" href="#activity" data-toggle="tab">ข้อมูลทั่วไป</a> </li>
-                        <li class="nav-item"><a class="nav-link" href="#PictureXray" data-toggle="tab">รูปต้นทางได้ Upload <span style="color: red ;" id="countPictureXray"></span> </a></li>
+                        <li class="nav-item"><a class="nav-link" href="#PictureXray" data-toggle="tab">รูปต้นทางได้
+                                Upload <span style="color: red ;" id="countPictureXray"></span> </a></li>
                         <li class="nav-item"><a class="nav-link" href="#tabDrugs" data-toggle="tab">ยา</a> </li>
                         <li class="nav-item"><a class="nav-link" href="#labs" data-toggle="tab">LABS</a> </li>
-                        <li class="nav-item"><a class="nav-link" href="#consultfiles" data-toggle="tab">ConsultFile</a> </li>
+                        <li class="nav-item"><a class="nav-link" href="#consultfiles" data-toggle="tab">ConsultFile</a>
+                        </li>
                     </ul>
                 </div><!-- /.card-header -->
                 <div class="card-body">
@@ -259,7 +261,8 @@
                                                                             <th>T (c)</th>
                                                                             <th>PR (ครั้ง/หน้า)</th>
                                                                             <th>RR (ครั้ง/นาที)</th>
-                                                                            <th colspan="2" style="text-align:center">BP/mmHg</th>
+                                                                            <th colspan="2" style="text-align:center">
+                                                                                BP/mmHg</th>
                                                                             <th>Sp O2(%)</th>
                                                                         </tr>
                                                                     </thead>
@@ -363,15 +366,21 @@
                                             <!--//* เพิ่ม ใหม่ update case ได้  //! ยกเลิการส่งตัว Update Is Put case  -------------------------------------->
                                             <div align="right">
                                                 <span id="referSus"></span>
-                                                <button type="button" class="btn btn-primary" onclick="PutRefDes()" style="display: none;" id="UpdateCaseRefDes"> Updateข้อมูลสถานพยาบาลปลายทาง </button>
+                                                <button type="button" class="btn btn-primary" onclick="PutRefDes()" style="display: none;" id="UpdateCaseRefDes">
+                                                    Updateข้อมูลสถานพยาบาลปลายทาง </button>
 
-                                                <button type="button" class="btn btn-primary" data-bs-toggle="modal" style="display: none;" id="open-modal-case-referHocode" data-bs-target="#mmmodalReferCode"> เปลี่ยนสถานพยาบาลปลายทาง </button>
+                                                <button type="button" class="btn btn-primary" data-bs-toggle="modal" style="display: none;" id="open-modal-case-referHocode" data-bs-target="#mmmodalReferCode"> เปลี่ยนสถานพยาบาลปลายทาง
+                                                </button>
+                                                <button type="button" class="btn btn-success" data-bs-toggle="modal" style="display: none;" id="open-modal-case-referHosCodeDes" data-bs-target="#mmmodalReferCode">
+                                                    ส่งต่อ
+                                                </button>
                                                 <button type="button" class="btn btn-default" data-bs-toggle="modal" style="display: none;" id="open-modal-case-referin" data-bs-target="#mmmodal">
                                                     ส่งตัวกลับ
                                                 </button>
                                                 <button type="button" id="UpStatusReferOutDes" style="display:none;" class="btn btn-success " onclick="UpStatusReferOutIsSave()">
                                                     Refer </button>
-                                                <button type="button" class="btn btn-primary" style="display:none;" id="UpdateRefRefer" onclick="PutCaseReferOut()"> Update Case ส่งตัว </button>
+                                                <button type="button" class="btn btn-primary" style="display:none;" id="UpdateRefRefer" onclick="PutCaseReferOut()"> Update Case ส่งตัว
+                                                </button>
                                                 <span id="referCancle"></span>
                                                 <button type="button" class="btn btn-danger" data-bs-toggle="modal" style="display: none;" id="open-modal-case-referout-cancelorg" data-bs-target="#mmmodalCancleOrg">
                                                     ยกเลิกการส่งตัว
@@ -387,7 +396,8 @@
                                                         </div>
                                                         <div class="modal-body">
                                                             <div class="form-group">
-                                                                <label for="exampleInputEmail1">โปรดระบุเหตุผลในการยกเลิกการส่ง </label>
+                                                                <label for="exampleInputEmail1">โปรดระบุเหตุผลในการยกเลิกการส่ง
+                                                                </label>
                                                                 <input type="text" class="form-control" id="inputCancleReferoutOrg" name="inputCancleReferoutOrg">
                                                             </div>
                                                         </div>
@@ -435,7 +445,7 @@
                                                     <div class="modal-content">
                                                         <div class="modal-header">
                                                             <h4 class="modal-title">เหตุผลการส่งตัว</h4>
-                                                            <button type="button" class="btn-close" data-bs-dimdiss="modal" aria-label="Close"></button>
+                                                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                                                         </div>
                                                         <div class="modal-body">
                                                             <div class="form-group">
@@ -443,7 +453,7 @@
                                                                 <select class="form-select form-select-solid" data-control="select2" data-dropdown-parent="#mmmodal" data-placeholder="Select an option" data-allow-clear="true" id="deriveryService" onchange="modalDerivery(this.value)">
                                                                 </select>
                                                             </div>
-                                                            <div class="form-group" id="OtherCase" style="display: none;">
+                                                            <div class="form-group" id="OtherCaseSendRefer" style="display: none;">
                                                                 <label for="exampleInputEmail1">Other Case</label>
                                                                 <input type="text" class="form-control" id="inputOtherCase" oninput="InputOtherCase(this.value)" name="inputOtherCase">
                                                             </div>

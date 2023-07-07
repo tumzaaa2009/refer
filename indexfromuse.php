@@ -1360,17 +1360,17 @@ if (isset($_GET['destroy'])) {
         let numCount = ++rowCount;
         newRow.innerHTML = `
         <td><input class="form-control timepicker" type="text" name="timeTruma" /></td>
-        <td><input class="form-control" type="text" name="e" /></td>
-        <td><input class="form-control" type="text" name="v" /></td>
-        <td><input class="form-control" type="text" name="m" /></td>
-        <td><input class="form-control" type="text" name="pupilR" /></td>
-        <td><input class="form-control" type="text" name="pupilL" /></td>
-        <td><input class="form-control" type="text" name="Tc" /></td>
-        <td><input class="form-control" type="text" name="prF" /></td>
-        <td><input class="form-control" type="text" name="pfM" /></td>
-        <td><input class="form-control" type="text" name="bp" placeholder="bp" /></td>
-        <td><input class="form-control" type="text" name="mmHg" placeholder="mmhg" /></td>
-        <td><input class="form-control" type="text" name="spo2" /></td>
+        <td><input class="form-control" type="number" name="e" /></td>
+        <td><input class="form-control" type="number" name="v" /></td>
+        <td><input class="form-control" type="number" name="m" /></td>
+        <td><input class="form-control" type="number" name="pupilR" /></td>
+        <td><input class="form-control" type="number" name="pupilL" /></td>
+        <td><input class="form-control" type="number" name="Tc" /></td>
+        <td><input class="form-control" type="number" name="prF" /></td>
+        <td><input class="form-control" type="number" name="pfM" /></td>
+        <td><input class="form-control" type="number" name="bp" placeholder="bp" /></td>
+        <td><input class="form-control" type="number" name="mmHg" placeholder="mmhg" /></td>
+        <td><input class="form-control" type="number" name="spo2" /></td>
         <td><button class="btn btn-danger" onclick="deleteTurmaTr(this, ${numCount})">Delete</button></td>
         `;
 
@@ -1744,10 +1744,13 @@ if (isset($_GET['destroy'])) {
 
     // *** funtion Modal
     async function modalDerivery(value) {
+        console.log(value)
         if (value == "อื่น") {
-            $("#OtherCase").show();
+
+            $("#OtherCaseSendRefer").show();
+
         } else {
-            $("#OtherCase").hide();
+            $("#OtherCaseSendRefer").hide();
             $("#inputOtherCase").val('');
         }
 
