@@ -55,14 +55,14 @@
                                 <label>สถานะการรับ Refer</label>
                                 <select class="form-control" name="statusRefer">
                                     <option value="" selected>ทั้งหมด</option>
-                                    <option value="-110">รพต้นทาง-ปลายทางส่งเคสไปยังปลายทางใหม่</option>
+                                    <option value="-110">เปลี่ยนสถานพยาบาลปลายทาง</option>
                                     <option value="-11">ปฏิเสธการส่งตัว-ยกเลิกเคส(รพปลายทาง)</option>
                                     <option value="-10">ปฏิเสธการส่งตัว-ยกเลิกเคส(รพต้นทาง)</option>
                                     <option value="10">รอลงรับ Refer </option>
                                     <option value="11"> รับ Refer </option>
                                     <option value="111">ข้อมูลมีการ Update </option>
-                                    <option value="12"> รอลงรับ ส่งกลับ </option>
-                                    <option value="13">รับกลับ </option>
+                                    <!-- <option value="12"> รอลงรับ ส่งกลับ </option>
+                                    <option value="13">รับกลับ </option> -->
                                     <option value="14">ส่งกลับแล้ว </option>
                                 </select>
                             </div>

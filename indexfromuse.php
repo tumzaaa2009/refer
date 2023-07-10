@@ -505,12 +505,14 @@ if (isset($_GET['destroy'])) {
         </div>
         <!-- /.content-wrapper -->
         <footer class="main-footer">
+
             <strong>Copyright &copy; 2014-2021
                 <a href="https://adminlte.io">AdminLTE.io</a>.</strong>
             All rights reserved.
             <div class="float-right d-none d-sm-inline-block">
                 <b>Version</b> 3.2.0
             </div>
+            <strong class="div-status"></strong>
         </footer>
 
         <!-- Control Sidebar -->
@@ -616,9 +618,14 @@ if (isset($_GET['destroy'])) {
         hosCode: hosCode,
         hosName: hosName,
         passCode: hosPassCode,
-        opreator: hosOpreator,
+        opreator: hosOpreator
     });
-
+    socket.on(`connectionstatus`, (data) => {
+        $(".div-status").css({
+            'color': 'green',
+            'font-size': '15px;'
+        }).html("Status ReferR4: Connecting")
+    })
     socket.on(`send_status ${hosCode}`, function(data) {
         if ((data.message = "มี RefNo เข้า  ")) {
             toastr.success(`มี RefNo เข้า ${data.refNo}`, "", {
@@ -743,6 +750,46 @@ if (isset($_GET['destroy'])) {
             showTableReferOut();
         }
     });
+
+
+    socket.on(`send_status_ReferBack ${hosCode}`, function(data) {
+       
+        if ((data.data = 200)) {
+            toastr.info(`ส่งกลับเคส ${data.refNo}`, "", {
+                positionClass: "toast-top-full-width",
+                timeOut: false,
+                extendedTimeOut: "1000",
+                showMethod: "fadeIn",
+                hideMethod: "fadeOut",
+                closeButton: true,
+                toastClass: "toast-black"
+            });
+            const audio = new Audio("./sound_alert/com_linecorp_line_whistle.ogg");
+            audio.autoplay = true;
+            showTableReferOut();
+        }
+    });
+    socket.on(`sendreferbackonlysend ${hosCode}`, function(data) {
+        if ((data.data = 200)) {
+            toastr.info(`ส่งต่อ ${data.refNo}`, "", {
+                positionClass: "toast-top-full-width",
+                timeOut: false,
+                extendedTimeOut: "1000",
+                showMethod: "fadeIn",
+                hideMethod: "fadeOut",
+                closeButton: true,
+                toastClass: "toast-black"
+            });
+            const audio = new Audio("./sound_alert/com_linecorp_line_whistle.ogg");
+            audio.autoplay = true;
+            showTableReferOut();
+        }
+    });
+
+
+
+
+
     // ?Socketio
 
     $(document).ready(function() {
@@ -870,6 +917,7 @@ if (isset($_GET['destroy'])) {
             showTableReferBack();
         } else if (onfrom == 'showdetailreferback') {
 
+            getStation(hosCode);
             if (idrefer != "" && idrefer != undefined) {
 
                 showDetailReferBack()

@@ -268,9 +268,9 @@ function sendFromReferhosCode() {
           $("#mmmodalReferCode").modal("hide");
           $(".modal-backdrop").hide();
 
-          $("#referSus").html(
-            `<a href="indexfromuse.php?onfrom=showdetailreferoutDestinationtable&idrefer=${response.refNo}">ติดตามเอกสารติดตามการส่งตัวใหม่ เลขที่ ${response.referNo}</a>`
-          );
+          // $("#referSus").html(
+          //   `<a href="indexfromuse.php?onfrom=showdetailshowdetailreferout&idrefer=${response.refNo}">อ้างอิงเอกสารสงตัวเก่าคลิ๊ก ${response.referNo}</a>`
+          // );
           $("#open-modal-case-referout-cancelorg").hide();
           location.href = "indexfromuse.php?onfrom=referouttable";
         }, 2000);
@@ -541,7 +541,7 @@ const showTableReferOut = () => {
           } else if (item.is_save == 11) {
             IsSave = `<span  data-bs-toggle="tooltip" data-bs-placement="bottom" title='ยืนยันการรับตัว'><i class="fa fa-check" aria-hidden="true" style="color: black;"></i></span>`;
           } else if (item.is_save == 111) {
-            IsSave = `<span  data-bs-toggle="tooltip" data-bs-placement="bottom" title='ยืนยันการรับตัว'><i class="fa fa-exclamation-triangle" aria-hidden="true" style="color: black;"></i></i></span>`;
+            IsSave = `<span  data-bs-toggle="tooltip" data-bs-placement="bottom" title='ข้อมูลมีการอัพเดท'><i class="fa fa-pencil-alt" style="color: black;"></i></span>`;
           } else if (item.is_save == 14) {
             IsSave = `<span  data-bs-toggle="tooltip" data-bs-placement="bottom" title='รับส่งกลับแล้ว'>
                         <i class="fa fa-ambulance" aria-hidden="true"></i></span>`;
@@ -933,6 +933,14 @@ function showDetailReferOut() {
             $("#DiagonosisDes").prop("readonly", false);
             $("#ccDestination").prop("readonly", false);
           } else if (hosCode == response.message[0].refer_code) {
+            const [refNew, refOld] =
+              response.message[0].codegen_refer_no.split("-");
+            if (refNew != "" && refOld != "") {
+              $("#referSus").show();
+              $("#referSus").html(
+                `<a href="indexfromuse.php?onfrom=showdetailreferout&idrefer=${refNew}-${refOld}">อ้างอิงส่งตัวเก่า</a>`
+              );
+            }
             $("#cc").prop("readonly", false);
             $("#managementDes").prop("readonly", false);
             $("#Diagonosis").prop("readonly", false);
@@ -1015,6 +1023,14 @@ function showDetailReferOut() {
 
             $("#reservationtime").val(startDate + " - " + endDate);
           } else if (hosCode == response.message[0].refer_code) {
+            const [refOld, refNew] =
+              response.message[0].codegen_refer_no.split("-");
+            if (refNew != "" && refOld != "") {
+              $("#referSus").show();
+              $("#referSus").html(
+                `<a href="indexfromuse.php?onfrom=showdetailreferout&idrefer=${refOld}-${refNew}">เอกสารส่งเก่า</a>`
+              );
+            }
             $("#cc").prop("readonly", false);
             $("#managementDes").prop("readonly", false);
             $("#Diagonosis").prop("readonly", false);
@@ -1147,7 +1163,7 @@ function showDetailReferOut() {
           }`;
 
           $("#cancleRefer-status-10-11").show();
-        
+
           if (
             response.message[0].cancle_org !== "" &&
             response.message[0].cancle_org !== null &&
@@ -1167,6 +1183,14 @@ function showDetailReferOut() {
             $("#UpStatusReferOutDesResive").show();
             $("#open-modal-case-referin").hide();
             $("#open-modal-case-referHosCodeDes").hide();
+            const [refOld, refNew] =
+              response.message[0].codegen_refer_no.split("-");
+            if (refNew != "" && refOld != "") {
+              $("#referSus").show();
+              $("#referSus").html(
+                `<a href="indexfromuse.php?onfrom=showdetailreferout&idrefer=${refNew}-${refOld}">อ้างอิงส่งตัวใหม่</a>`
+              );
+            }
           } else {
             $("#UpStatusReferOutDesResive").hide();
             $("#open-modal-case-referin").hide();
@@ -1265,6 +1289,7 @@ const showTableReferBack = () => {
   const hosrefer = formData.get("hosrefer");
   const cid = formData.get("cid");
   const daterange = formData.get("daterange");
+  const statusRefer = formData.get("statusRefer");
   let data = [];
   if (refno != "" || hosrefer != "" || cid != "" || daterange != "") {
     const dates = daterange.split(" - ");
@@ -1275,6 +1300,7 @@ const showTableReferBack = () => {
       cid: cid,
       dateStart: dates[0],
       dateEnd: dates[1],
+      statusRefer: statusRefer,
     };
   }
   $.ajax({
@@ -1293,6 +1319,20 @@ const showTableReferBack = () => {
     success: function (response) {
       const arrayHosRefer = [];
       const arrayItemRefer = [];
+      // เรียกใช้ DataTable และแสดงผล
+      const table = $("#showTableReferBack").DataTable({
+        destroy: true, // ลบข้อมูลเก่าออกเมื่อเปลี่ยนข้อมูลใหม่
+        paging: true,
+        lengthMenu: [5, 10, 20], // ตั้งค่าตัวเลือกแสดงหน้า
+        language: {
+          paginate: {
+            previous: "ก่อนหน้า",
+            next: "ถัดไป",
+          },
+        },
+        searching: false,
+        lengthChange: false,
+      });
       if (response.status == 200) {
         console.log(response);
         let dateString = ` `;
@@ -1305,19 +1345,11 @@ const showTableReferBack = () => {
           dateString = `${day}-${month}-${year}`;
           let IsSave = "";
           let typeRefer;
-          if (item.is_save == -1) {
-            IsSave = `<span  data-bs-toggle="tooltip" data-bs-placement="bottom" title='ปฏิเสธการส่งตัว'>
-                        <i class="fa fa-exclamation-triangle" aria-hidden="true" style="color: black;"></i></span>`;
-          } else if (item.is_save == 0) {
-            IsSave =
-              IsSave = `<span  data-bs-toggle="tooltip" data-bs-placement="bottom" title='สถานปลายทางยังไม่รับการส่งตัว'><i class="fa fa-times" aria-hidden="true" style="color: black;"></i></span>`;
-          } else if (item.is_save == 1) {
-            IsSave = `<span  data-bs-toggle="tooltip" data-bs-placement="bottom" title='ยืนยันการรับตัว'><i class="fa fa-check" aria-hidden="true" style="color: black;"></i></span>`;
-          } else if (item.is_save == 2) {
-            IsSave = `<span  data-bs-toggle="tooltip" data-bs-placement="bottom" title='รับการส่งตัวกลับ'>
+          if (item.is_save == 10) {
+            IsSave = `<span  data-bs-toggle="tooltip" data-bs-placement="bottom" title='ส่งกลับ'>
                         <i class="fa fa-ambulance" aria-hidden="true"></i></span>`;
-          } else if (item.is_save == 3) {
-            IsSave = `<span  data-bs-toggle="tooltip" data-bs-placement="bottom" title='รับการส่งตัวกลับ'>
+          } else if (item.is_save == 11) {
+            IsSave = `<span  data-bs-toggle="tooltip" data-bs-placement="bottom" title='ส่งต่อ'>
                           <i class="fa fa-ambulance" aria-hidden="true"></i></span>`;
           }
 
@@ -1337,25 +1369,13 @@ const showTableReferBack = () => {
           );
           arrayItemRefer.push(item);
         });
-        // เรียกใช้ DataTable และแสดงผล
-        const table = $("#showTableReferBack").DataTable({
-          destroy: true, // ลบข้อมูลเก่าออกเมื่อเปลี่ยนข้อมูลใหม่
-          paging: true,
-          lengthMenu: [5, 10, 20], // ตั้งค่าตัวเลือกแสดงหน้า
-          language: {
-            paginate: {
-              previous: "ก่อนหน้า",
-              next: "ถัดไป",
-            },
-          },
-          searching: false,
-          lengthChange: false,
-        });
+
         table.clear().draw(); // ล้างข้อมูลเก่าทั้งหมดใน DataTable
         table.rows.add($(arrayHosRefer.join(""))).draw(); // เพิ่มข้อมูลใหม่เข้า DataTable
         // $("#tbodyReferOut").html(arrayHosRefer);
       } else if (response.status == 409) {
-        $("#tbodyReferOut").html(`<tr><td colspan='9'>ไม่พบการค้นหา</td></tr>`);
+        table.clear().draw(); // ล้างข้อมูลเก่าทั้งหมดใน DataTable
+        table.rows.add($(arrayHosRefer.join(""))).draw(); // เพิ่มข้อมูลใหม่เข้า DataTable
       }
     },
   });
@@ -1389,7 +1409,8 @@ const showDetailReferBack = () => {
       if (response.status == 200) {
         $("#refer_no").val(response.message[0].refer_no);
         $("#refer_code").val(response.message[0].refer_code);
-        $("#codeGenRefer").val(response.message[0].codegen_refer_no);
+        $("#code_gen_refer").val(response.message[0].codegen_refer_no);
+
         $("#hn").val(response.message[0].hn);
         $("#cid").val(response.message[0].cid);
         $("#age").val(response.message[0].age);
@@ -1403,7 +1424,7 @@ const showDetailReferBack = () => {
         $("#getStationService").val(response.message[0].location_org);
         $("#department").val(response.message[0].location_id);
         $("#telformreferback").val(response.message[0].tel_referback);
-        $("#hosCodeRefer").val(
+        $("#nameRefer").val(
           ` ${response.message[0].refer_hospcode} ชื่อสถานพยาบาล :${response.message[0].refer_hosp_name}`
         );
         $("#movementFromReferBack").val(
@@ -1431,6 +1452,7 @@ const showDetailReferBack = () => {
         const json = JSON.parse(response.message[0].image_api);
 
         // ? ตาราง risk torma
+        // ? ตาราง risk torma
         if (response.message[0].risk_turma != "") {
           const jsonRiskTurma = JSON.parse(response.message[0].risk_turma);
 
@@ -1438,7 +1460,7 @@ const showDetailReferBack = () => {
             if (key === "riskturma") {
               const riskTurma = jsonRiskTurma[key];
               return riskTurma.map((item) => {
-                return `<tr class="table-active table-bordered"><td>${item.e}</td><td>${item.v}</td><td>${item.m}</td><td>${item.pupilR}</td><td>${item.pupilL}</td><td>${item.Tc}</td><td>${item.prF}</td><td>${item.pfM}</td><td>${item.bp}</td><td>${item.mmHg}</td><td>${item.spo2}</td></tr>`;
+                return `<tr class="table-active table-bordered"><td>${item.time}</td><td>${item.e}</td><td>${item.v}</td><td>${item.m}</td><td>${item.pupilR}</td><td>${item.pupilL}</td><td>${item.Tc}</td><td>${item.prF}</td><td>${item.pfM}</td><td>${item.bp}</td><td>${item.mmHg}</td><td>${item.spo2}</td></tr>`;
                 // ส่งค่าที่ต้องการให้กลับจาก map
               });
             }
@@ -1583,6 +1605,58 @@ const showDetailReferBack = () => {
           });
           $("#treeviewDes").html(drugArray);
         }
+        if (response.message[0].is_save == 10) {
+          if (hosCode == response.message[0].refer_hospcode) {
+            $("#open-modal-case-referHocode").show()
+          }
+
+        }
+      }
+    },
+  });
+};
+
+const sendFromReferBackhosCode = () => {
+  const forms = document.getElementById("refer-back-form");
+  const formData = new FormData(forms);
+  formData.append("HoscodeCheck", hosCode);
+  if ($("#hosCodeRefer").val() === "0") {
+    alert("กรุณาเลือกโรงพยาบาลที่จะส่งต่อ");
+    return false;
+  }
+  if ($("#sendFromReferhosCode".val) === "") {
+    alert("ระบบเหตุผล");
+    return false;
+  }
+  $.ajax({
+    headers: {
+      "x-access-token": hosPassCode,
+    },
+    type: "POST",
+    url: "https://rh4cloudcenter.moph.go.th:3000/referapi/putreferbackonlysend",
+    data: formData,
+    contentType: false,
+    processData: false,
+    success: function (response) {
+      console.log(response);
+      if (response.message === "Success") {
+        Swal.fire({
+          position: "top-center",
+          icon: "success",
+          title: "รับการส่งตัว",
+          showConfirmButton: false,
+          timer: 1500,
+        });
+
+        setTimeout(function () {
+          $("#mmmodalReferCode").modal("hide");
+          $(".modal-backdrop").hide();
+          // $("#referSus").html(
+          //   `<a href="indexfromuse.php?onfrom=showdetailshowdetailreferout&idrefer=${response.refNo}">อ้างอิงเอกสารสงตัวเก่าคลิ๊ก ${response.referNo}</a>`
+          // );
+          $("#open-modal-case-referout-cancelorg").hide();
+          location.href = "indexfromuse.php?onfrom=referbacktable";
+        }, 2000);
       }
     },
   });

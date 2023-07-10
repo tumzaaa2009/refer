@@ -59,8 +59,8 @@
                                 <label>สถานะการรับ Refer</label>
                                 <select class="form-control" name="statusRefer">
                                     <option value="" selected>ทั้งหมด</option>
-                                    <option value="10">เฉพาะส่งต่อ</option>
-                                    <option value="11">เฉพาะส่งกลับ</option>
+                                    <option value="11">เฉพาะส่งต่อ</option>
+                                    <option value="10">เฉพาะส่งกลับ</option>
                                 </select>
                             </div>
                         </div>

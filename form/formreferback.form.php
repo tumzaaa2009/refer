@@ -25,7 +25,7 @@
       <!-- /.content-header -->
       <div class="card card-primary">
           <div class="card-header">
-              <h3 class="card-title">ข้อมูลผู้ป่วยส่งกลับ  </h3>
+              <h3 class="card-title">ข้อมูลผู้ป่วยส่งกลับ </h3>
           </div>
           <!-- /.card-header -->
           <!-- form start -->
@@ -384,6 +384,7 @@
                                                               <table id="TrumaTable" class="table table-bordered table-hover dataTable dtr-inline">
                                                                   <thead>
                                                                       <tr>
+                                                                          <th>เวลา hr/mm</th>
                                                                           <th>E</th>
                                                                           <th>V</th>
                                                                           <th>M</th>
@@ -398,19 +399,20 @@
                                                                   </thead>
                                                                   <tbody>
                                                                       <tr id="TrAddTruma">
-                                                                          <td><input class="form-control" ype="text" name="e" /> </td>
-                                                                          <td><input class="form-control" type="text" name="v" /> </td>
-                                                                          <td><input class="form-control" type="text" name="m" /> </td>
-                                                                          <td><input class="form-control" type="text" name="pupilR" /></td>
-                                                                          <td><input class="form-control" type="text" name="pupilL" /></td>
-                                                                          <td><input class="form-control" type="text" name="Tc" /></td>
-                                                                          <td><input class="form-control" type="text" name="prF" /></td>
-                                                                          <td><input class="form-control" type="text" name="pfM" /></td>
-                                                                          <td>
-                                                                              <input class="form-control" type="text" name="bp" placeholder="bp" />
+                                                                          <td><input id="timepicker" name="timeTruma" type="text" class="form-control"></td>
+                                                                          <td><input class="form-control" type="number" name="e" /> </td>
+                                                                          <td><input class="form-control" type="number" name="v" /> </td>
+                                                                          <td><input class="form-control" type="number" name="m" /> </td>
+                                                                          <td><input class="form-control" type="number" name="pupilR" /></td>
+                                                                          <td><input class="form-control" type="number" name="pupilL" /></td>
+                                                                          <td><input class="form-control" type="number" name="Tc" /></td>
+                                                                          <td><input class="form-control" type="number" name="prF" /></td>
+                                                                          <td><input class="form-control" type="number" name="pfM" /></td>
+                                                                          <td colspan="1">
+                                                                              <input class="form-control" type="number" name="bp" placeholder="bp" />
                                                                           </td>
-                                                                          <td><input class="form-control" type="text" name="mmHg" placeholder="mmhg" /></td>
-                                                                          <td><input class="form-control" type="text" name="spo2" /></td>
+                                                                          <td colspan="1"><input class="form-control" type="number" name="mmHg" placeholder="mmhg" /></td>
+                                                                          <td><input class="form-control" type="number" name="spo2" /></td>
                                                                       </tr>
                                                                   </tbody>
                                                               </table>

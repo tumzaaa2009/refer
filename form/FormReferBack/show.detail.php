@@ -115,7 +115,7 @@
                                            </div>
                                            <div class=" col-md-6">
                                                <label class="col-md-autocol-form-label">สถานพยาบาลปลายทาง</label>
-                                               <input type="text" class="form-control" readonly name="hosCodeRefer" id="hosCodeRefer">
+                                               <input type="text" class="form-control" readonly name="nameRefer" id="nameRefer">
 
                                            </div>
                                        </div>
@@ -269,7 +269,39 @@
                                                </div>
                                            </div>
                                            <!-- /.modal -->
-
+                                           <div align="right">
+                                               <button type="button" class="btn btn-primary" data-bs-toggle="modal" style="display:none;" id="open-modal-case-referHocode" data-bs-target="#mmmodalReferCode"> ส่งต่อ
+                                               </button>
+                                            
+                              
+                                           </div>
+                                           <div class="modal fade" id='mmmodalReferCode' tabindex="-1" aria-hidden="true">
+                                               <div class="modal-dialog modal-xl">
+                                                   <div class="modal-content">
+                                                       <div class="modal-body">
+                                                           <div class="row">
+                                                               <div class=" col-md-6">
+                                                                   <label class="col-md-autocol-form-label">สถานพยาบาลปลายทาง</label>
+                                                                   <select class="form-control " id="hosCodeRefer" onchange="getStationServiceDestinations(this.value)" name="hosCodeRefer" style="width: 100%;">
+                                                                   </select>
+                                                               </div>
+                                                               <div class=" col-md-6">
+                                                                   <label class="col-md-autocol-form-label">จุดบริการปลายทาง</label>
+                                                                   <select class="form-control " id="getStationServiceDestination" name="getStationServiceDestination"></select>
+                                                               </div>
+                                                               <!-- <div class="form-group" id="OtherCase">
+                                                                   <label for="exampleInputEmail1">Other Case</label>
+                                                                   <input type="text" class="form-control" id="inputOtherCase" name="inputOtherCase">
+                                                               </div> -->
+                                                           </div>
+                                                       </div>
+                                                       <div class="modal-footer justify-content-between">
+                                                           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                                           <button type="button" class="btn btn-success" id="sendFromReferHoscodeUpdate" onclick="sendFromReferBackhosCode()">ยืนยันการส่ง</button>
+                                                       </div>
+                                                   </div>
+                                               </div>
+                                           </div>
                                        </div>
                                        <!-- //! ปิดข้อมูลทั่วไป // -->
                                    </div>
