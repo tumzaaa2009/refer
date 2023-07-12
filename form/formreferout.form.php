@@ -453,7 +453,7 @@ if ($_GET['onfrom'] === "formreferout") { ?>
                                         <div class="col-md-6">
                                             <div class="form-group">
                                                 <label>ทะเบียนรถนำส่ง :</label>
-                                                <input type="text" class="form-control" name="carRefer" id="" aria-describedby="helpId" placeholder="">
+                                                <select class="form-control select2" name="carRefer" id="carRefer" aria-describedby="helpId" placeholder=""></select>
                                             </div>
                                         </div>
                                         <div class="col-md-6">

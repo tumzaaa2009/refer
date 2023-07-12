@@ -5,6 +5,7 @@
 session_start();
 include_once("./connect/file.refer.connec.php");
 $userRoles = json_decode($_SESSION["mySession"][6]); // แสดงรายการตาม session
+ 
 ?>
 
 <head>
@@ -203,6 +204,18 @@ $userRoles = json_decode($_SESSION["mySession"][6]); // แสดงรายก
                                     <p>รายการ ClinicGrop</p>
                                 </a>
                             </li>
+                            <li class="nav-item <?php echo (in_array('car', $userRoles)) ? '' : 'd-none' ?>">
+                                <a href="indexadmin.php?onfrom=car" class="nav-link <?php echo ($_GET['onfrom'] == 'car') ? 'active' : '' ?>">
+                                    <i class="far fa-circle nav-icon "></i>
+                                    <p>ทะเบียนรถยนต์</p>
+                                </a>
+                            </li>
+                            <li class="nav-item <?php echo (in_array('canclecase', $userRoles)) ? '' : 'd-none' ?>">
+                                <a href="indexadmin.php?onfrom=canclecase" class="nav-link <?php echo ($_GET['onfrom'] == 'canclecase') ? 'active' : '' ?>">
+                                    <i class="far fa-circle nav-icon "></i>
+                                    <p>เหตุผลการยกเลิกเคส</p>
+                                </a>
+                            </li>
                             <li class="nav-item">
                                 <a href="indexadmin.php?destroy" class="nav-link" name="destroySession" value="Logout">
                                     <i class="nav-icon far fa-circle text-warning"></i> Logout
@@ -270,6 +283,22 @@ $userRoles = json_decode($_SESSION["mySession"][6]); // แสดงรายก
                                             $pageActive = "active";
                                         } else if ($_GET['onfrom'] == "departmentadd") {
                                             $includedFile = './form/ManageAdmin/Mdepartment/add.department.php';
+                                            include($includedFile);
+                                            $includedFileName = basename($includedFile);
+                                        } else if ($_GET['onfrom'] == "car") {
+                                            $includedFile = './form/ManageAdmin/Mcar/table.car.php';
+                                            include($includedFile);
+                                            $includedFileName = basename($includedFile);
+                                        } else if ($_GET['onfrom'] == "caradd") {
+                                            $includedFile = './form/ManageAdmin/Mcar/add.car.php';
+                                            include($includedFile);
+                                            $includedFileName = basename($includedFile);
+                                        } else if ($_GET['onfrom'] == "canclecase") {
+                                            $includedFile = './form/ManageAdmin/Mcase/table.case.php';
+                                            include($includedFile);
+                                            $includedFileName = basename($includedFile);
+                                        } else if ($_GET['onfrom'] == "addcasecancle") {
+                                            $includedFile = './form/ManageAdmin/Mcase/add.case.php';
                                             include($includedFile);
                                             $includedFileName = basename($includedFile);
                                         }
@@ -400,6 +429,10 @@ $userRoles = json_decode($_SESSION["mySession"][6]); // แสดงรายก
             TableStation();
         } else if (onfrom === "department") {
             TableDepartment();
+        } else if (onfrom === "car") {
+            TableCar();
+        } else if (onfrom === "canclecase") {
+            GetTableCancleCase();
         }
 
 
@@ -435,7 +468,9 @@ $userRoles = json_decode($_SESSION["mySession"][6]); // แสดงรายก
                             const doctorOption = `<option value="doctor" ${json.includes('doctor') ? 'selected' : ''}>เมนูหมอ</option>`;
                             const station = `<option value="station" ${json.includes('station') ? 'selected' : ''}>หน่วยบริการ</option>`;
                             const department = `<option value="department" ${json.includes('department') ? 'selected' : ''}>ห้องตรวจ</option>`;
-                            selectOptions += userOption + doctorOption + station + department + `</select>`;
+                            const car = `<option value="car" ${json.includes('car') ? 'selected' : ''}>รถ Refer</option>`;
+                            const cancleCase = `<option value="canclecase" ${json.includes('canclecase') ? 'selected' : ''}>เหตุผลการยกเลิกเคส</option>`
+                            selectOptions += userOption + doctorOption + station + department + car + cancleCase + `</select>`;
                         }
                     } else if (item[0].auth_refer == "null") {
                         selectOptions = `<select class="select2" multiple="multiple" name="authRefer[]"  onchange="editUser(event.target.selectedOptions,${item[0].id},'authRefer')" data-placeholder="เลือกระดับการเข้าถึง" style="width: 100%;">`;
@@ -443,8 +478,9 @@ $userRoles = json_decode($_SESSION["mySession"][6]); // แสดงรายก
                         const doctorOption = `<option value="doctor" >เมนูหมอ</option>`;
                         const station = `<option value="station">สถานที่บริการ</option>`;
                         const department = `<option value="department" >ห้องตรวจ</option>`;
-                        selectOptions += userOption + doctorOption + station + department + `</select>`;
-
+                        const car = `<option value="department" ${json.includes('car') ? 'selected' : ''}>รถ Refer</option>`;
+                        const cancleCase = `<option value="canclecase" ${json.includes('canclecase') ? 'selected' : ''}>เหตุผลการยกเลิกเคส</option>`
+                        selectOptions += userOption + doctorOption + station + department + car + cancleCase+`</select>`;
                     }
 
                     arrayHosRefer.push(
@@ -955,6 +991,193 @@ $userRoles = json_decode($_SESSION["mySession"][6]); // แสดงรายก
                         toastClass: "toast-black"
                     });
                 TableDepartment();
+            }
+        });
+    }
+
+    function TableCar() {
+        $.ajax({
+            type: "POST",
+            url: `${callPathRefer}`,
+            data: {
+                car: 1
+            },
+            dataType: "JSON",
+            success: function(response) {
+                let arrayDepartment = [];
+                response.forEach(function(item) {
+                    arrayDepartment.push(
+                        `<tr class="refer-row" >
+                        <td>
+                        <input type="text" class="form-control" name="departmentName" value="${item.name}" onchange="EditDelCar(event.target.value,${item.id},'carName')">
+                        </td>
+                        <td >
+                            <button onclick="EditDelCar(event.target.value,${item.id},'del')"  class="btn btn-primary mb-3" role="button">ลบรายการ  ${item.name}</button>
+                        </td>
+                    </tr>`
+                    );
+                    arrayDepartment.push(item);
+                });
+                // เรียกใช้ DataTable และแสดงผล
+                const table = $("#TableCar").DataTable({
+                    destroy: true, // ลบข้อมูลเก่าออกเมื่อเปลี่ยนข้อมูลใหม่
+                });
+                table.clear().draw(); // ล้างข้อมูลเก่าทั้งหมดใน DataTable
+                table.rows.add($(arrayDepartment.join(""))).draw(); // เพิ่มข้อมูลใหม่เข้า DataTable
+            }
+        });
+    }
+
+    function AddRegCar() {
+        const form = document.getElementById("reg-car");
+        const formData = new FormData(form);
+        const carReg = formData.get("carReg");
+        const hosCode = formData.get("hosCode");
+        if (carReg === "" || hosCode === "") {
+            alert('กรุณาตรวจสอบข้อมูล')
+            return false;
+        } else {
+            $.ajax({
+                type: "POST",
+                url: `${callPathRefer}`,
+                data: formData,
+                dataType: "JSON",
+                contentType: false,
+                processData: false,
+                success: function(response) {
+                    if (response[0].status == true)
+                        toastr.success(`เสร็จสิน้`, "", {
+                            positionClass: "toast-top-full-width",
+                            timeOut: false,
+                            extendedTimeOut: "500",
+                            showMethod: "fadeIn",
+                            hideMethod: "fadeOut",
+                            closeButton: true,
+                            toastClass: "toast-black"
+                        });
+
+                }
+            });
+        }
+
+    }
+
+    function EditDelCar(value, id, source) {
+        $.ajax({
+            type: "POST",
+            url: `${callPathRefer}`,
+            data: {
+                carValue: value,
+                carId: id,
+                carSource: source,
+            },
+            dataType: "JSON",
+            success: function(response) {
+                if (response[0].status == true)
+                    toastr.success(`เสร็จสิน้`, "", {
+                        positionClass: "toast-top-full-width",
+                        timeOut: false,
+                        extendedTimeOut: "500",
+                        showMethod: "fadeIn",
+                        hideMethod: "fadeOut",
+                        closeButton: true,
+                        toastClass: "toast-black"
+                    });
+                TableCar();
+            }
+        });
+    }
+
+    function GetTableCancleCase() {
+        $.ajax({
+            type: "POST",
+            url: `${callPathRefer}`,
+            data: {
+                cancleCase: 1
+            },
+            dataType: "JSON",
+            success: function(response) {
+                let arrayCancleCase = [];
+                response.forEach(function(item) {
+                    arrayCancleCase.push(
+                        `<tr class="refer-row" >
+                        <td>
+                        <input type="text" class="form-control" name="departmentName" value="${item.name}" onchange="EditDelCancleCase(event.target.value,${item.id},'detailCase')">
+                        </td>
+                        <td >
+                            <button onclick="EditDelCancleCase(event.target.value,${item.id},'del')"  class="btn btn-primary mb-3" role="button">ลบรายการ  ${item.name}</button>
+                        </td>
+                    </tr>`
+                    );
+                    arrayCancleCase.push(item);
+                });
+                // เรียกใช้ DataTable และแสดงผล
+                const table = $("#TableCancleCase").DataTable({
+                    destroy: true, // ลบข้อมูลเก่าออกเมื่อเปลี่ยนข้อมูลใหม่
+                });
+                table.clear().draw(); // ล้างข้อมูลเก่าทั้งหมดใน DataTable
+                table.rows.add($(arrayCancleCase.join(""))).draw(); // เพิ่มข้อมูลใหม่เข้า DataTable
+
+            }
+        });
+    }
+
+
+    function AddCancleCase() {
+        const form = document.getElementById("reg-case");
+        const formData = new FormData(form);
+        const carReg = formData.get("carReg");
+        const hosCode = formData.get("hosCode");
+        if (detailCase === "" || hosCode === "") {
+            alert('กรุณาตรวจสอบข้อมูล')
+            return false;
+        } else {
+            $.ajax({
+                type: "POST",
+                url: `${callPathRefer}`,
+                data: formData,
+                dataType: "JSON",
+                contentType: false,
+                processData: false,
+                success: function(response) {
+                    if (response[0].status == true)
+                        toastr.success(`เสร็จสิน้`, "", {
+                            positionClass: "toast-top-full-width",
+                            timeOut: false,
+                            extendedTimeOut: "500",
+                            showMethod: "fadeIn",
+                            hideMethod: "fadeOut",
+                            closeButton: true,
+                            toastClass: "toast-black"
+                        });
+
+                }
+            });
+        }
+    }
+
+    function EditDelCancleCase(value, id, source) {
+        $.ajax({
+            type: "POST",
+            url: `${callPathRefer}`,
+            data: {
+                cancleCaseValue: value,
+                cancleId: id,
+                cancleSource: source,
+            },
+            dataType: "JSON",
+            success: function(response) {
+                if (response[0].status == true)
+                    toastr.success(`เสร็จสิน้`, "", {
+                        positionClass: "toast-top-full-width",
+                        timeOut: false,
+                        extendedTimeOut: "500",
+                        showMethod: "fadeIn",
+                        hideMethod: "fadeOut",
+                        closeButton: true,
+                        toastClass: "toast-black"
+                    });
+                GetTableCancleCase();
             }
         });
     }

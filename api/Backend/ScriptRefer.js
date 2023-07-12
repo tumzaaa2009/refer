@@ -77,7 +77,10 @@ const sendFromReferOuts = () => {
     alert("กรุณากรอก otherCauseReferout");
     return;
   }
-
+  if (formData.get("timeTruma") == "0:00") {
+    alert("กรุณากรอก เวลา");
+    return;
+  }
   $.ajax({
     headers: {
       "x-access-token": hosPassCode,
@@ -381,53 +384,98 @@ function groupByDate(data) {
     return result;
   }, {});
 }
-
 function UpStatusReferOutIsSave() {
   let statusRecive = "";
   let cancleCase = "";
   Swal.fire({
     title: `โปรดยืนยันหรือปฏิเสธการรับ ส่งตัว ${$("#refer_no").val()}`,
-    showDenyButton: true,
+    showDenyButton: false,
     showCancelButton: true,
     confirmButtonText: "รับการส่งตัว+Updateข้อมูลปลายทาง",
     confirmButtonColor: "#305dd3",
-    denyButtonText: `ปฏิเสธการส่งตัว`,
-    denyButtonColor: "#d33",
+
+    cancelButtonText: "ปิดหน้าต่างการส่งตัว",
+    // denyButtonColor: "#d33",
     width: 750,
-    html: `
-    <input type="text" id="reasonInput" value="" placeholder="ระบุเหตุผลหากปฏิเสธการส่งตัว" class="col-6 swal2-input">
-  `,
   }).then((result) => {
     if (result.isConfirmed) {
       statusRecive = 11;
-    } else if (result.isDenied) {
-      const reason = $("#reasonInput").val();
-      if (reason != "") {
-        statusRecive = -11;
-        cancleCase = reason;
-      } else {
-        Swal.fire({
-          title: "โปรดระบุเหตุผล",
-          icon: "warning",
-          confirmButtonText: "ตกลง",
-        });
-        return false;
-      }
-    }
-    const referCode = $("#refer_code").val();
-    const DiagonosisDes = $("#DiagonosisDes").val();
-    const ccDestination = $("#ccDestination").val();
-    const seesionHosCode = hosCode;
-    const forms = document.getElementById("refer-out-form");
-    const formData = new FormData(forms);
+      const referCode = $("#refer_code").val();
+      const DiagonosisDes = $("#DiagonosisDes").val();
+      const ccDestination = $("#ccDestination").val();
+      const seesionHosCode = hosCode;
+      const forms = document.getElementById("refer-out-form");
+      const formData = new FormData(forms);
 
-    formData.append("referCode", referCode);
-    formData.append("DiagonosisDes", DiagonosisDes);
-    formData.append("ccDestination", ccDestination);
-    formData.append("seesionHosCode", seesionHosCode);
-    formData.append("case", $("#reasonInput").val());
-    formData.append("hosCode", hosCode);
-    formData.append("status", statusRecive);
+      formData.append("referCode", referCode);
+      formData.append("DiagonosisDes", DiagonosisDes);
+      formData.append("ccDestination", ccDestination);
+      formData.append("seesionHosCode", seesionHosCode);
+      formData.append("case", $("#reasonInput").val());
+      formData.append("hosCode", hosCode);
+      formData.append("status", statusRecive);
+      $.ajax({
+        headers: {
+          "x-access-token": referCode,
+        },
+        type: "PUT",
+        url: "https://rh4cloudcenter.moph.go.th:3000/referapi/updatestatus",
+        data: formData,
+        dataType: "JSON",
+        contentType: false,
+        processData: false,
+        success: function (response) {
+          if (
+            response.messages == "susOnrecive" ||
+            response.messages == "susNotRecive"
+          ) {
+            $("#UpStatusReferOutDes").hide();
+
+            if (hosCode == response.referCode) {
+              $("#UpStatusReferOutDesResive").show();
+            }
+            toastr.success(`${response.refNo}`, "", {
+              positionClass: "toast-top-full-width",
+              timeOut: false,
+              extendedTimeOut: "1000",
+              showMethod: "fadeIn",
+              hideMethod: "fadeOut",
+              closeButton: true,
+            });
+            setTimeout(function () {
+              location.href = "indexfromuse.php?onfrom=referouttable";
+            }, 1.5);
+          }
+        },
+      });
+    } else {
+      return false;
+    }
+  });
+}
+function RefuseReferOut() {
+  const statusRecive = -11;
+  const referCode = $("#refer_code").val();
+  const DiagonosisDes = $("#DiagonosisDes").val();
+  const ccDestination = $("#ccDestination").val();
+  const seesionHosCode = hosCode;
+  const forms = document.getElementById("refer-out-form");
+  const formData = new FormData(forms);
+
+  formData.append("referCode", referCode);
+  formData.append("DiagonosisDes", DiagonosisDes);
+  formData.append("ccDestination", ccDestination);
+  formData.append("seesionHosCode", seesionHosCode);
+  formData.append("case", formData.get("reasonInput"));
+  formData.append("hosCode", hosCode);
+  formData.append("status", statusRecive);
+  console.log($("#input-refuse").val());
+ 
+ 
+  if (formData.get("reasonInput") == 0) {
+    alert("กรณุระบบเหตุผลการปฏิเสธ");
+    return false;
+  } else {
     $.ajax({
       headers: {
         "x-access-token": referCode,
@@ -444,7 +492,7 @@ function UpStatusReferOutIsSave() {
           response.messages == "susNotRecive"
         ) {
           $("#UpStatusReferOutDes").hide();
-
+          $("#refuse-button").hide();
           if (hosCode == response.referCode) {
             $("#UpStatusReferOutDesResive").show();
           }
@@ -462,7 +510,7 @@ function UpStatusReferOutIsSave() {
         }
       },
     });
-  });
+  }
 }
 
 const showTableReferOut = () => {
@@ -591,7 +639,6 @@ const showTableReferOut = () => {
 function showDetailReferOut() {
   let dateString = ` `;
   let expDateString = ``;
-
   $.ajax({
     type: "POST",
     url: "https://rh4cloudcenter.moph.go.th:3000/referapi/showDetailReferOut",
@@ -859,6 +906,7 @@ function showDetailReferOut() {
           $(
             '#levelActual option[value="' + response.message[0].level_des + '"]'
           ).prop("selected", true);
+
           $('#bedHos option[value="' + response.message[0].bed_des + '"]').prop(
             "selected",
             true
@@ -919,6 +967,7 @@ function showDetailReferOut() {
           $("#open-modal-case-referin").hide();
           $("#UpStatusReferOutDesResive").hide();
           if (hosCode == referHoscode) {
+            $("#refuse-button").show();
             $("#UpStatusReferOutDes").show();
             $("#UpdateRefRefer").hide();
             $("#Typept").prop("disabled", false);
@@ -935,10 +984,11 @@ function showDetailReferOut() {
           } else if (hosCode == response.message[0].refer_code) {
             const [refNew, refOld] =
               response.message[0].codegen_refer_no.split("-");
-            if (refNew != "" && refOld != "") {
+
+            if (refNew != "" && refOld != "" && refOld != undefined) {
               $("#referSus").show();
               $("#referSus").html(
-                `<a href="indexfromuse.php?onfrom=showdetailreferout&idrefer=${refNew}-${refOld}">อ้างอิงส่งตัวเก่า</a>`
+                `<a href="indexfromuse.php?onfrom=showdetailreferout&idrefer=${refOld}-${refNew}">อ้างอิงส่งตัวเก่า</a>`
               );
             }
             $("#cc").prop("readonly", false);
@@ -967,6 +1017,7 @@ function showDetailReferOut() {
 
           // ? Putข้อความเคส ---------------------------------------- Refer
           if (hosCode == referHoscode) {
+            $("#refuse-button").show();
             $("#UpStatusReferOutDes").show();
             $("#UpdateRefRefer").hide();
             $("#Typept").prop("disabled", false);
@@ -983,17 +1034,31 @@ function showDetailReferOut() {
             $("#open-modal-case-referout-cancelorg").hide();
             $("#reservationtime").prop("disabled", false);
             // Select OPtion ปลายทาง
-            $(
-              '#Typept option[value="' + response.message[0].typept_des + '"]'
-            ).prop("selected", true);
+
+            const typetDes = response.message[0].typept_des.split(",");
+            const select2typetDes = [];
+            $('select[name="Typept_Des"] option').each(function () {
+              if (typetDes.includes($(this).val())) {
+                $(this).prop("selected", true);
+                select2typetDes.push($(this).val());
+              }
+            });
+            $("#Typept").val(select2typetDes).trigger("change");
             $(
               '#levelActual option[value="' +
                 response.message[0].level_des +
                 '"]'
             ).prop("selected", true);
-            $(
-              '#bedHos option[value="' + response.message[0].bed_des + '"]'
-            ).prop("selected", true);
+
+            const typetbedDes = response.message[0].bad_des.split(",");
+            const select2bedDes = [];
+            $('select[name="bedHosDes"] option').each(function () {
+              if (typetbedDes.includes($(this).val())) {
+                $(this).prop("selected", true);
+                select2bedDes.push($(this).val());
+              }
+            });
+            $("#bedHos").val(select2bedDes).trigger("change");
 
             $(
               '.load_des option[value="' + response.message[0].load_des + '"]'
@@ -1012,10 +1077,10 @@ function showDetailReferOut() {
 
             console.log(response.message[0].service_plane_des);
 
-            const servicePlaneDes =
-              response.message[0].service_plane_des.split(",");
             $('select[name="sevicePlanDes"] option').each(function () {
-              if (servicePlaneDes.includes($(this).val())) {
+              if (
+                response.message[0].service_plane_des.includes($(this).val())
+              ) {
                 $(this).prop("selected", true);
               }
             });
@@ -1026,10 +1091,10 @@ function showDetailReferOut() {
             const [refOld, refNew] =
               response.message[0].codegen_refer_no.split("-");
             if (refNew != "" && refOld != "") {
-              $("#referSus").show();
-              $("#referSus").html(
-                `<a href="indexfromuse.php?onfrom=showdetailreferout&idrefer=${refOld}-${refNew}">เอกสารส่งเก่า</a>`
-              );
+              // $("#referSus").show();
+              // $("#referSus").html(
+              //   `<a href="indexfromuse.php?onfrom=showdetailreferout&idrefer=${refOld}-${refNew}">เอกสารส่งเก่า</a>`
+              // );
             }
             $("#cc").prop("readonly", false);
             $("#managementDes").prop("readonly", false);
@@ -1039,17 +1104,31 @@ function showDetailReferOut() {
             $("#open-modal-case-referout-cancelorg").show();
             $("#UpdateRefRefer").show();
             // Select OPtion ต้นทาง
-            $(
-              '#Typept option[value="' + response.message[0].typept_des + '"]'
-            ).prop("selected", true);
+
+            const typetDes = response.message[0].typept_des.split(",");
+            const select2typetDes = [];
+            $('select[name="Typept_Des"] option').each(function () {
+              if (typetDes.includes($(this).val())) {
+                $(this).prop("selected", true);
+                select2typetDes.push($(this).val());
+              }
+            });
+            $("#Typept").val(select2typetDes).trigger("change");
             $(
               '#levelActual option[value="' +
                 response.message[0].level_des +
                 '"]'
             ).prop("selected", true);
-            $(
-              '#bedHos option[value="' + response.message[0].bed_des + '"]'
-            ).prop("selected", true);
+
+            const typetbedDes = response.message[0].bad_des.split(",");
+            const select2bedDes = [];
+            $('select[name="bedHosDes"] option').each(function () {
+              if (typetbedDes.includes($(this).val())) {
+                $(this).prop("selected", true);
+                select2bedDes.push($(this).val());
+              }
+            });
+            $("#bedHos").val(select2bedDes).trigger("change");
 
             $(
               '.load_des option[value="' + response.message[0].load_des + '"]'
@@ -1183,6 +1262,7 @@ function showDetailReferOut() {
             $("#UpStatusReferOutDesResive").show();
             $("#open-modal-case-referin").hide();
             $("#open-modal-case-referHosCodeDes").hide();
+          } else {
             const [refOld, refNew] =
               response.message[0].codegen_refer_no.split("-");
             if (refNew != "" && refOld != "") {
@@ -1191,7 +1271,6 @@ function showDetailReferOut() {
                 `<a href="indexfromuse.php?onfrom=showdetailreferout&idrefer=${refNew}-${refOld}">อ้างอิงส่งตัวใหม่</a>`
               );
             }
-          } else {
             $("#UpStatusReferOutDesResive").hide();
             $("#open-modal-case-referin").hide();
             $("#UpStatusReferOutDesResive").hide();
@@ -1607,9 +1686,8 @@ const showDetailReferBack = () => {
         }
         if (response.message[0].is_save == 10) {
           if (hosCode == response.message[0].refer_hospcode) {
-            $("#open-modal-case-referHocode").show()
+            $("#open-modal-case-referHocode").show();
           }
-
         }
       }
     },

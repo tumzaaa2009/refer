@@ -753,7 +753,7 @@ if (isset($_GET['destroy'])) {
 
 
     socket.on(`send_status_ReferBack ${hosCode}`, function(data) {
-       
+
         if ((data.data = 200)) {
             toastr.info(`ส่งกลับเคส ${data.refNo}`, "", {
                 positionClass: "toast-top-full-width",
@@ -872,6 +872,7 @@ if (isset($_GET['destroy'])) {
             ServicePlane();
             CaseReferOut();
             DoctorName();
+            SelectCar();
             CoordinateIsName();
             conscious();
             getStation(hosCode)
@@ -896,6 +897,7 @@ if (isset($_GET['destroy'])) {
         else if (onfrom === 'referouttable') {
             showTableReferOut()
         } else if (onfrom === 'showdetailreferout') {
+            SelectCancleCase()
             getStation(hosCode)
             if (idrefer != "" && idrefer != undefined) {
                 ServicePlane();
@@ -1338,7 +1340,6 @@ if (isset($_GET['destroy'])) {
     };
     // * Ajax other Case Refer Back 
     const ValueOtherCaseReferBack = (params) => {
-
         if (params == "อื่นๆ") {
             $("#DivotherCauseReferback").show();
         } else {
@@ -1370,6 +1371,54 @@ if (isset($_GET['destroy'])) {
             },
         });
     };
+
+    function SelectCar() {
+        $.ajax({
+            type: "POST",
+            url: `${callPathRefer}`,
+            data: {
+                car: 1
+            },
+            dataType: "JSON",
+            success: function(response) {
+                const carService = [];
+                carService.push(`<option id='' value='0' selected>ระบุเลขทะเบียนรถ</option>`)
+                for (let index = 0; index < response.length; index++) {
+                    console.log(response[index].name)
+                    carService.push(
+                        ` <option id = '${response[index].id}'  value = '${response[index].name}' >${response[index].name} </option>`
+                    );
+                }
+                $("#carRefer").html(carService);
+            }
+        });
+    }
+
+    let arrayCancleCase = [];
+
+    function SelectCancleCase() {
+        $.ajax({
+            type: "POST",
+            url: `${callPathRefer}`,
+            data: {
+                cancleCase: 1
+            },
+            dataType: "JSON",
+            success: function(response) {
+
+                arrayCancleCase.push(`<option id='' value='0' selected>ระบุเหตุผลการยกเลิก</option>`)
+                response.forEach(function(item) {
+                    arrayCancleCase.push(
+                        ` <option id = '${item .id}'  value = '${item.name}' >${item.name} </option>`
+                    );
+
+                });
+                $("#inputCancleReferoutOrg").html(arrayCancleCase)
+                $("#input-refuse").html(arrayCancleCase)
+
+            }
+        });
+    }
     const CoordinateIsName = () => {
         $.ajax({
             type: "POST",

@@ -113,8 +113,6 @@
                                                    <div class="form-group">
                                                        <label>ประเภทผู้ป่วย :</label>
                                                        <input class="form-control " name="TypeptDes" id="TypeptDes" type="text " />
-
-
                                                    </div>
                                                </div>
                                                <div class="col-md-4">
@@ -379,7 +377,8 @@
                                                        ส่งตัวกลับ
                                                    </button>
                                                    <button type="button" id="UpStatusReferOutDes" style="display:none;" class="btn btn-success " onclick="UpStatusReferOutIsSave()">
-                                                       Refer </button>
+                                                       รับ Refer </button>
+                                                   <button type="button" class="btn btn-warning" id="refuse-button" style="display:none;" data-bs-toggle="modal" data-bs-target="#mmmodal-refuse-case">ปฏิเสธการส่งตัว </button>
                                                    <button type="button" class="btn btn-primary" style="display:none;" id="UpdateRefRefer" onclick="PutCaseReferOut()"> Update ข้อมูลไปให้ปลายทาง
                                                    </button>
                                                    <span id="referCancle"></span>
@@ -399,7 +398,7 @@
                                                                <div class="form-group">
                                                                    <label for="exampleInputEmail1">โปรดระบุเหตุผลในการยกเลิกการส่ง
                                                                    </label>
-                                                                   <input type="text" class="form-control" id="inputCancleReferoutOrg" name="inputCancleReferoutOrg">
+                                                                   <select class="form-control" id="inputCancleReferoutOrg" name="inputCancleReferoutOrg"> </select>
                                                                </div>
                                                            </div>
                                                            <div class="modal-footer justify-content-between">
@@ -471,7 +470,28 @@
                                                        </div>
                                                    </div>
                                                </div>
-
+                                               <!-- //? ปฏิเสธการส่งตัว -->
+                                               <div class="modal fade" id='mmmodal-refuse-case' tabindex="-1" aria-hidden="true">
+                                                   <div class="modal-dialog modal-xl">
+                                                       <div class="modal-content">
+                                                           <div class="modal-header">
+                                                               <h4 class="modal-title">เหตุผลการปฏิเสธการส่งตัว</h4>
+                                                               <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                                           </div>
+                                                           <div class="modal-body">
+                                                               <div class="form-group">
+                                                                   <label for="exampleInputEmail1">โปรดระบุเหตุผลในการยกเลิกการส่ง
+                                                                   </label>
+                                                                   <select class="form-control" id="input-refuse" name="reasonInput"> </select>
+                                                               </div>
+                                                           </div>
+                                                           <div class="modal-footer justify-content-between">
+                                                               <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                                               <button type="button" class="btn btn-success" id="cancleReferOutOrg" onclick="RefuseReferOut()">ยืนยันการยกเลิก</button>
+                                                           </div>
+                                                       </div>
+                                                   </div>
+                                               </div>
                                                <!-- //! ปิดข้อมูลทั่วไป // -->
                                            </div>
                                        </div>

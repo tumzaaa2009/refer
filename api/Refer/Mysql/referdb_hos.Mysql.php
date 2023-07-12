@@ -52,7 +52,7 @@ function Ward()
 function LvActual()
 {
     global  $objconnectRefer;
-// WHERE staion_name ='" . $_POST['lvActual'] . "'
+    // WHERE staion_name ='" . $_POST['lvActual'] . "'
     $selectLvActual = "SELECT * FROM level  ORDER BY level_id ASC";
     $queryStationWard = mysqli_query($objconnectRefer, $selectLvActual);
     $lv = array();
@@ -454,7 +454,85 @@ function EditDelDepartment()
     }
     echo json_encode($rs);
 }
+function GetTabelCar()
+{
+    global $objconnectRefer;
+    $sql = "SELECT * FROM car_reg ORDER BY id_car DESC";
+    $query = mysqli_query($objconnectRefer, $sql);
+    if ($query) {
+        while ($rowCar = mysqli_fetch_array($query)) {
+            $rsCar[] = array('status' => true, "id" => $rowCar["id_car"], "name" => $rowCar["reg_car"]);
+        }
+    } else {
+        $rsCar[] = array('status' => false);
+    }
 
+
+    echo json_encode($rsCar);
+}
+
+function AddRegCar()
+{
+    global $objconnectRefer;
+    $sql = "INSERT INTO car_reg (reg_car) value('" . $_POST["carReg"] . "')";
+    $query = mysqli_query($objconnectRefer, $sql);
+    if ($query)
+        $rs[] = array("status" => true, $query);
+    echo json_encode($rs);
+}
+
+function EditDelCar()
+{
+    global $objconnectRefer;
+
+    if ($_POST['carSource'] == "del") {
+        $sqlStation = "DELETE FROM car_reg WHERE id_car='" . $_POST['carId'] . "'";
+        $fetchVale =  mysqli_query($objconnectRefer, $sqlStation);
+        if ($fetchVale) $rs[] = array("status" => true, $fetchVale);
+    } else if ($_POST['carSource'] == "carName") {
+        $sqlEditStation = "UPDATE car_reg SET reg_car ='" . $_POST['carValue'] . "' WHERE id_car ='" . $_POST['carId'] . "' ";
+        $fetchVale = mysqli_query($objconnectRefer, $sqlEditStation);
+        if ($fetchVale) $rs[] = array("status" => true, $fetchVale);
+    }
+    echo json_encode($rs);
+}
+
+function GetTableCancleCase(){
+    global $objconnectRefer;
+    $sql = "SELECT * FROM cancle_case";
+    $query = mysqli_query($objconnectRefer, $sql);
+    if ($query) {
+        while ($rowCar = mysqli_fetch_array($query)) {
+            $rsCar[] = array('status' => true, "id" => $rowCar["id_case"], "name" => $rowCar["detail_note"]);
+        }
+    } else {
+        $rsCar[] = array('status' => false);
+    }
+echo json_encode($rsCar);
+}
+
+function AddCase()
+{
+    global $objconnectRefer;
+    $sql = "INSERT INTO cancle_case (detail_note) value('" . $_POST["detailCase"] . "')";
+    $query = mysqli_query($objconnectRefer, $sql);
+    if ($query)
+        $rs[] = array("status" => true, $query);
+    echo json_encode($rs);
+}
+function EditDelCancleCase(){
+    global $objconnectRefer;
+    if ($_POST['cancleSource'] == "del") {
+        $sqlStation = "DELETE FROM cancle_case WHERE id_case='" . $_POST['cancleId'] . "'";
+        $fetchVale =  mysqli_query($objconnectRefer, $sqlStation);
+        if ($fetchVale) $rs[] = array("status" => true, $fetchVale);
+    } else if ($_POST['cancleSource'] == "detailCase") {
+     $sqlEditStation = "UPDATE cancle_case SET detail_note ='" . $_POST['cancleCaseValue'] . "' WHERE id_case ='" . $_POST['cancleId'] . "' ";
+        $fetchVale = mysqli_query($objconnectRefer, $sqlEditStation);
+        if ($fetchVale) $rs[] = array("status" => true, $fetchVale);
+    }
+    echo json_encode($rs);
+}
 //* เรียกใช้การทำงาน //
 
 if (isset($_POST['servicestation'])) {
@@ -541,3 +619,24 @@ if (isset($_POST['nameDeapartMent'])) {
 if (isset($_POST['departmentValue']) && isset($_POST['departmentId']) && isset($_POST['departmentSource'])) {
     EditDelDepartment();
 }
+if (isset($_POST['car'])) {
+    GetTabelCar();
+}
+if (isset($_POST['carReg']) && isset($_POST['hosCode'])) {
+    AddRegCar();
+}
+if (isset($_POST['carValue']) && isset($_POST['carId']) && isset($_POST['carSource'])) {
+    EditDelCar();
+}
+if(isset($_POST['cancleCase'])){
+ 
+    GetTableCancleCase();
+}
+if (isset($_POST['detailCase']) && isset($_POST['hosCode'])) {
+    AddCase();
+}
+if (isset($_POST['cancleCaseValue']) && isset($_POST['cancleId']) && isset($_POST['cancleSource'])) {
+ 
+    EditDelCancleCase();
+}
+

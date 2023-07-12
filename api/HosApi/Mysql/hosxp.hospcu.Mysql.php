@@ -1,10 +1,5 @@
 <?php 
 include('../file.refer.connec.php');
-
-
-
-
-
 $serverHis;
 $userHis;
 $passHis;
@@ -190,6 +185,4 @@ if(isset($_POST['drugLabs'])){
       ListDrugLabs($_POST['drugLabs']);
 }
 
- 
-      
 ?>
