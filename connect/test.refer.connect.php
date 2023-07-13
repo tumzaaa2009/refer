@@ -41,9 +41,9 @@ if (isset($_POST['contentTypeHis'])) {
        }
 }
 if ($dbTypeRefer == "Mysql" &&  $contentTypeRefer == "refer") {
-       $objconnectRefer = mysqli_connect($serverRefer, $userRefer, $passRefer, $dbNameRefer);
+       $objconnectRefer = mysqli_connect($serverRefer, $userRefer, $passRefer, $dbNameRefer, $portRefer);
        date_default_timezone_set('Asia/Bangkok');
-       $arr["status"] = "Connecting Success =". $contentTypeRefer;
+       $arr["status"] = "Connecting Success =" . $contentTypeRefer;
 
        if (!$objconnectRefer) {
               $statusError = "Failed to connect to MySQL: " . mysqli_connect_error();
@@ -51,22 +51,17 @@ if ($dbTypeRefer == "Mysql" &&  $contentTypeRefer == "refer") {
               echo json_encode($arr);
               exit();
        }
-
        $query = mysqli_query($objconnectRefer, "SET CHARACTER SET UTF8");
-
        if (!$query) {
               $statusError = "Error in executing query: " . mysqli_error($objconnectRefer);
               $arr["status"] = $statusError;
               echo json_encode($arr);
               exit();
        }
-
        echo json_encode($arr);
-
 }
 if ($dbTypeHis == "Mysql" &&   $contentTypeHis == "his") {
-
-       $objconnectHis = mysqli_connect($serverHis, $userHis, $passHis, $dbNameHis);
+       $objconnectHis = mysqli_connect($serverHis, $userHis, $passHis, $dbNameHis, $portHis);
        date_default_timezone_set('Asia/Bangkok');
        $arr["status"] = "Connecting Suscess " . $contentTypeHis;
        mysqli_query($objconnectHis, "SET CHARACTER SET UTF8");
@@ -76,21 +71,38 @@ if ($dbTypeHis == "Mysql" &&   $contentTypeHis == "his") {
               echo json_encode($arr);
               exit();
        }
-
        $query = mysqli_query($objconnectHis, "SET CHARACTER SET UTF8");
-
        if (!$query) {
               $statusError = "Error in executing query: " . mysqli_error($objconnectHis);
               $arr["status"] = $statusError;
               echo json_encode($arr);
               exit();
        }
-
        echo json_encode($arr);
+} else if ($dbTypeHis == "PostGreSql" && $contentTypeHis == "his") {    
+       $objconnectRefer = pg_connect("host=$serverHis port=$portHis dbname=$dbNameHis user=$userHis password=$passHis");
+       date_default_timezone_set('Asia/Bangkok');
+       if (!$objconnectRefer) {
+              $arr["status"] = "Failed to connect to PostgreSQL: " . pg_last_error();
+              exit();
+       } else {
+              // ตั้งค่าภาษา UTF-8
+              $arr["status"] = "Suscess:PostGress";
+              pg_set_client_encoding($objconnectRefer, "utf8");
+       }
+       echo json_encode($arr);
+}
 
-
-} 
-else if ($dbTypeHis == "SQLSERVER" && $contentType == "his") {
-       $arr["status"] = "ระบบยังไม่รองรับ";
+if ($dbTypeRefer == "PostGreSql" && $contentTypeRefer == "refer") {
+       $objconnectRefer = pg_connect("host=$serverRefer port=$portRefer dbname=$dbNameRefer user=$userRefer password=$passRefer");
+       date_default_timezone_set('Asia/Bangkok');
+       if (!$objconnectRefer) {
+              $arr["status"] = "Failed to connect to PostgreSQL: " . pg_last_error();
+              exit();
+       } else {
+              // ตั้งค่าภาษา UTF-8
+              $arr["status"] = "Suscess:PostGress";
+              pg_set_client_encoding($objconnectRefer, "utf8");
+       }
        echo json_encode($arr);
 }
