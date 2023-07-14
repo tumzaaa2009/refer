@@ -5,7 +5,7 @@
 session_start();
 include_once("./connect/file.refer.connec.php");
 $userRoles = json_decode($_SESSION["mySession"][6]); // แสดงรายการตาม session
- 
+
 ?>
 
 <head>
@@ -276,6 +276,11 @@ $userRoles = json_decode($_SESSION["mySession"][6]); // แสดงรายก
                                             include($includedFile);
                                             $includedFileName = basename($includedFile);
                                             $pageActive = "active";
+                                        } else if ($_GET['onfrom'] == "stationadd") {
+                                            $includedFile = './form/ManageAdmin/Mstation/add.station.php';
+                                            include($includedFile);
+                                            $includedFileName = basename($includedFile);
+                                            $pageActive = "active";
                                         } else if ($_GET['onfrom'] == "department") {
                                             $includedFile = './form/ManageAdmin/Mdepartment/table.department.php';
                                             include($includedFile);
@@ -433,6 +438,8 @@ $userRoles = json_decode($_SESSION["mySession"][6]); // แสดงรายก
             TableCar();
         } else if (onfrom === "canclecase") {
             GetTableCancleCase();
+        } else if (onfrom === "departmentadd") {
+            TableDepartment();
         }
 
 
@@ -478,9 +485,9 @@ $userRoles = json_decode($_SESSION["mySession"][6]); // แสดงรายก
                         const doctorOption = `<option value="doctor" >เมนูหมอ</option>`;
                         const station = `<option value="station">สถานที่บริการ</option>`;
                         const department = `<option value="department" >ห้องตรวจ</option>`;
-                        const car = `<option value="department" ${json.includes('car') ? 'selected' : ''}>รถ Refer</option>`;
-                        const cancleCase = `<option value="canclecase" ${json.includes('canclecase') ? 'selected' : ''}>เหตุผลการยกเลิกเคส</option>`
-                        selectOptions += userOption + doctorOption + station + department + car + cancleCase+`</select>`;
+                        const car = `<option value="department" >รถ Refer</option>`;
+                        const cancleCase = `<option value="canclecase">เหตุผลการยกเลิกเคส</option>`
+                        selectOptions += userOption + doctorOption + station + department + car + cancleCase + `</select>`;
                     }
 
                     arrayHosRefer.push(
@@ -498,7 +505,7 @@ $userRoles = json_decode($_SESSION["mySession"][6]); // แสดงรายก
                                 </select>
                                 </td>
                                 <td>
-                                <button onclick="editDoctorname(event.target.value,${item[0].id},'del')" class="btn btn-primary mb-3" role="button">ลบ User</button>
+                                <button onclick="editUser(event.target.value,${item[0].id},'del')" class="btn btn-primary mb-3" role="button">ลบ User</button>
                             </td>
             </tr>`
                     );
@@ -919,52 +926,75 @@ $userRoles = json_decode($_SESSION["mySession"][6]); // แสดงรายก
             dataType: "JSON",
             success: function(response) {
                 let arrayDepartment = [];
-                response.forEach(function(item) {
-
+                let selectOptions = '';
+                response.Department.forEach(function(item) {
+                    let selectOptions = '';
+                    let selected = ''; // สร้างตัวแปร selected นอกลูป
+                    response.Station.forEach(function(itemList) {
+                        selected = item.station_name === itemList.staion.station_name ? 'selected' : '';
+                        selectOptions += `<option value="${itemList.staion.station_name}" ${selected}>${itemList.staion.station_name}</option>`;
+                    });
                     arrayDepartment.push(
-                        `<tr class="refer-row" >
-                        <td>
-                        <input type="text" class="form-control" name="departmentName" value="${item.name}" onchange="EditDelDepartment(event.target.value,${item.id},'departmentName')">
-                        </td>
-                        <td >
-                            <button onclick="EditDelDepartment(event.target.value,${item.id},'del')"  class="btn btn-primary mb-3" role="button">ลบรายการ ห้องตรวจ ${item.name}</button>
-                        </td>
-                    </tr>`
+                        `<tr class="refer-row">
+                            <td>
+                                <input type="text" class="form-control" name="departmentName" value="${item.name}" onchange="EditDelDepartment(event.target.value,${item.id},'departmentName')">
+                            </td>
+                            <td>
+                                <input type="text" class="form-control" name="departmentName" value="${item.station_name}" readonly>
+                            </td>
+                            <td>
+                                <select name="stationName" id="" class="custom-select form-control-border" onchange="EditDelDepartment(event.target.value,${item.id},'stationName')">
+                                    ${selectOptions}
+                                </select>
+                            </td>
+                            <td>
+                                <button onclick="EditDelDepartment(event.target.value,${item.id},'del')" class="btn btn-primary mb-3" role="button">ลบรายการ ห้องตรวจ ${item.name}</button>
+                            </td>
+                        </tr>`
                     );
-                    arrayDepartment.push(item);
+                    $("#selectOptionStation").html(`<select name="stationName" id="stationName" class="custom-select form-control-border"  >
+                    ${selectOptions}
+                </select>`)
                 });
+
                 // เรียกใช้ DataTable และแสดงผล
                 const table = $("#TableDepartment").DataTable({
                     destroy: true, // ลบข้อมูลเก่าออกเมื่อเปลี่ยนข้อมูลใหม่
                 });
                 table.clear().draw(); // ล้างข้อมูลเก่าทั้งหมดใน DataTable
                 table.rows.add($(arrayDepartment.join(""))).draw(); // เพิ่มข้อมูลใหม่เข้า DataTable
+
+
             }
         });
     }
 
+
     function AddDepatMent() {
         const nameDeapartMent = $("#namedepartment").val()
+        const nameStationName = $("#stationName").val()
         if (nameDeapartMent == "") alert("กรุณาระบบ ห้องตรวจ");
+
         $.ajax({
             type: "POST",
             url: `${callPathRefer}`,
             data: {
-                nameDeapartMent: nameDeapartMent
+                nameDeapartMent: nameDeapartMent,
+                nameStationName: nameStationName
             },
             dataType: "JSON",
             success: function(response) {
                 if (response == true)
-                    toastr.success(`บันทึกเสร็จสิ้น`, "", {
-                        positionClass: "toast-top-full-width",
-                        timeOut: false,
-                        extendedTimeOut: "500",
-                        showMethod: "fadeIn",
-                        hideMethod: "fadeOut",
-                        closeButton: true,
-                        toastClass: "toast-black"
-                    });
-                TableDepartment()
+                toastr.success(`บันทึกเสร็จสิ้น`, "", {
+                    positionClass: "toast-top-full-width",
+                    timeOut: false,
+                    extendedTimeOut: "500",
+                    showMethod: "fadeIn",
+                    hideMethod: "fadeOut",
+                    closeButton: true,
+                    toastClass: "toast-black"
+                });
+
             }
         });
     }

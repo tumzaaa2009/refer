@@ -16,7 +16,7 @@ function conDBdw()
     global $objconnectRefer;
     global $portRefer;
     $objconnectRefer = pg_connect("host=$serverRefer port=$portRefer dbname=$dbNameRefer user=$userRefer password=$passRefer");
- 
+
     if (!$objconnectRefer) {
         echo "Failed to connect : " . mysqli_connect_error();
         exit();
@@ -355,10 +355,10 @@ function AddUser()
     $insertAddUser = "INSERT INTO user_login(user_name,user_password,name_user,section_detail,tel,auth_refer,status)
     VALUES('" . $_POST['username'] . "','" . $_POST['userpassword'] . "','" . $_POST['myName'] . "','" . $_POST['lcationDetail'] . "','" . $_POST['userTel'] . "','" . json_encode($arrayAuthRefer) . "','" . $_POST['status'] . "')";
     $status =   pg_query(pg_connect("host=$serverRefer port=$portRefer dbname=$dbNameRefer user=$userRefer password=$passRefer"), $insertAddUser);
-    if ($status == 1) {
-        $arr[] = array('status' => true, 'status' => $status);
+    if ($status) {
+        $arr[] = array('status' => true);
     } else {
-        $arr[] = array('status' => false, 'status' => $status);
+        $arr[] = array('status' => false);
     }
     echo json_encode($arr);
 }
@@ -385,11 +385,11 @@ function EditUser()
     } else if ($_POST['source'] == "status") {
         $sql = "UPDATE user_login SET status ='" . $_POST['resultEditUser'] . "' WHERE id ='" . $_POST['id'] . "'";
     } else if ($_POST['source'] == "del") {
-        $sql = "DELETE user_login WHERE id ='" . $_POST['id'] . "'";
+        $sql = "DELETE FROM user_login WHERE id ='" . $_POST['id'] . "'";
     }
     $status = pg_query(pg_connect("host=$serverRefer port=$portRefer dbname=$dbNameRefer user=$userRefer password=$passRefer"), $sql);
-    if ($status == 1) {
-        $arr[] = array('status' => true, 'status' => $status);
+    if ($status) {
+        $arr[] = array('status' => true);
     } else {
         $arr[] = array('status' => false, 'status' => $status);
     }
@@ -425,8 +425,8 @@ function AddDortor($post)
     $insertAddDoctor = "INSERT INTO doctor (doctor_name,doctor_status,doctor_tel) VALUES('" . $post['namedoctor'] . " " . $post['lastnamedoctor'] . "', '" . $post['status'] . "','" . $post['telDoctor'] . "' )";
     $status = pg_query(pg_connect("host=$serverRefer port=$portRefer dbname=$dbNameRefer user=$userRefer password=$passRefer"), $insertAddDoctor);
     $arr = [];
-    if ($status == 1) {
-        $arr[] = array('status' => true, 'status' => $status);
+    if ($status) {
+        $arr[] = array('status' => true);
     } else {
         $arr[] = array('status' => false, 'status' => $status);
     }
@@ -450,8 +450,8 @@ function EditDoctorname($value, $id, $souce)
         $upDateDoctor = "DELETE FROM doctor   WHERE doctor_id ='" . $id . "'";
     }
     $status =  pg_query(pg_connect("host=$serverRefer port=$portRefer dbname=$dbNameRefer user=$userRefer password=$passRefer"), $upDateDoctor);
-    if ($status == 1) {
-        $arr[] = array('status' => true, 'status' => $status);
+    if ($status) {
+        $arr[] = array('status' => true);
     } else {
         $arr[] = array('status' => false, 'status' => $status);
     }
@@ -500,10 +500,10 @@ function AddStationRefer()
     global $dbNameRefer;
     global $objconnectRefer;
     global $portRefer;
-    $sql = "INSERT INTO station (station_name) value('" . $_POST['station'] . "') ";
+    $sql = "INSERT INTO station (station_name) VALUES ('" . $_POST['station'] . "') ";
     $queryStation = pg_query(pg_connect("host=$serverRefer port=$portRefer dbname=$dbNameRefer user=$userRefer password=$passRefer"), $sql);
     $stationArr = array();
-    if ($queryStation == 1) {
+    if ($queryStation) {
         $sqlSelectStation = "SELECT * FROM station";
         $querySelectStation = pg_query(pg_connect("host=$serverRefer port=$portRefer dbname=$dbNameRefer user=$userRefer password=$passRefer"), $sqlSelectStation);
         while ($fetchStation = pg_fetch_array($querySelectStation)) {
@@ -536,14 +536,13 @@ function EditDelStation()
     while ($fetchStation = pg_fetch_array($querySelectStation)) {
         $stationArr['res'][] = $fetchStation['station_name'];
     }
-    if ($querySelectStation == 1) {
+    if ($querySelectStation) {
         $resultArr = array('status' => true, "hosCode" => $_POST['hosCode'], "res" => $stationArr['res']);
     } else {
         $resultArr[] = array('status' => false);
     }
     echo json_encode($resultArr);
 }
-
 function GetTableDepartment()
 {
     global $serverRefer;
@@ -552,17 +551,23 @@ function GetTableDepartment()
     global $dbNameRefer;
     global $objconnectRefer;
     global $portRefer;
-    $sqlSelectDepartment = "SELECT * FROM department";
-    $querySelectDepartment = pg_query(pg_connect("host=$serverRefer port=$portRefer dbname=$dbNameRefer user=$userRefer password=$passRefer"), $sqlSelectDepartment);
-    while ($fetchDepartment = pg_fetch_array($querySelectDepartment)) {
-        $DepartmentArr['res'][] = $fetchDepartment['department_name'];
-    }
-    if ($querySelectDepartment == 1) {
-        $resultArr = array('status' => true, "res" => $DepartmentArr['res']);
+    $sql = "SELECT * FROM department ORDER BY dep_id DESC";
+    $query =  pg_query(pg_connect("host=$serverRefer port=$portRefer dbname=$dbNameRefer user=$userRefer password=$passRefer"), $sql);
+    if ($query) {
+        while ($rowDepartment = pg_fetch_array($query)) {
+            $rsDepartment[] = array('status' => true, "id" => $rowDepartment["dep_id"], "name" => $rowDepartment["dep_name"], "station_name" => $rowDepartment["station_name"]);
+        }
+        $sqlDepartment = "SELECT * FROM station ";
+        $queryDepartment =  pg_query(pg_connect("host=$serverRefer port=$portRefer dbname=$dbNameRefer user=$userRefer password=$passRefer"), $sqlDepartment);
+        while ($rowStaion = pg_fetch_array($queryDepartment)) {
+
+            $rsStation[] = array('status' => true, "staion" => $rowStaion);
+        }
     } else {
-        $resultArr[] = array('status' => false);
+        $rsDepartment[] = array('status' => false);
     }
-    echo json_encode($resultArr);
+    $rsArrayMerge = array_merge(array("Department" => $rsDepartment), array("Station" => $rsStation));
+    echo json_encode($rsArrayMerge);
 }
 function AddDepartment()
 {
@@ -572,19 +577,16 @@ function AddDepartment()
     global $dbNameRefer;
     global $objconnectRefer;
     global $portRefer;
-    $sqlInsertDepartment = "INSERT INTO department (department_name,station_name) value('" . $_POST['departmentName'] . "','" . $_POST['station'] . "') ";
-    $queryInsertDepartment = pg_query(pg_connect("host=$serverRefer port=$portRefer dbname=$dbNameRefer user=$userRefer password=$passRefer"), $sqlInsertDepartment);
-    if ($queryInsertDepartment == 1) {
-        $sqlSelectDepartment = "SELECT * FROM department";
-        $querySelectDepartment = pg_query(pg_connect("host=$serverRefer port=$portRefer dbname=$dbNameRefer user=$userRefer password=$passRefer"), $sqlSelectDepartment);
-        while ($fetchDepartment = pg_fetch_array($querySelectDepartment)) {
-            $DepartmentArr['res'][] = $fetchDepartment['department_name'];
-        }
-        $resultArr = array('status' => true, "res" => $DepartmentArr['res']);
+    global $objconnectRefer;
+    $sql = "INSERT INTO department (dep_name,station_name) VALUES('" . $_POST["nameDeapartMent"] . "','" . $_POST["nameStationName"] . "')";
+    $query = pg_query(pg_connect("host=$serverRefer port=$portRefer dbname=$dbNameRefer user=$userRefer password=$passRefer"), $sql);
+
+    if ($query) {
+        $rsDepartment[] = array('status' => true);
     } else {
-        $resultArr[] = array('status' => false);
+        $rsDepartment[] = array('status' => false);
     }
-    echo json_encode($resultArr);
+    echo json_encode($rsDepartment);
 }
 
 function EditDelDepartment()
@@ -596,372 +598,25 @@ function EditDelDepartment()
     global $objconnectRefer;
     global $portRefer;
     if ($_POST['departmentSource'] == "del") {
-        $sqlStation = "DELETE FROM department WHERE department_id='" . $_POST['departmentId'] . "'";
-        pg_query(pg_connect("host=$serverRefer port=$portRefer dbname=$dbNameRefer user=$userRefer password=$passRefer"), $sqlStation);
+        $sqlStation = "DELETE FROM department WHERE dep_id='" . $_POST['departmentId'] . "'";
+        $fetchVale =  pg_query(pg_connect("host=$serverRefer port=$portRefer dbname=$dbNameRefer user=$userRefer password=$passRefer"), $sqlStation);
+        if ($fetchVale) {
+            $rs[] = array("status" => true);
+        }
     } else if ($_POST['departmentSource'] == "departmentName") {
-        $sqlEditDepartment = "UPDATE department SET department_name ='" . $_POST['departmentValue'] . "' WHERE department_id ='" . $_POST['departmentId'] . "' ";
-        pg_query(pg_connect("host=$serverRefer port=$portRefer dbname=$dbNameRefer user=$userRefer password=$passRefer"), $sqlEditDepartment);
-    }
-    $sqlSelectDepartment = "SELECT * FROM department";
-    $querySelectDepartment = pg_query(pg_connect("host=$serverRefer port=$portRefer dbname=$dbNameRefer user=$userRefer password=$passRefer"), $sqlSelectDepartment);
-    while ($fetchDepartment = pg_fetch_array($querySelectDepartment)) {
-        $DepartmentArr['res'][] = $fetchDepartment['department_name'];
-    }
-    if ($querySelectDepartment == 1) {
-        $resultArr = array('status' => true, "res" => $DepartmentArr['res']);
-    } else {
-        $resultArr[] = array('status' => false);
-    }
-    echo json_encode($resultArr);
-}
-
-function AddTypeRefer()
-{
-    global $serverRefer;
-    global $userRefer;
-    global $passRefer;
-    global $dbNameRefer;
-    global $objconnectRefer;
-    global $portRefer;
-    $sqlInsertTypeRefer = "INSERT INTO type_refer (type_refer_name) value('" . $_POST['typeRefer'] . "') ";
-    $queryInsertTypeRefer = pg_query(pg_connect("host=$serverRefer port=$portRefer dbname=$dbNameRefer user=$userRefer password=$passRefer"), $sqlInsertTypeRefer);
-    if ($queryInsertTypeRefer == 1) {
-        $sqlSelectTypeRefer = "SELECT * FROM type_refer";
-        $querySelectTypeRefer = pg_query(pg_connect("host=$serverRefer port=$portRefer dbname=$dbNameRefer user=$userRefer password=$passRefer"), $sqlSelectTypeRefer);
-        while ($fetchTypeRefer = pg_fetch_array($querySelectTypeRefer)) {
-            $TypeReferArr['res'][] = $fetchTypeRefer['type_refer_name'];
+        $sqlEditStation = "UPDATE department SET dep_name ='" . $_POST['departmentValue'] . "' WHERE dep_id ='" . $_POST['departmentId'] . "' ";
+        $fetchVale = pg_query(pg_connect("host=$serverRefer port=$portRefer dbname=$dbNameRefer user=$userRefer password=$passRefer"), $sqlEditStation);
+        if ($fetchVale) {
+            $rs[] = array("status" => true);
         }
-        $resultArr = array('status' => true, "res" => $TypeReferArr['res']);
-    } else {
-        $resultArr[] = array('status' => false);
-    }
-    echo json_encode($resultArr);
-}
-
-function GetTableTypeRefer()
-{
-    global $serverRefer;
-    global $userRefer;
-    global $passRefer;
-    global $dbNameRefer;
-    global $objconnectRefer;
-    global $portRefer;
-    $sqlSelectTypeRefer = "SELECT * FROM type_refer";
-    $querySelectTypeRefer = pg_query(pg_connect("host=$serverRefer port=$portRefer dbname=$dbNameRefer user=$userRefer password=$passRefer"), $sqlSelectTypeRefer);
-    while ($fetchTypeRefer = pg_fetch_array($querySelectTypeRefer)) {
-        $TypeReferArr['res'][] = $fetchTypeRefer['type_refer_name'];
-    }
-    if ($querySelectTypeRefer == 1) {
-        $resultArr = array('status' => true, "res" => $TypeReferArr['res']);
-    } else {
-        $resultArr[] = array('status' => false);
-    }
-    echo json_encode($resultArr);
-}
-
-function EditDelTypeRefer()
-{
-    global $serverRefer;
-    global $userRefer;
-    global $passRefer;
-    global $dbNameRefer;
-    global $objconnectRefer;
-    global $portRefer;
-    if ($_POST['typeReferSource'] == "del") {
-        $sqlStation = "DELETE FROM type_refer WHERE type_refer_id='" . $_POST['typeReferId'] . "'";
-        pg_query(pg_connect("host=$serverRefer port=$portRefer dbname=$dbNameRefer user=$userRefer password=$passRefer"), $sqlStation);
-    } else if ($_POST['typeReferSource'] == "typeReferName") {
-        $sqlEditDepartment = "UPDATE type_refer SET type_refer_name ='" . $_POST['typeReferValue'] . "' WHERE type_refer_id ='" . $_POST['typeReferId'] . "' ";
-        pg_query(pg_connect("host=$serverRefer port=$portRefer dbname=$dbNameRefer user=$userRefer password=$passRefer"), $sqlEditDepartment);
-    }
-    $sqlSelectTypeRefer = "SELECT * FROM type_refer";
-    $querySelectTypeRefer = pg_query(pg_connect("host=$serverRefer port=$portRefer dbname=$dbNameRefer user=$userRefer password=$passRefer"), $sqlSelectTypeRefer);
-    while ($fetchTypeRefer = pg_fetch_array($querySelectTypeRefer)) {
-        $TypeReferArr['res'][] = $fetchTypeRefer['type_refer_name'];
-    }
-    if ($querySelectTypeRefer == 1) {
-        $resultArr = array('status' => true, "res" => $TypeReferArr['res']);
-    } else {
-        $resultArr[] = array('status' => false);
-    }
-    echo json_encode($resultArr);
-}
-function AddCauseReferout()
-{
-    global $serverRefer;
-    global $userRefer;
-    global $passRefer;
-    global $dbNameRefer;
-    global $objconnectRefer;
-    global $portRefer;
-    $sqlInsertCauseReferout = "INSERT INTO cause_referout (cause_referout_name) value('" . $_POST['causeReferout'] . "') ";
-    $queryInsertCauseReferout = pg_query(pg_connect("host=$serverRefer port=$portRefer dbname=$dbNameRefer user=$userRefer password=$passRefer"), $sqlInsertCauseReferout);
-    if ($queryInsertCauseReferout == 1) {
-        $sqlSelectCauseReferout = "SELECT * FROM cause_referout";
-        $querySelectCauseReferout = pg_query(pg_connect("host=$serverRefer port=$portRefer dbname=$dbNameRefer user=$userRefer password=$passRefer"), $sqlSelectCauseReferout);
-        while ($fetchCauseReferout = pg_fetch_array($querySelectCauseReferout)) {
-            $CauseReferoutArr['res'][] = $fetchCauseReferout['cause_referout_name'];
+    } else if ($_POST['departmentSource'] == "stationName") {
+        $sqlEditStation = "UPDATE department SET station_name ='" . $_POST['departmentValue'] . "' WHERE dep_id ='" . $_POST['departmentId'] . "' ";
+        $fetchVale = pg_query(pg_connect("host=$serverRefer port=$portRefer dbname=$dbNameRefer user=$userRefer password=$passRefer"), $sqlEditStation);
+        if ($fetchVale) {
+            $rs[] = array("status" => true);
         }
-        $resultArr = array('status' => true, "res" => $CauseReferoutArr['res']);
-    } else {
-        $resultArr[] = array('status' => false);
     }
-    echo json_encode($resultArr);
-}
-function GetTableCauseReferout()
-{
-    global $serverRefer;
-    global $userRefer;
-    global $passRefer;
-    global $dbNameRefer;
-    global $objconnectRefer;
-    global $portRefer;
-    $sqlSelectCauseReferout = "SELECT * FROM cause_referout";
-    $querySelectCauseReferout = pg_query(pg_connect("host=$serverRefer port=$portRefer dbname=$dbNameRefer user=$userRefer password=$passRefer"), $sqlSelectCauseReferout);
-    while ($fetchCauseReferout = pg_fetch_array($querySelectCauseReferout)) {
-        $CauseReferoutArr['res'][] = $fetchCauseReferout['cause_referout_name'];
-    }
-    if ($querySelectCauseReferout == 1) {
-        $resultArr = array('status' => true, "res" => $CauseReferoutArr['res']);
-    } else {
-        $resultArr[] = array('status' => false);
-    }
-    echo json_encode($resultArr);
-}
-function EditDelCauseReferout()
-{
-    global $serverRefer;
-    global $userRefer;
-    global $passRefer;
-    global $dbNameRefer;
-    global $objconnectRefer;
-    global $portRefer;
-    if ($_POST['causeReferoutSource'] == "del") {
-        $sqlCauseReferout = "DELETE FROM cause_referout WHERE cause_referout_id='" . $_POST['causeReferoutId'] . "'";
-        pg_query(pg_connect("host=$serverRefer port=$portRefer dbname=$dbNameRefer user=$userRefer password=$passRefer"), $sqlCauseReferout);
-    } else if ($_POST['causeReferoutSource'] == "causeReferoutName") {
-        $sqlEditCauseReferout = "UPDATE cause_referout SET cause_referout_name ='" . $_POST['causeReferoutValue'] . "' WHERE cause_referout_id ='" . $_POST['causeReferoutId'] . "' ";
-        pg_query(pg_connect("host=$serverRefer port=$portRefer dbname=$dbNameRefer user=$userRefer password=$passRefer"), $sqlEditCauseReferout);
-    }
-    $sqlSelectCauseReferout = "SELECT * FROM cause_referout";
-    $querySelectCauseReferout = pg_query(pg_connect("host=$serverRefer port=$portRefer dbname=$dbNameRefer user=$userRefer password=$passRefer"), $sqlSelectCauseReferout);
-    while ($fetchCauseReferout = pg_fetch_array($querySelectCauseReferout)) {
-        $CauseReferoutArr['res'][] = $fetchCauseReferout['cause_referout_name'];
-    }
-    if ($querySelectCauseReferout == 1) {
-        $resultArr = array('status' => true, "res" => $CauseReferoutArr['res']);
-    } else {
-        $resultArr[] = array('status' => false);
-    }
-    echo json_encode($resultArr);
-}
-function AddDrugReferout()
-{
-    global $serverRefer;
-    global $userRefer;
-    global $passRefer;
-    global $dbNameRefer;
-    global $objconnectRefer;
-    global $portRefer;
-    $sqlInsertDrugReferout = "INSERT INTO drug_referout (drug_referout_name) value('" . $_POST['drugReferout'] . "') ";
-    $queryInsertDrugReferout = pg_query(pg_connect("host=$serverRefer port=$portRefer dbname=$dbNameRefer user=$userRefer password=$passRefer"), $sqlInsertDrugReferout);
-    if ($queryInsertDrugReferout == 1) {
-        $sqlSelectDrugReferout = "SELECT * FROM drug_referout";
-        $querySelectDrugReferout = pg_query(pg_connect("host=$serverRefer port=$portRefer dbname=$dbNameRefer user=$userRefer password=$passRefer"), $sqlSelectDrugReferout);
-        while ($fetchDrugReferout = pg_fetch_array($querySelectDrugReferout)) {
-            $DrugReferoutArr['res'][] = $fetchDrugReferout['drug_referout_name'];
-        }
-        $resultArr = array('status' => true, "res" => $DrugReferoutArr['res']);
-    } else {
-        $resultArr[] = array('status' => false);
-    }
-    echo json_encode($resultArr);
-}
-function GetTableDrugReferout()
-{
-    global $serverRefer;
-    global $userRefer;
-    global $passRefer;
-    global $dbNameRefer;
-    global $objconnectRefer;
-    global $portRefer;
-    $sqlSelectDrugReferout = "SELECT * FROM drug_referout";
-    $querySelectDrugReferout = pg_query(pg_connect("host=$serverRefer port=$portRefer dbname=$dbNameRefer user=$userRefer password=$passRefer"), $sqlSelectDrugReferout);
-    while ($fetchDrugReferout = pg_fetch_array($querySelectDrugReferout)) {
-        $DrugReferoutArr['res'][] = $fetchDrugReferout['drug_referout_name'];
-    }
-    if ($querySelectDrugReferout == 1) {
-        $resultArr = array('status' => true, "res" => $DrugReferoutArr['res']);
-    } else {
-        $resultArr[] = array('status' => false);
-    }
-    echo json_encode($resultArr);
-}
-function EditDelDrugReferout()
-{
-    global $serverRefer;
-    global $userRefer;
-    global $passRefer;
-    global $dbNameRefer;
-    global $objconnectRefer;
-    global $portRefer;
-    if ($_POST['drugReferoutSource'] == "del") {
-        $sqlDrugReferout = "DELETE FROM drug_referout WHERE drug_referout_id='" . $_POST['drugReferoutId'] . "'";
-        pg_query(pg_connect("host=$serverRefer port=$portRefer dbname=$dbNameRefer user=$userRefer password=$passRefer"), $sqlDrugReferout);
-    } else if ($_POST['drugReferoutSource'] == "drugReferoutName") {
-        $sqlEditDrugReferout = "UPDATE drug_referout SET drug_referout_name ='" . $_POST['drugReferoutValue'] . "' WHERE drug_referout_id ='" . $_POST['drugReferoutId'] . "' ";
-        pg_query(pg_connect("host=$serverRefer port=$portRefer dbname=$dbNameRefer user=$userRefer password=$passRefer"), $sqlEditDrugReferout);
-    }
-    $sqlSelectDrugReferout = "SELECT * FROM drug_referout";
-    $querySelectDrugReferout = pg_query(pg_connect("host=$serverRefer port=$portRefer dbname=$dbNameRefer user=$userRefer password=$passRefer"), $sqlSelectDrugReferout);
-    while ($fetchDrugReferout = pg_fetch_array($querySelectDrugReferout)) {
-        $DrugReferoutArr['res'][] = $fetchDrugReferout['drug_referout_name'];
-    }
-    if ($querySelectDrugReferout == 1) {
-        $resultArr = array('status' => true, "res" => $DrugReferoutArr['res']);
-    } else {
-        $resultArr[] = array('status' => false);
-    }
-    echo json_encode($resultArr);
-}
-
-function AddSystemRefer()
-{
-    global $serverRefer;
-    global $userRefer;
-    global $passRefer;
-    global $dbNameRefer;
-    global $objconnectRefer;
-    global $portRefer;
-    $sqlInsertSystemRefer = "INSERT INTO system_refer (system_refer_name) value('" . $_POST['systemRefer'] . "') ";
-    $queryInsertSystemRefer = pg_query(pg_connect("host=$serverRefer port=$portRefer dbname=$dbNameRefer user=$userRefer password=$passRefer"), $sqlInsertSystemRefer);
-    if ($queryInsertSystemRefer == 1) {
-        $sqlSelectSystemRefer = "SELECT * FROM system_refer";
-        $querySelectSystemRefer = pg_query(pg_connect("host=$serverRefer port=$portRefer dbname=$dbNameRefer user=$userRefer password=$passRefer"), $sqlSelectSystemRefer);
-        while ($fetchSystemRefer = pg_fetch_array($querySelectSystemRefer)) {
-            $SystemReferArr['res'][] = $fetchSystemRefer['system_refer_name'];
-        }
-        $resultArr = array('status' => true, "res" => $SystemReferArr['res']);
-    } else {
-        $resultArr[] = array('status' => false);
-    }
-    echo json_encode($resultArr);
-}
-function GetTableSystemRefer()
-{
-    global $serverRefer;
-    global $userRefer;
-    global $passRefer;
-    global $dbNameRefer;
-    global $objconnectRefer;
-    global $portRefer;
-    $sqlSelectSystemRefer = "SELECT * FROM system_refer";
-    $querySelectSystemRefer = pg_query(pg_connect("host=$serverRefer port=$portRefer dbname=$dbNameRefer user=$userRefer password=$passRefer"), $sqlSelectSystemRefer);
-    while ($fetchSystemRefer = pg_fetch_array($querySelectSystemRefer)) {
-        $SystemReferArr['res'][] = $fetchSystemRefer['system_refer_name'];
-    }
-    if ($querySelectSystemRefer == 1) {
-        $resultArr = array('status' => true, "res" => $SystemReferArr['res']);
-    } else {
-        $resultArr[] = array('status' => false);
-    }
-    echo json_encode($resultArr);
-}
-function EditDelSystemRefer()
-{
-    global $serverRefer;
-    global $userRefer;
-    global $passRefer;
-    global $dbNameRefer;
-    global $objconnectRefer;
-    global $portRefer;
-    if ($_POST['systemReferSource'] == "del") {
-        $sqlSystemRefer = "DELETE FROM system_refer WHERE system_refer_id='" . $_POST['systemReferId'] . "'";
-        pg_query(pg_connect("host=$serverRefer port=$portRefer dbname=$dbNameRefer user=$userRefer password=$passRefer"), $sqlSystemRefer);
-    } else if ($_POST['systemReferSource'] == "systemReferName") {
-        $sqlEditSystemRefer = "UPDATE system_refer SET system_refer_name ='" . $_POST['systemReferValue'] . "' WHERE system_refer_id ='" . $_POST['systemReferId'] . "' ";
-        pg_query(pg_connect("host=$serverRefer port=$portRefer dbname=$dbNameRefer user=$userRefer password=$passRefer"), $sqlEditSystemRefer);
-    }
-    $sqlSelectSystemRefer = "SELECT * FROM system_refer";
-    $querySelectSystemRefer = pg_query(pg_connect("host=$serverRefer port=$portRefer dbname=$dbNameRefer user=$userRefer password=$passRefer"), $sqlSelectSystemRefer);
-    while ($fetchSystemRefer = pg_fetch_array($querySelectSystemRefer)) {
-        $SystemReferArr['res'][] = $fetchSystemRefer['system_refer_name'];
-    }
-    if ($querySelectSystemRefer == 1) {
-        $resultArr = array('status' => true, "res" => $SystemReferArr['res']);
-    } else {
-        $resultArr[] = array('status' => false);
-    }
-    echo json_encode($resultArr);
-}
-function AddRiskRefer()
-{
-    global $serverRefer;
-    global $userRefer;
-    global $passRefer;
-    global $dbNameRefer;
-    global $objconnectRefer;
-    global $portRefer;
-    $sqlInsertRiskRefer = "INSERT INTO risk_refer (risk_refer_name) value('" . $_POST['riskRefer'] . "') ";
-    $queryInsertRiskRefer = pg_query(pg_connect("host=$serverRefer port=$portRefer dbname=$dbNameRefer user=$userRefer password=$passRefer"), $sqlInsertRiskRefer);
-    if ($queryInsertRiskRefer == 1) {
-        $sqlSelectRiskRefer = "SELECT * FROM risk_refer";
-        $querySelectRiskRefer = pg_query(pg_connect("host=$serverRefer port=$portRefer dbname=$dbNameRefer user=$userRefer password=$passRefer"), $sqlSelectRiskRefer);
-        while ($fetchRiskRefer = pg_fetch_array($querySelectRiskRefer)) {
-            $RiskReferArr['res'][] = $fetchRiskRefer['risk_refer_name'];
-        }
-        $resultArr = array('status' => true, "res" => $RiskReferArr['res']);
-    } else {
-        $resultArr[] = array('status' => false);
-    }
-    echo json_encode($resultArr);
-}
-function GetTableRiskRefer()
-{
-    global $serverRefer;
-    global $userRefer;
-    global $passRefer;
-    global $dbNameRefer;
-    global $objconnectRefer;
-    global $portRefer;
-    $sqlSelectRiskRefer = "SELECT * FROM risk_refer";
-    $querySelectRiskRefer = pg_query(pg_connect("host=$serverRefer port=$portRefer dbname=$dbNameRefer user=$userRefer password=$passRefer"), $sqlSelectRiskRefer);
-    while ($fetchRiskRefer = pg_fetch_array($querySelectRiskRefer)) {
-        $RiskReferArr['res'][] = $fetchRiskRefer['risk_refer_name'];
-    }
-    if ($querySelectRiskRefer == 1) {
-        $resultArr = array('status' => true, "res" => $RiskReferArr['res']);
-    } else {
-        $resultArr[] = array('status' => false);
-    }
-    echo json_encode($resultArr);
-}
-function EditDelRiskRefer()
-{
-    global $serverRefer;
-    global $userRefer;
-    global $passRefer;
-    global $dbNameRefer;
-    global $objconnectRefer;
-    global $portRefer;
-    if ($_POST['riskReferSource'] == "del") {
-        $sqlRiskRefer = "DELETE FROM risk_refer WHERE risk_refer_id='" . $_POST['riskReferId'] . "'";
-        pg_query(pg_connect("host=$serverRefer port=$portRefer dbname=$dbNameRefer user=$userRefer password=$passRefer"), $sqlRiskRefer);
-    } else if ($_POST['riskReferSource'] == "riskReferName") {
-        $sqlEditRiskRefer = "UPDATE risk_refer SET risk_refer_name ='" . $_POST['riskReferValue'] . "' WHERE risk_refer_id ='" . $_POST['riskReferId'] . "' ";
-        pg_query(pg_connect("host=$serverRefer port=$portRefer dbname=$dbNameRefer user=$userRefer password=$passRefer"), $sqlEditRiskRefer);
-    }
-    $sqlSelectRiskRefer = "SELECT * FROM risk_refer";
-    $querySelectRiskRefer = pg_query(pg_connect("host=$serverRefer port=$portRefer dbname=$dbNameRefer user=$userRefer password=$passRefer"), $sqlSelectRiskRefer);
-    while ($fetchRiskRefer = pg_fetch_array($querySelectRiskRefer)) {
-        $RiskReferArr['res'][] = $fetchRiskRefer['risk_refer_name'];
-    }
-    if ($querySelectRiskRefer == 1) {
-        $resultArr = array('status' => true, "res" => $RiskReferArr['res']);
-    } else {
-        $resultArr[] = array('status' => false);
-    }
-    echo json_encode($resultArr);
+    echo json_encode($rs);
 }
 
 function GetTabelCar()
@@ -985,6 +640,118 @@ function GetTabelCar()
 
 
     echo json_encode($rsCar);
+}
+
+function AddRegCar()
+{
+    global $serverRefer;
+    global $userRefer;
+    global $passRefer;
+    global $dbNameRefer;
+    global $objconnectRefer;
+    global $portRefer;
+    $sql = "INSERT INTO car_reg (reg_car) VALUES ('" . $_POST["carReg"] . "')";
+    $query =  pg_query(pg_connect("host=$serverRefer port=$portRefer dbname=$dbNameRefer user=$userRefer password=$passRefer"), $sql);
+    if ($query) {
+        $rs[] = array("status" => true);
+    } else {
+        $rs[] = array("status" => false);
+    }
+    echo json_encode($rs);
+}
+
+function EditDelCar()
+{
+    global $serverRefer;
+    global $userRefer;
+    global $passRefer;
+    global $dbNameRefer;
+    global $objconnectRefer;
+    global $portRefer;
+
+    if ($_POST['carSource'] == "del") {
+        $sqlStation = "DELETE FROM car_reg WHERE id_car='" . $_POST['carId'] . "'";
+        $fetchVale =  pg_query(pg_connect("host=$serverRefer port=$portRefer dbname=$dbNameRefer user=$userRefer password=$passRefer"), $sqlStation);
+        if ($fetchVale) {
+            $rs[] = array("status" => true);
+        } else {
+            $rs[] = array("status" => false);
+        }
+    } else if ($_POST['carSource'] == "carName") {
+        $sqlEditStation = "UPDATE car_reg SET reg_car ='" . $_POST['carValue'] . "' WHERE id_car ='" . $_POST['carId'] . "' ";
+        $fetchVale = pg_query(pg_connect("host=$serverRefer port=$portRefer dbname=$dbNameRefer user=$userRefer password=$passRefer"), $sqlEditStation);
+        if ($fetchVale) {
+            $rs[] = array("status" => true);
+        } else {
+            $rs[] = array("status" => false);
+        }
+    }
+    echo json_encode($rs);
+}
+
+function GetTableCancleCase()
+{
+    global $serverRefer;
+    global $userRefer;
+    global $passRefer;
+    global $dbNameRefer;
+    global $objconnectRefer;
+    global $portRefer;
+    $sql = "SELECT * FROM cancle_case";
+    $query = pg_query(pg_connect("host=$serverRefer port=$portRefer dbname=$dbNameRefer user=$userRefer password=$passRefer"), $sql);
+    if ($query) {
+        while ($rowCar = pg_fetch_array($query)) {
+            $rsCar[] = array('status' => true, "id" => $rowCar["id_case"], "name" => $rowCar["detail_note"]);
+        }
+    } else {
+        $rsCar[] = array('status' => false);
+    }
+    echo json_encode($rsCar);
+}
+
+function AddCase()
+{
+    global $serverRefer;
+    global $userRefer;
+    global $passRefer;
+    global $dbNameRefer;
+    global $objconnectRefer;
+    global $portRefer;
+    $sql = "INSERT INTO cancle_case (detail_note) value('" . $_POST["detailCase"] . "')";
+    $query = pg_query(pg_connect("host=$serverRefer port=$portRefer dbname=$dbNameRefer user=$userRefer password=$passRefer"), $sql);
+    if ($query) {
+        $rs[] = array("status" => true);
+    } else {
+        $rs[] = array("status" => false);
+    }
+    echo json_encode($rs);
+}
+function EditDelCancleCase()
+{
+    global $serverRefer;
+    global $userRefer;
+    global $passRefer;
+    global $dbNameRefer;
+    global $objconnectRefer;
+    global $portRefer;
+    if ($_POST['cancleSource'] == "del") {
+        $sqlStation = "DELETE FROM cancle_case WHERE id_case='" . $_POST['cancleId'] . "'";
+        $fetchVale =  pg_query(pg_connect("host=$serverRefer port=$portRefer dbname=$dbNameRefer user=$userRefer password=$passRefer"), $sqlStation);
+        if ($fetchVale) {
+            $rs[] = array("status" => true);
+        } else {
+            $rs[] = array("status" => false);
+        }
+    } else if ($_POST['cancleSource'] == "detailCase") {
+        $sqlEditStation = "UPDATE cancle_case SET detail_note ='" . $_POST['cancleCaseValue'] . "' WHERE id_case ='" . $_POST['cancleId'] . "' ";
+        $fetchVale = pg_query(pg_connect("host=$serverRefer port=$portRefer dbname=$dbNameRefer user=$userRefer password=$passRefer"), $sqlEditStation);
+        if ($fetchVale) {
+            $rs[] = array("status" => true);
+        } else {
+            $rs[] = array("status" => false);
+        }
+    }
+    echo json_encode($rs);
 }
 
 //* เรียกใช้การทำงาน //

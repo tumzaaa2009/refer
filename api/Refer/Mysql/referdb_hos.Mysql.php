@@ -290,7 +290,7 @@ function EditUser()
     } else if ($_POST['source'] == "status") {
         $sql = "UPDATE user_login SET  status ='" . $_POST['resultEditUser'] . "' WHERE id ='" . $_POST['id'] . "'";
     } else if ($_POST['source'] == "del") {
-        $sql = "DELETE user_login WHERE id ='" . $_POST['id'] . "'";
+          $sql = "DELETE FROM user_login WHERE id ='" . $_POST['id'] . "'";
     }
     $status =  mysqli_query($objconnectRefer, $sql);
     if ($status == 1) {
@@ -318,7 +318,7 @@ function GetTableDoctor()
 function AddDortor($post)
 {
     global $objconnectRefer;
-    $insertAddDoctor = "INSERT INTO doctor (doctor_name,doctor_status,doctor_tel) VALUES('" . $post['namedoctor'] . " " . $post['lastnamedoctor'] . "', '" . $post['status'] . "','" . $post['telDoctor'] . "' )";
+  $insertAddDoctor = "INSERT INTO doctor (doctor_name,doctor_status,doctor_tel) VALUES('" . $post['namedoctor'] . " " . $post['lastnamedoctor'] . "', '" . $post['status'] . "','" . $post['telDoctor'] . "' )";
     $status = mysqli_query($objconnectRefer, $insertAddDoctor);
     $arr = [];
     if ($status == 1) {
@@ -326,7 +326,7 @@ function AddDortor($post)
     } else {
         $arr[] = array('status' => false, 'status' => $status);
     }
-    echo json_encode($arr);
+      echo json_encode($arr);
 }
 function EditDoctorname($value, $id, $souce)
 {
@@ -377,7 +377,7 @@ function tableStation()
 function AddStationRefer()
 {
     global $objconnectRefer;
-    $sql = "INSERT INTO station (station_name) value('" . $_POST['station'] . "') ";
+    $sql = "INSERT INTO station (station_name) VALUES ('" . $_POST['station'] . "') ";
     $queryStation = mysqli_query($objconnectRefer, $sql);
     $stationArr = array();
     if ($queryStation == 1) {
@@ -398,6 +398,9 @@ function EditDelStation()
     if ($_POST['stationSource'] == "del") {
         $sqlStation = "DELETE FROM station WHERE station_id='" . $_POST['stationId'] . "'";
         mysqli_query($objconnectRefer, $sqlStation);
+    } else if ($_POST['stationSource'] == "stationName") {
+        $sqlEditStation = "UPDATE station SET station_name ='" . $_POST['stationValue'] . "'  WHERE station_id ='" . $_POST['stationId'] . "' ";
+        mysqli_query($objconnectRefer, $sqlEditStation);
     } else if ($_POST['stationSource'] == "stationName") {
         $sqlEditStation = "UPDATE station SET station_name ='" . $_POST['stationValue'] . "'  WHERE station_id ='" . $_POST['stationId'] . "' ";
         mysqli_query($objconnectRefer, $sqlEditStation);
@@ -422,26 +425,35 @@ function GetTableDepartment()
     $query = mysqli_query($objconnectRefer, $sql);
     if ($query) {
         while ($rowDepartment = mysqli_fetch_array($query)) {
-            $rsDepartment[] = array('status' => true, "id" => $rowDepartment["dep_id"], "name" => $rowDepartment["dep_name"]);
+           $rsDepartment[] = array('status' => true, "id" => $rowDepartment["dep_id"], "name" => $rowDepartment["dep_name"], "station_name" =>$rowDepartment["station_name"]);
+   
         }
+    $sqlDepartment = "SELECT * FROM station ";
+    $queryDepartment = mysqli_query($objconnectRefer,$sqlDepartment);
+       while ($rowStaion = mysqli_fetch_array($queryDepartment)) {
+      
+            $rsStation[] = array('status' => true, "staion"=> $rowStaion);
+       }
     } else {
         $rsDepartment[] = array('status' => false);
     }
-
-
-    echo json_encode($rsDepartment);
+    $rsArrayMerge = array_merge(array("Department"=>$rsDepartment),array("Station"=> $rsStation) );
+    echo json_encode($rsArrayMerge);
+ 
 }
 
 function AddDepartment()
 {
+   
     global $objconnectRefer;
-    $sql = "INSERT INTO department (dep_name) value('" . $_POST["nameDeapartMent"] . "')";
+         $sql = "INSERT INTO department (dep_name,station_name) VALUES('" . $_POST["nameDeapartMent"] . "','" . $_POST["nameStationName"] . "')";
     $query = mysqli_query($objconnectRefer, $sql);
     if ($query)
         echo json_encode($query);
 }
 function EditDelDepartment()
 {
+   
     global $objconnectRefer;
     if ($_POST['departmentSource'] == "del") {
         $sqlStation = "DELETE FROM department WHERE dep_id='" . $_POST['departmentId'] . "'";
@@ -449,6 +461,10 @@ function EditDelDepartment()
         if ($fetchVale) $rs[] = array("status" => true, $fetchVale);
     } else if ($_POST['departmentSource'] == "departmentName") {
         $sqlEditStation = "UPDATE department SET dep_name ='" . $_POST['departmentValue'] . "' WHERE dep_id ='" . $_POST['departmentId'] . "' ";
+        $fetchVale = mysqli_query($objconnectRefer, $sqlEditStation);
+        if ($fetchVale) $rs[] = array("status" => true, $fetchVale);
+    } else if ($_POST['departmentSource'] == "stationName") {
+       $sqlEditStation = "UPDATE department SET station_name ='" . $_POST['departmentValue'] . "' WHERE dep_id ='" . $_POST['departmentId'] . "' ";
         $fetchVale = mysqli_query($objconnectRefer, $sqlEditStation);
         if ($fetchVale) $rs[] = array("status" => true, $fetchVale);
     }

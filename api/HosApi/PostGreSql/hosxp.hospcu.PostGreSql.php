@@ -80,7 +80,6 @@ function InputHn()
 }
 
 
-
 // //? ตัวนี้ใช้ Rh4cloud ที่เข้ามาลงทะเบียน 
 function SearchHospcodeMain()
 {
@@ -151,7 +150,7 @@ function ListDrugItems($hn){
     global $dbNameHis;
     global $objconnectHis;
     global $portHis;
-        $selectItemDrug = "SELECT * FROM `opitemrece` as opitem INNER JOIN drugitems as dugitem on dugitem.icode=opitem.icode INNER JOIN drugusage on drugusage.drugusage =dugitem.drugusage  WHERE opitem.hn ='".$hn."' ORDER BY opitem.vstdate DESC limit 15" ;
+        $selectItemDrug = "SELECT * FROM opitemrece as opitem INNER JOIN drugitems as dugitem on dugitem.icode=opitem.icode INNER JOIN drugusage on drugusage.drugusage =dugitem.drugusage  WHERE opitem.hn ='".$hn."' ORDER BY opitem.vstdate DESC limit 15" ;
       $queryItemDrug = pg_query(pg_connect("host=$serverHis port=$portHis dbname=$dbNameHis user=$userHis password=$passHis"), $selectItemDrug);
       $countItems = pg_num_rows($queryItemDrug);
     $data = array();
