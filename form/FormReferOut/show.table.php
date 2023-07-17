@@ -57,7 +57,7 @@
                                     <option value="" selected>ทั้งหมด</option>
                                     <option value="-110">เปลี่ยนสถานพยาบาลปลายทาง</option>
                                     <option value="-11">ปฏิเสธการส่งตัว-ยกเลิกเคส(รพปลายทาง)</option>
-                                    <option value="-10">ปฏิเสธการส่งตัว-ยกเลิกเคส(รพต้นทาง)</option>
+                                    <option value="-10">ยกเลิกเคส(รพต้นทาง)</option>
                                     <option value="10">รอลงรับ Refer </option>
                                     <option value="11"> รับ Refer </option>
                                     <option value="111">ข้อมูลมีการ Update </option>

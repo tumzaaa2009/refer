@@ -250,6 +250,7 @@
                                                                    <table id="example2" class="table crollable-table">
                                                                        <thead>
                                                                            <tr>
+                                                                               <th>Consciousness</th>
                                                                                <th>เวลา</th>
                                                                                <th>E</th>
                                                                                <th>V</th>
@@ -404,6 +405,7 @@
                                                            <div class="modal-footer justify-content-between">
                                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                                                                <button type="button" class="btn btn-success" id="cancleReferOutOrg" onclick="cancleReferoutOrg()">ยืนยันการยกเลิก</button>
+                                                               <input type="hidden" id="is-save" name="isSave">
                                                            </div>
                                                        </div>
                                                    </div>

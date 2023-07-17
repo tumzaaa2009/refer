@@ -402,7 +402,7 @@ if ($_GET['onfrom'] === "formreferout") { ?>
                                                   </div>
                                               </div>
                                               <div class="col-md-auto">
-                                                  
+                                                  updateColor
                                                   <div class="form-group">
                                                       <label>เลขที่ใบส่งตัว HIS</label>
                                                       <input type="text" class="form-control" placeholder="" name="deliveryNumberHis">
@@ -446,7 +446,7 @@ if ($_GET['onfrom'] === "formreferout") { ?>
                                         </div>
                                         <div class="col-md-6">
                                             <div class="form-group">
-                                                <label>Service Plane :</label>
+                                                <label>Service Plan :</label>
                                                 <select class="form-control select2" name="sevicePlan" id="servicePlane" width="100%;" multiple="multiple"> </select>
                                             </div>
                                         </div>
@@ -459,7 +459,7 @@ if ($_GET['onfrom'] === "formreferout") { ?>
                                         <div class="col-md-6">
                                             <div class="form-group">
                                                 <label>เหตุผลการส่ง :</label>
-                                                <select class="form-control select2" name="causeReferout" id="causeReferout" onchange="ValueOtherCaseReferOut(this.value)"></select>
+                                                <select class="form-control select2" name="causeReferout" id="causeReferout"  onchange="ValueOtherCaseReferOut(this.value)"></select>
                                             </div>
                                         </div>
                                         <div class="col-md-12">
@@ -482,32 +482,10 @@ if ($_GET['onfrom'] === "formreferout") { ?>
                                                 </select>
                                             </div>
                                         </div>
-                                        <div class="col-md-6">
-                                            <div class="form-group ">
-
-                                                <label>การประเมินผู้ป่วย</label>
-                                                <select class="form-control select2 select2-hidden-accessible" style="width: 100%;" data-select2-id="1" tabindex="-1" aria-hidden="true" name="conscious" id="conscious"></select>
-
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <div class="form-group ">
-
-                                                <label>Consciousness</label>
-                                                <select class="form-control" name="Consciousness" id="">
-                                                    <option value="Normal">Normal</option>
-                                                    <option value="Drowsiness">Drowsiness</option>
-                                                    <option value="SemiComa">SemiComa</option>
-                                                    <option value="Coma">Coma</option>
-                                                    <option value="ไม่สามารถประเมินได้">ไม่สามารถประเมินได้</option>
-                                                </select>
-
-                                            </div>
-                                        </div>
                                         <div class="col-md-12 col-lg-12">
                                             <div class="form-group ">
                                                 <div class="row">
-                                                    <div class="col-md-12 col-lg-12" style="border:solid;">
+                                                    <div class="col-md-12 col-lg-12">
                                                         <div align="center">
                                                             <label>การประเมินผู้ป่วย <button name="AddTruma" id="AddTruma" class="btn btn-primary" onclick="TrumaAdd()">ADD+</button>
                                                                 <input type="hidden" class="form-control" name="numTruma" id="numTruma" value="0">
@@ -517,6 +495,7 @@ if ($_GET['onfrom'] === "formreferout") { ?>
                                                             <table id="TrumaTable" class="table table-bordered table-hover dataTable dtr-inline">
                                                                 <thead>
                                                                     <tr>
+                                                                        <th>การประเมินผู้ป่วย</th>
                                                                         <th>เวลา hr/mm</th>
                                                                         <th>E</th>
                                                                         <th>V</th>
@@ -524,7 +503,7 @@ if ($_GET['onfrom'] === "formreferout") { ?>
                                                                         <th>Pupil ขวา</th>
                                                                         <th>Pupil ซ้าย</th>
                                                                         <th>T (c)</th>
-                                                                        <th>PR (ครั้ง/หน้า)</th>
+                                                                        <th>PR (ครั้ง/นาที)</th>
                                                                         <th>RR (ครั้ง/นาที)</th>
                                                                         <th colspan="2" style="text-align:center">BP/mmHg</th>
                                                                         <th>Sp O2(%)</th>
@@ -532,10 +511,18 @@ if ($_GET['onfrom'] === "formreferout") { ?>
                                                                 </thead>
                                                                 <tbody>
                                                                     <tr id="TrAddTruma">
+                                                                        <td> <select class="form-control" name="Consciousness" id="">
+                                                                                <option value="Normal">Normal</option>
+                                                                                <option value="Drowsiness">Drowsiness</option>
+                                                                                <option value="SemiComa">SemiComa</option>
+                                                                                <option value="Coma">Coma</option>
+                                                                                <option value="ไม่สามารถประเมินได้">ไม่สามารถประเมินได้</option>
+                                                                            </select>
+                                                                        </td>
                                                                         <td><input id="timepicker" name="timeTruma" type="text" class="form-control"></td>
-                                                                        <td><input class="form-control" type="number" name="e" /> </td>
-                                                                        <td><input class="form-control" type="number" name="v" /> </td>
-                                                                        <td><input class="form-control" type="number" name="m" /> </td>
+                                                                        <td><input class="form-control" type="text" name="e" /> </td>
+                                                                        <td><input class="form-control" type="text" name="v" /> </td>
+                                                                        <td><input class="form-control" type="text" name="m" /> </td>
                                                                         <td><input class="form-control" type="number" name="pupilR" /></td>
                                                                         <td><input class="form-control" type="number" name="pupilL" /></td>
                                                                         <td><input class="form-control" type="number" name="Tc" /></td>
@@ -563,6 +550,16 @@ if ($_GET['onfrom'] === "formreferout") { ?>
                                             </div>
                                             <div class="col-md-12">
                                                 <div align="left">
+                                                    <div class="row">
+                                                        <div class="col-md-12">
+                                                            <label>Diagonosis</label>
+                                                            <textarea name="digonosis" class="col-md-12" id="Diagonosis" title="Diagonosis"></textarea>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-12">
+                                                <div align="left">
                                                     <div class="row mb-2">
                                                         <div class="col-md-auto">
                                                             <label>Management</label>
@@ -583,16 +580,7 @@ if ($_GET['onfrom'] === "formreferout") { ?>
                                                 </div>
                                                 <textarea title="Contents" name="management" id="management" class="col-md-12"></textarea>
                                             </div>
-                                            <div class="col-md-12">
-                                                <div align="left">
-                                                    <div class="row">
-                                                        <div class="col-md-12">
-                                                            <label>Diagonosis</label>
-                                                            <textarea name="digonosis" class="col-md-12" id="Diagonosis" title="Diagonosis"></textarea>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
+
                                             <div class="col-md-12">
                                                 <div class="form-group ">
                                                     <div class="row">

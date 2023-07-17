@@ -98,7 +98,7 @@ if (isset($_POST['submitPost'])) {
     $_SESSION["hosOpreator"] = $_POST['hosOpreator'];
 ?>
     <script type="text/javascript">
-        window.location.href = 'indexfromuse.php?onfrom=referoutDestinationtable';
+        window.location.href = 'indexfromuse.php?onfrom=referouttable';
     </script>
 <?php } ?>
 
@@ -114,7 +114,6 @@ if (isset($_POST['submitPost'])) {
                                 <h4 class="panel-title" align="center">เข้าระบบ Refer</h4>
                             </div>
                             <div class="row">
-
                             </div>
                             <div class="card-body">
                                 <form role="form" id="formlogin" method="post" name="formlogin">
@@ -132,7 +131,6 @@ if (isset($_POST['submitPost'])) {
                                         <button class="btn btn-lg btn-success btn-block" type="button" onClick="Login();">เช็ค Sync </button>
                                         <a href="loginadmin.php" class="btn btn-lg btn-primary" type="button">หน้าการตั้งค่าระบบ Refer </a>
                                         <a href="register.php" class="btn btn-lg btn-dark   " type="button">สมัครเข้าใช้งาน </a>
-
                                     </fieldset>
                                 </form>
                             </div>

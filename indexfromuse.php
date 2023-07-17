@@ -105,33 +105,6 @@ if (isset($_GET['destroy'])) {
 
 
 
-        select.lvlactual option[value="Unstable"] {
-            background: rgba(255, 0, 0, 0.5);
-        }
-
-        select.lvlactual option[value="Stable with High risk of deterioration"] {
-            background: rgba(255, 0, 0, 0.5);
-        }
-
-        select.lvlactual option[value="Stable with Medium risk of deterioration"] {
-            background: rgba(224, 26, 237, 1);
-        }
-
-        select.lvlactual option[value="Stable with Low risk of deterioration"] {
-            background: rgba(224, 26, 237, 1);
-        }
-
-        select.lvlactual option[value="Stable with Low risk of deterioration "] {
-            background: rgba(218, 221, 21, 1);
-        }
-
-        select.lvlactual option[value="Stable with No risk of deterioration"] {
-            background: rgba(218, 221, 21, 1);
-        }
-
-        select.lvlactual option[value="OPD-New case"] {
-            background: rgba(55, 191, 21, 1);
-        }
 
         .modal-body {
             max-height: 400px;
@@ -230,6 +203,11 @@ if (isset($_GET['destroy'])) {
         .swal2-input::placeholder {
             color: red;
 
+        }
+
+        .table-responsive input.form-control {
+            width: 100%;
+            box-sizing: border-box;
         }
     </style>
 </head>
@@ -1002,7 +980,7 @@ if (isset($_GET['destroy'])) {
                 for (let index = 0; index < response.response.length; index++) {
 
                     lvActual.push(
-                        `<option value="${response.response[index].level_value}" >${response.response[index].level_name}</option>`
+                        `<option value="${response.response[index].level_value}" style="background:${response.response[index].level_color};" >${response.response[index].level_name}</option>`
                     );
                 }
                 $("#levelActual").html(lvActual);
@@ -1456,6 +1434,14 @@ if (isset($_GET['destroy'])) {
         const newRow = document.createElement("tr");
         let numCount = ++rowCount;
         newRow.innerHTML = `
+        <td> <select class="form-control" name="Consciousness" id="">
+                <option value="Normal">Normal</option>
+                <option value="Drowsiness">Drowsiness</option>
+                <option value="SemiComa">SemiComa</option>
+                <option value="Coma">Coma</option>
+                <option value="ไม่สามารถประเมินได้">ไม่สามารถประเมินได้</option>
+            </select>
+        </td>
         <td><input class="form-control timepicker" type="text" name="timeTruma" /></td>
         <td><input class="form-control" type="number" name="e" /></td>
         <td><input class="form-control" type="number" name="v" /></td>

@@ -193,6 +193,7 @@ const sendFromReferBack = () => {
 // ! cancle การส่งตัว ของ รพ ต้นทาง
 function cancleReferoutOrg() {
   const caseCancle = $("#inputCancleReferoutOrg").val();
+    const isSave = $("#is-save").val();
   if (caseCancle == "") {
     toastr.error(`โปรดระบุเหตุในการยกเลิกการส่งตัว`, "", {
       positionClass: "toast-top-center",
@@ -211,6 +212,7 @@ function cancleReferoutOrg() {
         caseCancle: caseCancle,
         hosCode: hosCode,
         hosReferDes: $("#codeReferDes").val(),
+        isSave: isSave
       },
       dataType: "JSON",
       success: function (response) {
@@ -470,8 +472,7 @@ function RefuseReferOut() {
   formData.append("hosCode", hosCode);
   formData.append("status", statusRecive);
   console.log($("#input-refuse").val());
- 
- 
+
   if (formData.get("reasonInput") == 0) {
     alert("กรณุระบบเหตุผลการปฏิเสธ");
     return false;
@@ -852,7 +853,7 @@ function showDetailReferOut() {
         $("#doctorNameDes").val(response.message[0].doctor_name);
         $("#coordinateIs").val(response.message[0].coordinate_name);
         $("#conscious").val(response.message[0].conscious);
-
+        $("#is-save").val(response.message[0].is_save);
         // ? ตาราง risk torma
         if (response.message[0].risk_turma != "") {
           const jsonRiskTurma = JSON.parse(response.message[0].risk_turma);
@@ -861,7 +862,7 @@ function showDetailReferOut() {
             if (key === "riskturma") {
               const riskTurma = jsonRiskTurma[key];
               return riskTurma.map((item) => {
-                return `<tr class="table-active table-bordered"><td>${item.time}</td><td>${item.e}</td><td>${item.v}</td><td>${item.m}</td><td>${item.pupilR}</td><td>${item.pupilL}</td><td>${item.Tc}</td><td>${item.prF}</td><td>${item.pfM}</td><td>${item.bp}</td><td>${item.mmHg}</td><td>${item.spo2}</td></tr>`;
+                return `<tr class="table-active table-bordered"><td>${item.Consciousness}</td><td>${item.time}</td><td>${item.e}</td><td>${item.v}</td><td>${item.m}</td><td>${item.pupilR}</td><td>${item.pupilL}</td><td>${item.Tc}</td><td>${item.prF}</td><td>${item.pfM}</td><td>${item.bp}</td><td>${item.mmHg}</td><td>${item.spo2}</td></tr>`;
                 // ส่งค่าที่ต้องการให้กลับจาก map
               });
             }
@@ -1159,27 +1160,63 @@ function showDetailReferOut() {
             $("#reservationtime").val(startDate + " - " + endDate);
           }
         } else if (response.message[0].is_save == -10) {
-          // ?? กรณี ที่ รพ ต้นทาง == ข้อมูลใบส่งตัว แล้วให้เป็น modal เพื่อเปลี่ยนสถานะส่งตัว
           $("#cancleRefer-status-10-11").show();
-          $("#cancleRefer-status-10-11").html(
-            `<h2>เหตุผลการยกเลิก : ${response.message[0].cancle_org}</h2>`
-          );
+          if (
+            response.message[0].cancle_org !== null &&
+            response.message[0].cancle_des !== null
+          ) {
+            $("#cancleRefer-status-10-11").html(
+              `<h2>เหตุผลการยกเลิกต้นทาง-ปลายทาง  : ${response.message[0].cancle_org} - ${response.message[0].cancle_des}</h2>`
+            );
+          } else if (response.message[0].cancle_des == null) {
+            $("#cancleRefer-status-10-11").html(
+              `<h2>ต้นทางยกเลิก: ${response.message[0].cancle_org}</h2>`
+            );
+          } else if (response.message[0].cancle_org == null) {
+            $("#cancleRefer-status-10-11").html(
+              `<h2>ปลายทาง : ${response.message[0].cancle_des}</h2>`
+            );
+          }
+
           $("#open-modal-case-referin").hide();
           $("#UpStatusReferOutDesResive").hide();
           $("#UpStatusReferOutDes").hide();
         } else if (response.message[0].is_save == -11) {
           // ?? กรณี ที่ รพ ต้นทาง == ข้อมูลใบส่งตัว แล้วให้เป็น modal เพื่อเปลี่ยนสถานะส่งตัว
+
           $("#cancleRefer-status-10-11").show();
-          $("#cancleRefer-status-10-11").html(
-            `<h2>เหตุผลการยกเลิกปลายทาง : ${response.message[0].cancle_des}</h2>`
-          );
-          if (hosCode == referHoscode) {
-            $("#open-modal-case-referout-cancelorg").show();
+          if (
+            response.message[0].cancle_org !== null &&
+            response.message[0].cancle_des !== null
+          ) {     
+         
+            $("#cancleRefer-status-10-11").html(  `<h2>เหตุผลการยกเลิกต้นทาง-ปลายทาง  : ${response.message[0].cancle_org} - ${response.message[0].cancle_des}</h2>`
+            );
+          } else if (response.message[0].cancle_des == null) {
+            $("#cancleRefer-status-10-11").html(
+              `<h2>ต้นทาง : ${response.message[0].cancle_org}</h2>`
+            );
+          } else if (response.message[0].cancle_org == null) {
+            $("#cancleRefer-status-10-11").html(
+              `<h2>ปลายทาง : ${response.message[0].cancle_des}</h2>`
+            );
           }
-          $("#open-modal-case-referHocode").show();
-          $("#open-modal-case-referin").hide();
-          $("#UpStatusReferOutDesResive").hide();
-          $("#UpStatusReferOutDes").hide();
+          if (hosCode == referHoscode) {
+            
+          } else {
+            if (
+              response.message[0].cancle_org !== null &&
+              response.message[0].cancle_des !== null
+            ) {
+               $("#open-modal-case-referout-cancelorg").hide();
+            }else{
+              $("#open-modal-case-referout-cancelorg").show();
+            }
+            $("#open-modal-case-referHocode").show();
+            $("#open-modal-case-referin").hide();
+            $("#UpStatusReferOutDesResive").hide();
+            $("#UpStatusReferOutDes").hide();
+          }
         } else if (response.message[0].is_save == -110) {
           $("#UpStatusReferOutDes").hide();
           $("#open-modal-case-referout-cancelorg").hide();
