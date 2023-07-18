@@ -161,7 +161,7 @@ function ListDrugLabs($hn){
     $querylabs = mysqli_query($objconnectHis, $selectLabs);
     while ($fetchLabs = mysqli_fetch_array($querylabs)) {
         $date = $fetchLabs['order_date'];
-        $item = array("status" => "true","type"=>"Labs", "lab_items_code" => $fetchLabs['lab_items_code'], "lab_items_name" => $fetchLabs['lab_items_name'], "lab_items_normal_value" => $fetchLabs['lab_items_normal_value']);
+        $item = array("status" => "true","type"=>"Labs", "lab_items_code" => $fetchLabs['lab_items_code'], "lab_items_name" => $fetchLabs['lab_items_name'], "lab_items_normal_value" => $fetchLabs['lab_items_normal_value'], "lab_order_result"=>$fetchLabs['lab_order_result']);
         $data[$date][] = $item;
     }
     echo json_encode($data);

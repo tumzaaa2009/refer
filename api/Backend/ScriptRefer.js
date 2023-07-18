@@ -193,7 +193,7 @@ const sendFromReferBack = () => {
 // ! cancle การส่งตัว ของ รพ ต้นทาง
 function cancleReferoutOrg() {
   const caseCancle = $("#inputCancleReferoutOrg").val();
-    const isSave = $("#is-save").val();
+  const isSave = $("#is-save").val();
   if (caseCancle == "") {
     toastr.error(`โปรดระบุเหตุในการยกเลิกการส่งตัว`, "", {
       positionClass: "toast-top-center",
@@ -212,7 +212,7 @@ function cancleReferoutOrg() {
         caseCancle: caseCancle,
         hosCode: hosCode,
         hosReferDes: $("#codeReferDes").val(),
-        isSave: isSave
+        isSave: isSave,
       },
       dataType: "JSON",
       success: function (response) {
@@ -574,6 +574,13 @@ const showTableReferOut = () => {
           const year = date.getUTCFullYear().toString();
           dateString = `${day}-${month}-${year}`;
           let IsSave = "";
+          const encrypted = response.message[0].data_encrypt;
+
+          // คีย์ที่ใช้ในการถอดรหัส
+          const secretKey = "Rh4Refer";
+
+          // ถอดรหัสข้อมูล
+          const decrypted = decryptData(encrypted, secretKey);
           let typeRefer;
           if (item.is_save == -11) {
             IsSave = `<span  data-bs-toggle="tooltip" data-bs-placement="bottom" title='ยกเลิกส่งตัวของปลายทาง'>
@@ -616,7 +623,7 @@ const showTableReferOut = () => {
             <td>${item.location_des}</td>
             <td>${item.clinicgroup}</td>
             <td>${item.pttype_id}</td>
-            <td>${item.pname}${item.fname} ${item.lname}</td>
+            <td>${decrypted.pname}${decrypted.fname} ${decrypted.lname}</td>
             <td>${item.doctor_name}</td>
             <td><a class="btn btn-primary" href="indexfromuse.php?onfrom=showdetailreferout&idrefer=${
               item.codegen_refer_no
@@ -637,6 +644,17 @@ const showTableReferOut = () => {
     },
   });
 };
+
+function decryptData(encryptedData, secretKey) {
+  const encryptedDataHash = encryptedData.slice(-64);
+  const encryptedDataWithoutHash = encryptedData.slice(0, -64);
+  const decryptedBytes = CryptoJS.AES.decrypt(
+    encryptedDataWithoutHash,
+    secretKey
+  );
+  const decryptedData = decryptedBytes.toString(CryptoJS.enc.Utf8);
+  return JSON.parse(decryptedData);
+}
 function showDetailReferOut() {
   let dateString = ` `;
   let expDateString = ``;
@@ -663,6 +681,16 @@ function showDetailReferOut() {
       expDateString = `${expDay}/${expMonth}/${expYear}`;
 
       if (response.status == 200) {
+        // ข้อมูลที่ถูกเข้ารหัสแล้ว
+        const encrypted = response.message[0].data_encrypt;
+
+        // คีย์ที่ใช้ในการถอดรหัส
+        const secretKey = "Rh4Refer";
+
+        // ถอดรหัสข้อมูล
+        const decrypted = decryptData(encrypted, secretKey);
+
+        console.log("ข้อมูลที่ถอดรหัส:", decrypted);
         const json = JSON.parse(response.message[0].image_api);
         const count = Object.keys(json).length;
         $("#countPictureXray").html(`(${count})`);
@@ -755,7 +783,7 @@ function showDetailReferOut() {
             const labs = groupedDataLabs[date];
             const labsListItems = labs
               .map((lab) => {
-                return `<tr><td>${lab.lab_items_code}</td><td>${lab.lab_items_name}</td><td>${lab.lab_items_normal_value}</td></tr>`;
+                return `<tr><td>${lab.lab_items_code}</td><td>${lab.lab_items_name}</td><td>${lab.lab_items_normal_value}</td><td>${lab.lab_order_result}</td></tr>`;
               })
               .join("");
             return `<div class="col">
@@ -771,6 +799,7 @@ function showDetailReferOut() {
                                     <th>ITEMLAB</th>
                                     <th>LABNAME</th>
                                     <th>LABNORMALVALUE</th>
+                                    <th>LABRESULT</th>
                                   </tr>
                                 </thead>
                                 <tbody>${labsListItems}</tbody>
@@ -807,16 +836,16 @@ function showDetailReferOut() {
         $("#refer_code").val(response.message[0].refer_code);
 
         $("#codeGenRefer").val(response.message[0].codegen_refer_no);
-        $("#hn").val(response.message[0].hn);
-        $("#cid").val(response.message[0].cid);
-        $("#age").val(response.message[0].age);
+        $("#hn").val(decrypted.hn);
+        $("#cid").val(decrypted.cid);
+        $("#age").val(decrypted.age);
         $("#refer_time").val(
           `${response.message[0].formatteStartDate} เวลา:${response.message[0].refer_time}`
         );
 
-        $("#pname").val(response.message[0].pname);
-        $("#fname").val(response.message[0].fname);
-        $("#lname").val(response.message[0].lname);
+        $("#pname").val(decrypted.pname);
+        $("#fname").val(decrypted.fname);
+        $("#lname").val(decrypted.lname);
         $("#aligy").val(response.message[0].drug_aligy);
 
         $("#doctorname").val(response.message[0].doctor_name);
@@ -1188,9 +1217,9 @@ function showDetailReferOut() {
           if (
             response.message[0].cancle_org !== null &&
             response.message[0].cancle_des !== null
-          ) {     
-         
-            $("#cancleRefer-status-10-11").html(  `<h2>เหตุผลการยกเลิกต้นทาง-ปลายทาง  : ${response.message[0].cancle_org} - ${response.message[0].cancle_des}</h2>`
+          ) {
+            $("#cancleRefer-status-10-11").html(
+              `<h2>เหตุผลการยกเลิกต้นทาง-ปลายทาง  : ${response.message[0].cancle_org} - ${response.message[0].cancle_des}</h2>`
             );
           } else if (response.message[0].cancle_des == null) {
             $("#cancleRefer-status-10-11").html(
@@ -1202,14 +1231,13 @@ function showDetailReferOut() {
             );
           }
           if (hosCode == referHoscode) {
-            
           } else {
             if (
               response.message[0].cancle_org !== null &&
               response.message[0].cancle_des !== null
             ) {
-               $("#open-modal-case-referout-cancelorg").hide();
-            }else{
+              $("#open-modal-case-referout-cancelorg").hide();
+            } else {
               $("#open-modal-case-referout-cancelorg").show();
             }
             $("#open-modal-case-referHocode").show();
@@ -1654,7 +1682,7 @@ const showDetailReferBack = () => {
             const labs = groupedDataLabs[date];
             const labsListItems = labs
               .map((lab) => {
-                return `<tr><td>${lab.lab_items_code}</td><td>${lab.lab_items_name}</td><td>${lab.lab_items_normal_value}</td></tr>`;
+                return `<tr><td>${lab.lab_items_code}</td><td>${lab.lab_items_name}</td><td>${lab.lab_items_normal_value}</td><td>${lab.lab_order_result}</td></tr>`;
               })
               .join("");
             return `<div class="col">
@@ -1670,6 +1698,7 @@ const showDetailReferBack = () => {
                                     <th>ITEMLAB</th>
                                     <th>LABNAME</th>
                                     <th>LABNORMALVALUE</th>
+                                       <th>LABNORMALRESULT</th>
                                   </tr>
                                 </thead>
                                 <tbody>${labsListItems}</tbody>

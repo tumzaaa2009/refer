@@ -574,6 +574,8 @@ if (isset($_GET['destroy'])) {
     <script src="./api/Backend/ScriptRefer.js"></script>
     <!-- Timepicker -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-timepicker/0.5.2/js/bootstrap-timepicker.min.js"></script>
+    <!-- crypto -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
 
 </body>
 
@@ -1705,7 +1707,7 @@ if (isset($_GET['destroy'])) {
                     html +=
                         '<li class="nav-item"><a class="nav-link"><i class="fas fa-angle-left right"></i>' +
                         formatDateThai(date) +
-                        '</a><ul class="nav nav-treeview"><li class="nav-item"><div class="table-responsive"><table class="table table-bordered"><thead><tr><th>รายการ</th><th>LabItemName</th><th>LabItemName</th><th>lab_items_normal_value</th></tr></thead><tbody>';
+                        '</a><ul class="nav nav-treeview"><li class="nav-item"><div class="table-responsive"><table class="table table-bordered"><thead><tr><th>รายการ</th><th>เลือกทั้งหมด </th><th>LabItemName</th><th>lab_items_normal_value</th><th>lab_order_result</th></tr></thead><tbody>';
                     html +=
                         '<tr><td style="width: fit-content"> <input class="check-all-items-labs" type="checkbox" data-date="' +
                         date +
@@ -1718,13 +1720,15 @@ if (isset($_GET['destroy'])) {
                             '" name="itemCheckboxlabs" value=\'{"date": "' +
                             date + '", "lab_items_code": "' + item.lab_items_code + '", "lab_items_name": "' + item
                             .lab_items_name +
-                            '", "lab_items_normal_value": "' + item.lab_items_normal_value + '"}\'></td>' +
+                            '", "lab_items_normal_value": "' + item.lab_items_normal_value + '","lab_order_result":"' + item.lab_order_result + '"}\'></td>' +
                             '<td style="width: fit-content"><input type="hidden" class="form-control" readonly value="' + item
                             .lab_items_code + '"></td>' +
                             '<td style="width: fit-content"><input type="text" class="form-control" readonly value="' + item
                             .lab_items_name + '"></td>' +
                             '<td style="width: fit-content"><input type="text" class="form-control" readonly value="' + item
-                            .lab_items_normal_value + '"></td></tr>';
+                            .lab_items_normal_value + '"></td>' +
+                            '<td style="width: fit-content"><input type="text" class="form-control" readonly value="' + item
+                            .lab_order_result + '"></td> </tr > ';
 
                     }
                     html += '</tbody></table></div></li></ul></li>';
