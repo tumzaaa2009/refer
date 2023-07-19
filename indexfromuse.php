@@ -692,7 +692,13 @@ if (isset($_GET['destroy'])) {
             $("#UpdateRefRefer").hide()
             const audio = new Audio("./sound_alert/com_linecorp_line_whistle.ogg");
             audio.autoplay = true;
-            showTableReferOut();
+            if (onfrom == "referouttable") {
+                showTableReferOut()
+            }
+            else if (idrefer != "" && idrefer != undefined) {
+ 
+                showDetailReferOut()
+            }
         } else if (data.message == "susNotRecive") {
             toastr.warning(`รพ ปลายทางปฏิเสธการส่งตัว ${data.refNo}`, "", {
                 positionClass: "toast-top-full-width",

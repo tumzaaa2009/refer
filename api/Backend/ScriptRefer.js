@@ -922,10 +922,10 @@ function showDetailReferOut() {
         if (response.message[0].is_save == 11) {
           $("#UpStatusReferOutDes").hide();
           $("#open-modal-case-referout-cancelorg").hide();
-          $("#cc").prop("readonly", false);
-          $("#managementDes").prop("readonly", false);
-          $("#Diagonosis").prop("readonly", false);
-          $("#ccMain").prop("readonly", false);
+          $("#cc").prop("readonly", true);
+          $("#managementDes").prop("readonly", true);
+          $("#Diagonosis").prop("readonly", true);
+          $("#ccMain").prop("readonly", true);
           $("#UpStatusReferOutDes").hide();
           $("#open-modal-case-referout-cancelorg").hide();
           $("#UpdateRefRefer").hide();
@@ -936,6 +936,11 @@ function showDetailReferOut() {
           $(
             '#levelActual option[value="' + response.message[0].level_des + '"]'
           ).prop("selected", true);
+
+          $("#levelActual").css(
+            "background-color",
+            response.message[0].level_actual_des_color
+          );
 
           $('#bedHos option[value="' + response.message[0].bed_des + '"]').prop(
             "selected",
@@ -1074,11 +1079,16 @@ function showDetailReferOut() {
               }
             });
             $("#Typept").val(select2typetDes).trigger("change");
-            $(
-              '#levelActual option[value="' +
-                response.message[0].level_des +
-                '"]'
-            ).prop("selected", true);
+            const levelActual = response.message[0].level_des.split(",");
+            const select2levelActual = [];
+            console.log(levelActual);
+            $('select[name="levelActual_Des"] option').each(function () {
+              if (levelActual.includes($(this).val())) {
+                $(this).prop("selected", true);
+                select2levelActual.push($(this).val());
+              }
+            });
+            $("#levelActual").val(select2levelActual).trigger("change");
 
             const typetbedDes = response.message[0].bad_des.split(",");
             const select2bedDes = [];
@@ -1126,6 +1136,11 @@ function showDetailReferOut() {
               //   `<a href="indexfromuse.php?onfrom=showdetailreferout&idrefer=${refOld}-${refNew}">เอกสารส่งเก่า</a>`
               // );
             }
+            $("#levelActual").css(
+              "background-color",
+              response.message[0].level_actual_des_color
+            );
+
             $("#cc").prop("readonly", false);
             $("#managementDes").prop("readonly", false);
             $("#Diagonosis").prop("readonly", false);

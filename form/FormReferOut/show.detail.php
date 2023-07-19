@@ -285,10 +285,6 @@
                                                            <textarea name="cc" id="cc" title="Contents" class="col-md-12" readonly></textarea>
                                                        </div>
                                                        <div class="col-md-auto col-lg-auto">
-                                                           <label>Management</label>
-                                                           <textarea title="Contents" name="managementDes" id="managementDes" class="col-md-12" readonly></textarea>
-                                                       </div>
-                                                       <div class="col-md-auto col-lg-auto">
                                                            <div align="left">
                                                                <div class="row">
                                                                    <div class="col-md-auto">
@@ -297,11 +293,17 @@
                                                                </div>
                                                            </div>
                                                            <textarea name="digonosis" id="Diagonosis" class="col-md-12" title="Diagonosis" readonly></textarea>
+                                                       </div>
+                                                       <div class="col-md-auto col-lg-auto">
+                                                           <label>Management</label>
+                                                           <textarea title="Contents" name="managementDes" id="managementDes" class="col-md-12" readonly></textarea>
+                                                       </div>
+
+                                                       <div class="col-md-auto col-lg-auto">
                                                            <div class="col-md-auto">
                                                                <label>Diagonosis ปลายทาง</label>
                                                            </div>
                                                            <textarea name="digonosisDes" id="DiagonosisDes" class="col-md-12" readonly></textarea>
-
                                                        </div>
                                                    </div>
                                                </div>
