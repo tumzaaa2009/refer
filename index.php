@@ -181,9 +181,9 @@
                                                                 <option value="hosxp.hospcu" <?php if ($hisType == "hosxp-hospcu") echo 'selected="selected"'; ?>>
                                                                     hosxp-hospcu
                                                                 </option>
-                                                                <option value="HOS-XE" <?php if ($hisType == "HOS-XE") echo 'selected="selected"'; ?>>
+                                                                <!-- <option value="HOS-XE" <?php if ($hisType == "HOS-XE") echo 'selected="selected"'; ?>>
                                                                     HOS-XE
-                                                                </option>
+                                                                </option> -->
                                                             </select>
                                                         </div>
                                                     </div>

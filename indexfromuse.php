@@ -29,7 +29,6 @@ if (isset($_GET['destroy'])) {
             $params["httponly"]
         );
     }
-
     // นำ user กลับไปยังหน้า login หรือหน้าที่ต้องการ
     header("Location:index.php");
     exit;
@@ -89,6 +88,8 @@ if (isset($_GET['destroy'])) {
     <!-- sweetalert2 -->
     <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.10/dist/sweetalert2.min.css" rel="stylesheet">
 
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-timepicker/0.5.2/css/bootstrap-timepicker.min.css">
+
     <style>
         body {
             margin: 0;
@@ -104,33 +105,6 @@ if (isset($_GET['destroy'])) {
 
 
 
-        select.lvlactual option[value="Unstable"] {
-            background: rgba(255, 0, 0, 0.5);
-        }
-
-        select.lvlactual option[value="Stable with High risk of deterioration"] {
-            background: rgba(255, 0, 0, 0.5);
-        }
-
-        select.lvlactual option[value="Stable with Medium risk of deterioration"] {
-            background: rgba(224, 26, 237, 1);
-        }
-
-        select.lvlactual option[value="Stable with Low risk of deterioration"] {
-            background: rgba(224, 26, 237, 1);
-        }
-
-        select.lvlactual option[value="Stable with Low risk of deterioration "] {
-            background: rgba(218, 221, 21, 1);
-        }
-
-        select.lvlactual option[value="Stable with No risk of deterioration"] {
-            background: rgba(218, 221, 21, 1);
-        }
-
-        select.lvlactual option[value="OPD-New case"] {
-            background: rgba(55, 191, 21, 1);
-        }
 
         .modal-body {
             max-height: 400px;
@@ -229,6 +203,11 @@ if (isset($_GET['destroy'])) {
         .swal2-input::placeholder {
             color: red;
 
+        }
+
+        .table-responsive input.form-control {
+            width: 100%;
+            box-sizing: border-box;
         }
     </style>
 </head>
@@ -346,14 +325,21 @@ if (isset($_GET['destroy'])) {
                         <!-- </ul> -->
                         <!-- </li> -->
                         <li class="nav-header">Menu รายชื่อผู้ป่วย</li>
-
                         <li class="nav-item">
-                            <a href="indexfromuse.php?onfrom=referoutOrigin" class="nav-link <?php echo ($_GET['onfrom'] == 'referoutOrigin') ? 'active' : '' ?>">
+                            <a href="indexfromuse.php?onfrom=referouttable" class="nav-link <?php echo ($_GET['onfrom'] == 'referouttable') ? 'active' : '' ?>">
+                                <i class="nav-icon fas fa-file"></i>
+                                <p>แสดงรายชื่อผู้ป่วยรับ Refer</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="indexfromuse.php?onfrom=referbacktable" class="nav-link <?php echo ($_GET['onfrom'] == 'referbacktable') ? 'active' : '' ?>">
                                 <i class="nav-icon fas fa-file"></i>
                                 <p>แสดงรายชื่อผู้ป่วยส่งต่อ</p>
                             </a>
                         </li>
-                        <li class="nav-item">
+
+
+                        <!-- <li class="nav-item">
                             <a href="indexfromuse.php?onfrom=referoutDestinationtable" class="nav-link <?php echo ($_GET['onfrom'] == 'referoutDestinationtable') ? 'active' : '' ?>">
                                 <i class="nav-icon fas fa-file"></i>
                                 <p>แสดงรายชื่อผู้ป่วยรับ Refer</p>
@@ -371,7 +357,7 @@ if (isset($_GET['destroy'])) {
                                 <i class=" nav-icon fas fa-file"></i>
                                 <p>แสดงรายชื่อผู้ป่วยยกเลิกการส่งตัว (รพ.ต้นทาง)-(รพ.ปลายทาง)</p>
                             </a>
-                        </li>
+                        </li> -->
 
                         <li class="nav-header">LABELS</li>
                         <?php if (isset($_GET['userfrom']) && $_GET['userfrom'] == 'admin') { ?>
@@ -406,7 +392,6 @@ if (isset($_GET['destroy'])) {
                 <div class="row">
                     <!-- Left col -->
                     <section class="col-lg-12">
-
                         <?php
                         if (isset($_GET['onfrom'])) {
                             $pageActive = ''; // กำหนดค่าเริ่มต้นของตัวแปร $pageActive
@@ -420,57 +405,67 @@ if (isset($_GET['destroy'])) {
                                 include($includedFile);
                                 $includedFileName = basename($includedFile);
                                 $pageActive = "active";
-                            } else if ($_GET['onfrom'] == 'referoutDestinationtable') {
-                                $includedFile = './form/FromHosDestination/referout/show.table.php';
+                            } else if ($_GET['onfrom'] == 'referouttable') {
+                                $includedFile = './form/FormReferOut/show.table.php';
                                 include($includedFile);
                                 $includedFileName = basename($includedFile);
                                 $pageActive = "active";
-                            } else if ($_GET['onfrom'] == "showdetailreferoutDestinationtable") {
+                            } else if ($_GET['onfrom'] == "showdetailreferout") {
                                 if ($_GET['idrefer'] != "") {
-                                    $includedFile = './form/FromHosDestination/referout/show.detail.php';
+                                    $includedFile = './form/FormReferOut/show.detail.php';
                                     include($includedFile);
                                     $includedFileName = basename($includedFile);
                                     $pageActive = "active";
                                 }
-                            } else if ($_GET['onfrom'] == 'referoutOrigin') {
-                                $includedFile = './form/FormHosMain/show.table.php';
+                            } else if ($_GET['onfrom'] == "referbacktable") {
+                                $includedFile = './form/FormReferBack/show.table.php';
                                 include($includedFile);
                                 $includedFileName = basename($includedFile);
                                 $pageActive = "active";
-                            } else if ($_GET['onfrom'] == 'referintable') {
-                                $includedFile = './form/FormReferIn/table.referin.sus.php';
-                                include($includedFile);
-                                $includedFileName = basename($includedFile);
-                                $pageActive = "active";
+                            } else if ($_GET['onfrom'] == "showdetailreferback") {
+                                if ($_GET['idrefer'] != "") {
+                                    $includedFile = './form/FormReferBack/show.detail.php';
+                                    include($includedFile);
+                                    $includedFileName = basename($includedFile);
+                                    $pageActive = "active";
+                                }
                             }
+
+                            // else if ($_GET['onfrom'] == 'referintable') {
+                            //     $includedFile = './form/FormReferIn/table.referin.sus.php';
+                            //     include($includedFile);
+                            //     $includedFileName = basename($includedFile);
+                            //     $pageActive = "active";
+                            // }
                             // else if ($_GET['onfrom'] == 'referintablewait') {
                             //     $includedFile = './form/FormReferIn/table.referin.wait.php';
                             //     include($includedFile);
                             //     $includedFileName = basename($includedFile);
                             //     $pageActive = "active";
                             // }
-                            else if ($_GET['onfrom'] == "showdetailreferin") {
+                            // else if ($_GET['onfrom'] == "showdetailreferin") {
 
-                                if ($_GET['idrefer'] != "") {
-                                    $includedFile = './form/FormReferIn/show.detail.php';
-                                    include($includedFile);
-                                    $includedFileName = basename($includedFile);
-                                    $pageActive = "active";
-                                }
-                            } else if ($_GET['onfrom'] == "showdetailreferinOnsusecss") {
+                            //     if ($_GET['idrefer'] != "") {
+                            //         $includedFile = './form/FormReferIn/show.detail.php';
+                            //         include($includedFile);
+                            //         $includedFileName = basename($includedFile);
+                            //         $pageActive = "active";
+                            //     }
+                            // }
+                            //  else if ($_GET['onfrom'] == "showdetailreferinOnsusecss") {
 
-                                if ($_GET['idrefer'] != "") {
-                                    $includedFile = './form/FormReferIn/show.detail.onSuscess.php';
-                                    include($includedFile);
-                                    $includedFileName = basename($includedFile);
-                                    $pageActive = "active";
-                                }
-                            } else if ($_GET['onfrom'] == "referoutremovetable") {
-                                $includedFile = './form/CancleRefer/show.tabel.cancle.refer.php';
-                                include($includedFile);
-                                $includedFileName = basename($includedFile);
-                                $pageActive = "active";
-                            }
+                            //     if ($_GET['idrefer'] != "") {
+                            //         $includedFile = './form/FormReferIn/show.detail.onSuscess.php';
+                            //         include($includedFile);
+                            //         $includedFileName = basename($includedFile);
+                            //         $pageActive = "active";
+                            //     }
+                            // } else if ($_GET['onfrom'] == "referoutremovetable") {
+                            //     $includedFile = './form/CancleRefer/show.tabel.cancle.refer.php';
+                            //     include($includedFile);
+                            //     $includedFileName = basename($includedFile);
+                            //     $pageActive = "active";
+                            // }
                         }
                         ?>
                     </section>
@@ -488,12 +483,14 @@ if (isset($_GET['destroy'])) {
         </div>
         <!-- /.content-wrapper -->
         <footer class="main-footer">
+
             <strong>Copyright &copy; 2014-2021
                 <a href="https://adminlte.io">AdminLTE.io</a>.</strong>
             All rights reserved.
             <div class="float-right d-none d-sm-inline-block">
                 <b>Version</b> 3.2.0
             </div>
+            <strong class="div-status"></strong>
         </footer>
 
         <!-- Control Sidebar -->
@@ -575,8 +572,10 @@ if (isset($_GET['destroy'])) {
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.10/dist/sweetalert2.all.min.js"></script>
     <!-- ??Api -->
     <script src="./api/Backend/ScriptRefer.js"></script>
-    <!-- Fancy -->
-
+    <!-- Timepicker -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-timepicker/0.5.2/js/bootstrap-timepicker.min.js"></script>
+    <!-- crypto -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
 
 </body>
 
@@ -588,6 +587,8 @@ if (isset($_GET['destroy'])) {
     const callPathRefer = '<?php echo $callPathRefer; ?>'
     const callPathHis = '<?php echo $callPathHis; ?>'
     let dateToday = new Date();
+    var onfrom = '<?php echo isset($_GET['onfrom']) ? $_GET['onfrom'] : ""; ?>';
+    var idrefer = '<?php echo isset($_GET['idrefer']) ? $_GET['idrefer'] : ""; ?>';
     // ?Socketio
     var socket = io.connect("https://rh4cloudcenter.moph.go.th:3000", {
         transport: ["websocket", "polling", "flashsocket"],
@@ -597,9 +598,14 @@ if (isset($_GET['destroy'])) {
         hosCode: hosCode,
         hosName: hosName,
         passCode: hosPassCode,
-        opreator: hosOpreator,
+        opreator: hosOpreator
     });
-
+    socket.on(`connectionstatus`, (data) => {
+        $(".div-status").css({
+            'color': 'green',
+            'font-size': '15px;'
+        }).html("Status ReferR4: Connecting")
+    })
     socket.on(`send_status ${hosCode}`, function(data) {
         if ((data.message = "มี RefNo เข้า  ")) {
             toastr.success(`มี RefNo เข้า ${data.refNo}`, "", {
@@ -613,9 +619,40 @@ if (isset($_GET['destroy'])) {
             });
             const audio = new Audio("./sound_alert/com_linecorp_line_whistle.ogg");
             audio.autoplay = true;
-            showTableReferOutDestination();
+            if (onfrom == "referouttable") {
+                showTableReferOut()
+            }
         }
     });
+    // ? put ReferOut 
+
+    socket.on(`SendPutReferOut ${hosCode}`, function(status, msgrefeno, msgCodeGenrefer) {
+        toastr.warning(`ต้นทางมีการปรับปรุงข้อมูล ReferOut ${ msgrefeno.messageRef} `, "", {
+            positionClass: "toast-top-full-width",
+            timeOut: false,
+            showMethod: "fadeIn",
+            hideMethod: "fadeOut",
+            closeButton: true,
+            toastClass: "toast-black"
+        });
+        if (onfrom == "showdetailreferout") {
+            showDetailReferOut()
+        }
+    });
+    socket.on(`SendPutReferOutDes ${hosCode}`, function(status, msgrefeno, msgCodeGenrefer) {
+        toastr.warning(`ปลายทางมีการอัพเดทข้อมูล ReferOut ${ msgrefeno.messageRef} `, "", {
+            positionClass: "toast-top-full-width",
+            timeOut: false,
+            showMethod: "fadeIn",
+            hideMethod: "fadeOut",
+            closeButton: true,
+            toastClass: "toast-black"
+        });
+        if (onfrom == "showdetailreferout") {
+            showDetailReferOut()
+        }
+    });
+
     // ! ยกเลิก referout ของต้นทาง  // และปลายทาง เข้านี้
     socket.on(`cancleStatus ${hosCode}`, function(data) {
         toastr.warning(`${data.message}`, "", {
@@ -629,14 +666,17 @@ if (isset($_GET['destroy'])) {
         });
         const audio = new Audio("./sound_alert/com_linecorp_line_whistle.ogg");
         audio.autoplay = true;
-        showTableReferOutDestination();
+        if (onfrom == "referouttable") {
+            showTableReferOut()
+        }
 
     });
 
 
 
     socket.on(`send_statusUpdate ${hosCode}`, function(data) {
-        console.log(data.message);
+        $("#UpdateRefRefer").hide();
+        $("#open-modal-case-referout-cancelorg").hide()
         if (data.message == "susOnrecive") {
             toastr.success(`รพ ปลายทางรับการส่งตัว ${data.refNo}`, "", {
                 positionClass: "toast-top-full-width",
@@ -647,9 +687,18 @@ if (isset($_GET['destroy'])) {
                 closeButton: true,
 
             });
+            $("#UpStatusReferOutDes").hide();
+            $("#open-modal-case-referout-cancelorg").hide();
+            $("#UpdateRefRefer").hide()
             const audio = new Audio("./sound_alert/com_linecorp_line_whistle.ogg");
             audio.autoplay = true;
-            showTableDesOrigin();
+            if (onfrom == "referouttable") {
+                showTableReferOut()
+            }
+            else if (idrefer != "" && idrefer != undefined) {
+ 
+                showDetailReferOut()
+            }
         } else if (data.message == "susNotRecive") {
             toastr.warning(`รพ ปลายทางปฏิเสธการส่งตัว ${data.refNo}`, "", {
                 positionClass: "toast-top-full-width",
@@ -663,7 +712,9 @@ if (isset($_GET['destroy'])) {
             });
             const audio = new Audio("./sound_alert/com_linecorp_line_whistle.ogg");
             audio.autoplay = true;
-            showTableDesOrigin();
+            if (onfrom == "referouttable") {
+                showTableReferOut()
+            }
 
         }
     });
@@ -671,7 +722,7 @@ if (isset($_GET['destroy'])) {
     socket.on(`send_statusreferIn ${hosCode} `, function(data) {
 
         if ((data.message = "ส่งตัวเคส ")) {
-            toastr.info(`รับการส่งตัวเคส ${data.refNo}`, "", {
+            toastr.info(`ส่งกลับเคส ${data.refNo}`, "", {
                 positionClass: "toast-top-full-width",
                 timeOut: false,
                 extendedTimeOut: "1000",
@@ -682,9 +733,49 @@ if (isset($_GET['destroy'])) {
             });
             const audio = new Audio("./sound_alert/com_linecorp_line_whistle.ogg");
             audio.autoplay = true;
-            showTableDesOrigin();
+            showTableReferOut();
         }
     });
+
+
+    socket.on(`send_status_ReferBack ${hosCode}`, function(data) {
+
+        if ((data.data = 200)) {
+            toastr.info(`ส่งกลับเคส ${data.refNo}`, "", {
+                positionClass: "toast-top-full-width",
+                timeOut: false,
+                extendedTimeOut: "1000",
+                showMethod: "fadeIn",
+                hideMethod: "fadeOut",
+                closeButton: true,
+                toastClass: "toast-black"
+            });
+            const audio = new Audio("./sound_alert/com_linecorp_line_whistle.ogg");
+            audio.autoplay = true;
+            showTableReferOut();
+        }
+    });
+    socket.on(`sendreferbackonlysend ${hosCode}`, function(data) {
+        if ((data.data = 200)) {
+            toastr.info(`ส่งต่อ ${data.refNo}`, "", {
+                positionClass: "toast-top-full-width",
+                timeOut: false,
+                extendedTimeOut: "1000",
+                showMethod: "fadeIn",
+                hideMethod: "fadeOut",
+                closeButton: true,
+                toastClass: "toast-black"
+            });
+            const audio = new Audio("./sound_alert/com_linecorp_line_whistle.ogg");
+            audio.autoplay = true;
+            showTableReferOut();
+        }
+    });
+
+
+
+
+
     // ?Socketio
 
     $(document).ready(function() {
@@ -692,25 +783,71 @@ if (isset($_GET['destroy'])) {
         $('.image-container').click(function() {
             $('.close-button').fadeIn();
         });
-
+        $('#timepicker').timepicker({
+            minuteStep: 60,
+            showMeridian: false,
+            defaultTime: '00:00'
+        });
         $('.close-button').click(function(event) {
             event.stopPropagation();
             $('.close-button').fadeOut();
         });
         $('[data-mask]').inputmask()
         $('.select2').select2()
+        //Date picker
+        $('input[name="daterange"]').daterangepicker({
+            opens: 'left',
+            startDate: dateToday,
+            endDate: dateToday,
+            locale: {
+                format: 'DD MMM YY',
+                daysOfWeek: ['อา', 'จ', 'อ', 'พ', 'พฤ', 'ศ', 'ส'],
+                monthNames: [
+                    'มกราคม',
+                    'กุมภาพันธ์',
+                    'มีนาคม',
+                    'เมษายน',
+                    'พฤษภาคม',
+                    'มิถุนายน',
+                    'กรกฎาคม',
+                    'สิงหาคม',
+                    'กันยายน',
+                    'ตุลาคม',
+                    'พฤศจิกายน',
+                    'ธันวาคม'
+                ],
+
+            }
+        }, function(start, end, label) {
+            console.log("A new date selection was made: " + start.format('DD-MM-YYYY') + ' to ' + end.format('DD-MM-YYYY'));
+        });
         $('#reservationtime').daterangepicker({
             "timePicker": true,
             "timePicker24Hour": true,
-            "timePickerSeconds": true,
+            "timePickerSeconds": false,
             minDate: dateToday,
             locale: {
                 format: 'DD/MM/YYYY HH:mm',
+                daysOfWeek: ['อา', 'จ', 'อ', 'พ', 'พฤ', 'ศ', 'ส'],
+                monthNames: [
+                    'มกราคม',
+                    'กุมภาพันธ์',
+                    'มีนาคม',
+                    'เมษายน',
+                    'พฤษภาคม',
+                    'มิถุนายน',
+                    'กรกฎาคม',
+                    'สิงหาคม',
+                    'กันยายน',
+                    'ตุลาคม',
+                    'พฤศจิกายน',
+                    'ธันวาคม'
+                ],
+
             }
         })
 
-        var onfrom = '<?php echo isset($_GET['onfrom']) ? $_GET['onfrom'] : ""; ?>';
-        var idrefer = '<?php echo isset($_GET['idrefer']) ? $_GET['idrefer'] : ""; ?>';
+
         if (onfrom === "formreferout") {
             ServiceStation();
             ward();
@@ -721,11 +858,12 @@ if (isset($_GET['destroy'])) {
             ServicePlane();
             CaseReferOut();
             DoctorName();
+            SelectCar();
             CoordinateIsName();
             conscious();
             getStation(hosCode)
+            LevelActual()
         } else if (onfrom === "formreferback") {
-
             ServiceStation();
             ward();
             pttype();
@@ -738,58 +876,55 @@ if (isset($_GET['destroy'])) {
             CoordinateIsName();
             conscious();
             getStation(hosCode)
-        } else if (onfrom === 'referoutDestinationtable') {
-            showTableReferOutDestination()
-        } else if (onfrom === 'showdetailreferoutDestinationtable') {
-            getStation(hosCode)
-
-            if (idrefer != "" && idrefer != undefined) {
-                showDetailReferOut()
-            } else {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'ไม่ระบุเลขId หรือ เลข ID ไม่ตรงกัน',
-                })
-                setTimeout(function() {
-                    location.href = "indexfromuse.php?onfrom=referoutOrigin";
-                }, 3000);
-            }
-        } else if (onfrom === 'referoutOrigin') {
-
-            showTableDesOrigin()
-        } else if (onfrom === 'referintable') {
-            showTableReferIn();
-        } else if (onfrom === 'referintablewait') {
-            showTableReferOutDestination()
-        } else if (onfrom === 'showdetailreferin') {
-            if (idrefer != "" && idrefer != undefined) {
-                showDetailReferOut()
-            } else {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'ไม่ระบุเลขId หรือ เลข ID ไม่ตรงกัน',
-                })
-                setTimeout(function() {
-
-                    location.href = "indexfromuse.php?onfrom=referoutOrigin";
-                }, 3000);
-            }
-        } else if (onfrom === 'showdetailreferinOnsusecss') {
-            if (idrefer != "" && idrefer != undefined) {
-                showDetailReferInOnsusSecss()
-            } else {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'ไม่ระบุเลขId หรือ เลข ID ไม่ตรงกัน',
-                })
-                setTimeout(function() {
-                    location.href = "indexfromuse.php?onfrom=referoutOrigin";
-                }, 3000);
-            }
-        } else if (onfrom == "referoutremovetable") {
-            CanCelTableRefer();
         }
+        // else if (onfrom === 'referoutDestinationtable') {
+        //     showTableReferOutDestination()
+        // } 
+        else if (onfrom === 'referouttable') {
+            showTableReferOut()
+        } else if (onfrom === 'showdetailreferout') {
+            SelectCancleCase()
+            getStation(hosCode)
+            if (idrefer != "" && idrefer != undefined) {
+                ServicePlane();
+                CoordinateIsNameDes()
+                Loads();
+                Typept();
+                LevelActual()
+                showDetailReferOut()
+            } else {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'ไม่ระบุเลขId หรือ เลข ID ไม่ตรงกัน',
+                })
+                setTimeout(function() {
+                    location.href = "indexfromuse.php?onfrom=referouttable";
+                }, 3000);
+            }
+        } else if (onfrom === 'referbacktable') {
+            showTableReferBack();
+        } else if (onfrom == 'showdetailreferback') {
+
+            getStation(hosCode);
+            if (idrefer != "" && idrefer != undefined) {
+
+                showDetailReferBack()
+            } else {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'ไม่ระบุเลขId หรือ เลข ID ไม่ตรงกัน',
+                })
+                setTimeout(function() {
+                    location.href = "indexfromuse.php?onfrom=referouttable";
+                }, 3000);
+            }
+        }
+
     });
+
+
+
+
     // ?แปลง Date
     function formatDateThai(dateString) {
         const date = new Date(dateString);
@@ -844,16 +979,16 @@ if (isset($_GET['destroy'])) {
             type: "POST",
             url: `${callPathRefer}`,
             data: {
-                lvActual: value,
+                lvActual: 1,
             },
             dataType: "JSON",
             success: function(response) {
                 const lvActual = [];
                 lvActual.push(`<option selected="selected" value="0">--เลือกระดับความรุนแรง--</option>`)
                 for (let index = 0; index < response.response.length; index++) {
-                
+
                     lvActual.push(
-                        `<option value="${response.response[index].level_value}" >${response.response[index].level_name}</option>`
+                        `<option value="${response.response[index].level_value}" style="background:${response.response[index].level_color};" >${response.response[index].level_name}</option>`
                     );
                 }
                 $("#levelActual").html(lvActual);
@@ -1045,7 +1180,7 @@ if (isset($_GET['destroy'])) {
     const ChangeLocation = (value) => {
 
         ward(value.value)
-        LevelActual(value.value)
+        // LevelActual(value.value)
     }
 
     const ward = (value) => {
@@ -1184,14 +1319,13 @@ if (isset($_GET['destroy'])) {
     const ValueOtherCaseReferOut = (params) => {
 
         if (params == "อื่นๆ") {
-            $("#otherCauseReferBack").show();
+            $("#otherCauseReferout").show();
         } else {
-            $("#otherCauseReferBack").hide();
+            $("#otherCauseReferout").hide();
         }
     };
     // * Ajax other Case Refer Back 
     const ValueOtherCaseReferBack = (params) => {
-
         if (params == "อื่นๆ") {
             $("#DivotherCauseReferback").show();
         } else {
@@ -1223,6 +1357,54 @@ if (isset($_GET['destroy'])) {
             },
         });
     };
+
+    function SelectCar() {
+        $.ajax({
+            type: "POST",
+            url: `${callPathRefer}`,
+            data: {
+                car: 1
+            },
+            dataType: "JSON",
+            success: function(response) {
+                const carService = [];
+                carService.push(`<option id='' value='0' selected>ระบุเลขทะเบียนรถ</option>`)
+                for (let index = 0; index < response.length; index++) {
+                    console.log(response[index].name)
+                    carService.push(
+                        ` <option id = '${response[index].id}'  value = '${response[index].name}' >${response[index].name} </option>`
+                    );
+                }
+                $("#carRefer").html(carService);
+            }
+        });
+    }
+
+    let arrayCancleCase = [];
+
+    function SelectCancleCase() {
+        $.ajax({
+            type: "POST",
+            url: `${callPathRefer}`,
+            data: {
+                cancleCase: 1
+            },
+            dataType: "JSON",
+            success: function(response) {
+
+                arrayCancleCase.push(`<option id='' value='0' selected>ระบุเหตุผลการยกเลิก</option>`)
+                response.forEach(function(item) {
+                    arrayCancleCase.push(
+                        ` <option id = '${item .id}'  value = '${item.name}' >${item.name} </option>`
+                    );
+
+                });
+                $("#inputCancleReferoutOrg").html(arrayCancleCase)
+                $("#input-refuse").html(arrayCancleCase)
+
+            }
+        });
+    }
     const CoordinateIsName = () => {
         $.ajax({
             type: "POST",
@@ -1232,7 +1414,24 @@ if (isset($_GET['destroy'])) {
             },
             dataType: "JSON",
             success: function(response) {
+
                 $("#coordinateIs").html(response);
+                console.log(document.getElementById("coordinateIs"))
+            },
+        });
+    };
+    const CoordinateIsNameDes = () => {
+        $.ajax({
+            type: "POST",
+            url: `${callPathRefer}`,
+            data: {
+                CoordinateName: "on",
+            },
+            dataType: "JSON",
+            success: function(response) {
+
+                $("#coordinateIsDes").html(response);
+
             },
         });
     };
@@ -1241,24 +1440,40 @@ if (isset($_GET['destroy'])) {
     const TrumaAdd = () => {
         const tableBody = document.querySelector("#TrumaTable tbody");
         const newRow = document.createElement("tr");
-        let numCount = ++rowCount
+        let numCount = ++rowCount;
         newRow.innerHTML = `
-        <td><input class="form-control" type="text" name="e" /></td>
-        <td><input class="form-control" type="text" name="v" /></td>
-        <td><input class="form-control" type="text" name="m" /></td>
-        <td><input class="form-control" type="text" name="pupilR" /></td>
-        <td><input class="form-control" type="text" name="pupilL" /></td>
-        <td><input class="form-control" type="text" name="Tc" /></td>
-        <td><input class="form-control" type="text" name="prF" /></td>
-        <td><input class="form-control" type="text" name="pfM" /></td>
-        <td><input class="form-control" type="text" name="bp" placeholder="bp" /></td>
-        <td><input class="form-control" type="text" name="mmHg" placeholder="mmhg" /></td>
-        <td><input class="form-control" type="text" name="spo2" /></td>
-        <td><button class="btn btn-danger" onclick="deleteTurmaTr(this,${numCount})">Delete</button></td>
-    `;
+        <td> <select class="form-control" name="Consciousness" id="">
+                <option value="Normal">Normal</option>
+                <option value="Drowsiness">Drowsiness</option>
+                <option value="SemiComa">SemiComa</option>
+                <option value="Coma">Coma</option>
+                <option value="ไม่สามารถประเมินได้">ไม่สามารถประเมินได้</option>
+            </select>
+        </td>
+        <td><input class="form-control timepicker" type="text" name="timeTruma" /></td>
+        <td><input class="form-control" type="number" name="e" /></td>
+        <td><input class="form-control" type="number" name="v" /></td>
+        <td><input class="form-control" type="number" name="m" /></td>
+        <td><input class="form-control" type="number" name="pupilR" /></td>
+        <td><input class="form-control" type="number" name="pupilL" /></td>
+        <td><input class="form-control" type="number" name="Tc" /></td>
+        <td><input class="form-control" type="number" name="prF" /></td>
+        <td><input class="form-control" type="number" name="pfM" /></td>
+        <td><input class="form-control" type="number" name="bp" placeholder="bp" /></td>
+        <td><input class="form-control" type="number" name="mmHg" placeholder="mmhg" /></td>
+        <td><input class="form-control" type="number" name="spo2" /></td>
+        <td><button class="btn btn-danger" onclick="deleteTurmaTr(this, ${numCount})">Delete</button></td>
+        `;
 
         $("#numTruma").val(numCount);
         tableBody.appendChild(newRow);
+
+        // เรียกใช้งาน jQuery timepicker สำหรับอิลิเมนต์ที่มีคลาส .timepicker ในแถวล่าสุด
+        $(newRow).find(".timepicker").timepicker({
+            minuteStep: 60,
+            showMeridian: false,
+            defaultTime: '00:00'
+        });
     }
 
     const deleteTurmaTr = (btn, count) => {
@@ -1498,7 +1713,7 @@ if (isset($_GET['destroy'])) {
                     html +=
                         '<li class="nav-item"><a class="nav-link"><i class="fas fa-angle-left right"></i>' +
                         formatDateThai(date) +
-                        '</a><ul class="nav nav-treeview"><li class="nav-item"><div class="table-responsive"><table class="table table-bordered"><thead><tr><th>รายการ</th><th>LabItemName</th><th>LabItemName</th><th>lab_items_normal_value</th></tr></thead><tbody>';
+                        '</a><ul class="nav nav-treeview"><li class="nav-item"><div class="table-responsive"><table class="table table-bordered"><thead><tr><th>รายการ</th><th>เลือกทั้งหมด </th><th>LabItemName</th><th>lab_items_normal_value</th><th>lab_order_result</th></tr></thead><tbody>';
                     html +=
                         '<tr><td style="width: fit-content"> <input class="check-all-items-labs" type="checkbox" data-date="' +
                         date +
@@ -1511,13 +1726,15 @@ if (isset($_GET['destroy'])) {
                             '" name="itemCheckboxlabs" value=\'{"date": "' +
                             date + '", "lab_items_code": "' + item.lab_items_code + '", "lab_items_name": "' + item
                             .lab_items_name +
-                            '", "lab_items_normal_value": "' + item.lab_items_normal_value + '"}\'></td>' +
+                            '", "lab_items_normal_value": "' + item.lab_items_normal_value + '","lab_order_result":"' + item.lab_order_result + '"}\'></td>' +
                             '<td style="width: fit-content"><input type="hidden" class="form-control" readonly value="' + item
                             .lab_items_code + '"></td>' +
                             '<td style="width: fit-content"><input type="text" class="form-control" readonly value="' + item
                             .lab_items_name + '"></td>' +
                             '<td style="width: fit-content"><input type="text" class="form-control" readonly value="' + item
-                            .lab_items_normal_value + '"></td></tr>';
+                            .lab_items_normal_value + '"></td>' +
+                            '<td style="width: fit-content"><input type="text" class="form-control" readonly value="' + item
+                            .lab_order_result + '"></td> </tr > ';
 
                     }
                     html += '</tbody></table></div></li></ul></li>';
@@ -1620,10 +1837,13 @@ if (isset($_GET['destroy'])) {
 
     // *** funtion Modal
     async function modalDerivery(value) {
+        console.log(value)
         if (value == "อื่น") {
-            $("#OtherCase").show();
+
+            $("#OtherCaseSendRefer").show();
+
         } else {
-            $("#OtherCase").hide();
+            $("#OtherCaseSendRefer").hide();
             $("#inputOtherCase").val('');
         }
 

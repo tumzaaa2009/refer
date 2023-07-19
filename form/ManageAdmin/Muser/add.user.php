@@ -24,6 +24,10 @@
         <select class="select2" multiple="multiple" name="authRefer[]" data-placeholder="เลือกระดับการเข้าถึง" style="width: 100%;">
             <option value="user">เมนูผู้ใช้งาน</option>
             <option value="doctor">เมนูหมอ</option>
+            <option value="station">สถานที่บริการ</option>
+            <option value="department">ห้องตรวจ</option>
+            <option value="department">รถ Refer</option>
+            <option value="canclecase">เหตุผลการยกเลิกเคส</option>
         </select>
     </div>
     <div class="mb-3">
