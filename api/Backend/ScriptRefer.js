@@ -738,18 +738,20 @@ function showDetailReferOut() {
         if (detaildrugArr != null) {
           const jsonDataDurg = JSON.parse(detaildrugArr);
           const groupedData = groupByDate(jsonDataDurg);
+          const listdateDrug = [];
 
-          const drugArray = Object.keys(groupedData).map((date) => {
+          const drugArray = Object.keys(groupedData).map((date, index) => {
             const drugs = groupedData[date];
+            listdateDrug.push(groupedData[date]);
             const drugListItems = drugs
-              .map((drug) => {
-                return `<tr><td>${drug.drugname}</td><td>${drug.therapeutic}</td><td>${drug.unit}</td></tr>`;
+              .map((drug, indexListItem) => {
+                return `<tr><td> <input type="text" name="drugname ${index}-${date}" value ="${drug.drugname}" readonly></td><td><input type="text" name="drugtherapeutic ${index}-${date}" value = "${drug.therapeutic}" readonly></td><td><input type="text" name="drugtherapeutic ${index}-${date}" value = "${drug.unit}" readonly></td></tr>`;
               })
               .join("");
             return `<div class="col">
                     <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
                       <li class="nav-item">
-                        <a class="nav-link"><i class="fas fa-angle-left right"></i>${date}</a>
+                        <a class="nav-link"><i class="fas fa-angle-left right"></i><input type="text" name ="date-${index}" value ="${date}" > ${date}</a>
                         <ul class="nav nav-treeview">
                           <li class="nav-item">
                             <div class="table-responsive">
@@ -770,6 +772,8 @@ function showDetailReferOut() {
                     </ul>
                   </div>`;
           });
+ 
+          $("#ListDrugs").val(JSON.stringify(listdateDrug));
 
           $("#treeviewDes").html(drugArray);
         }
@@ -834,18 +838,28 @@ function showDetailReferOut() {
         // ? Consult files
         $("#refer_no").val(response.message[0].refer_no);
         $("#refer_code").val(response.message[0].refer_code);
-
+        $("#refer_name").val(response.message[0].refer_name);
+        $("#gender").val(decrypted.sex);
         $("#codeGenRefer").val(response.message[0].codegen_refer_no);
         $("#hn").val(decrypted.hn);
         $("#cid").val(decrypted.cid);
         $("#age").val(decrypted.age);
+
         $("#refer_time").val(
-          `${response.message[0].formatteStartDate} เวลา:${response.message[0].refer_time}`
+          `${formatDateToThai(response.message[0].formatteStartDate)} เวลา:${
+            response.message[0].refer_time
+          }`
         );
 
+        $("#getStationService").val(response.message[0].location_org);
         $("#pname").val(decrypted.pname);
         $("#fname").val(decrypted.fname);
         $("#lname").val(decrypted.lname);
+        $("#addr").val(decrypted.addr);
+        $("#moopart").val(decrypted.moopart);
+        $("#tmbpart").val(decrypted.tmbpart);
+        $("#amppart").val(decrypted.amppart);
+        $("#chwpart").val(decrypted.chwpart);
         $("#aligy").val(response.message[0].drug_aligy);
 
         $("#doctorname").val(response.message[0].doctor_name);
@@ -858,12 +872,7 @@ function showDetailReferOut() {
         $("#getStationServiceDestinationDes").val(
           `${response.message[0].location_des}`
         );
-        $("#getStationServiceDestinationDes").val(
-          `${response.message[0].location_des}`
-        );
-        $("#getStationServiceDestinationDes").val(
-          `${response.message[0].location_des}`
-        );
+
         $("#lvAcityDes").val(`${response.message[0].level_actual}`);
         $("#lvAcityDes").css(
           "background-color",

@@ -87,9 +87,7 @@ if (isset($_GET['destroy'])) {
     <link rel="stylesheet" href="./plugins/toastr/toastr.min.css">
     <!-- sweetalert2 -->
     <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.10/dist/sweetalert2.min.css" rel="stylesheet">
-
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-timepicker/0.5.2/css/bootstrap-timepicker.min.css">
-
     <style>
         body {
             margin: 0;
@@ -594,18 +592,32 @@ if (isset($_GET['destroy'])) {
         transport: ["websocket", "polling", "flashsocket"],
     });
     // login Check
+    socket.on("connect_error", function(error) {
+        if (error.message === "xhr poll error" || error.message === "transport close") {
+            alert("ฐานข้อมูลกลางไม่สามารถเชื่อมต่อได้");
+            $(".div-status").css({
+                'color': 'red',
+                'font-size': '15px;'
+            }).html("Status ReferR4: Lost Connecting");
+        } else {
+            console.log("เกิดข้อผิดพลาดในการเชื่อมต่อ Socket.IO: ", error);
+        }
+    });
+
+    socket.on("connect", function() {
+        $(".div-status").css({
+            'color': 'green',
+            'font-size': '15px;'
+        }).html("Status ReferR4: Connected");
+    });
+
     socket.emit("connecting", {
         hosCode: hosCode,
         hosName: hosName,
         passCode: hosPassCode,
         opreator: hosOpreator
     });
-    socket.on(`connectionstatus`, (data) => {
-        $(".div-status").css({
-            'color': 'green',
-            'font-size': '15px;'
-        }).html("Status ReferR4: Connecting")
-    })
+
     socket.on(`send_status ${hosCode}`, function(data) {
         if ((data.message = "มี RefNo เข้า  ")) {
             toastr.success(`มี RefNo เข้า ${data.refNo}`, "", {
@@ -672,8 +684,6 @@ if (isset($_GET['destroy'])) {
 
     });
 
-
-
     socket.on(`send_statusUpdate ${hosCode}`, function(data) {
         $("#UpdateRefRefer").hide();
         $("#open-modal-case-referout-cancelorg").hide()
@@ -694,9 +704,8 @@ if (isset($_GET['destroy'])) {
             audio.autoplay = true;
             if (onfrom == "referouttable") {
                 showTableReferOut()
-            }
-            else if (idrefer != "" && idrefer != undefined) {
- 
+            } else if (idrefer != "" && idrefer != undefined) {
+
                 showDetailReferOut()
             }
         } else if (data.message == "susNotRecive") {
@@ -922,10 +931,23 @@ if (isset($_GET['destroy'])) {
 
     });
 
+    // * ทำ formattdate
+    function formatDateToThai(dateStr) {
+        const months = [
+            'มกราคม', 'กุมภาพันธ์', 'มีนาคม', 'เมษายน', 'พฤษภาคม', 'มิถุนายน',
+            'กรกฎาคม', 'สิงหาคม', 'กันยายน', 'ตุลาคม', 'พฤศจิกายน', 'ธันวาคม'
+        ];
+
+        const date = new Date(dateStr);
+        const day = date.getDate();
+        const month = months[date.getMonth()];
+        const year = date.getFullYear() + 543; // เพิ่ม 543 เพื่อแปลงเป็นปี พ.ศ.
+
+        return `${day} ${month} ${year}`;
+    }
 
 
-
-    // ?แปลง Date
+    // ?แปลง Date ของปฏิทิน
     function formatDateThai(dateString) {
         const date = new Date(dateString);
         const options = {

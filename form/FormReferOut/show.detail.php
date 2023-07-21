@@ -1,4 +1,4 @@
-   <form enctype="multipart/form-data" id="refer-out-form">
+   <form id="refer-out-form" method="POST" enctype="multipart/form-data" action="./form/FormReferOut/print.refer.out.php">
        <div class="card-body">
            <div class="col-12" align="center" id="cancleRefer-status-10-11" style="display: none;color:red">
 
@@ -6,47 +6,66 @@
            <div class="form-group row">
                <label for="เลขที่ใบส่งตัว" class="col-md-auto col-form-label mb-1">เลขที่ใบส่งตัว</label>
                <div class="col-md-auto">
-                   <input type="text" class="form-control" name="refer_no" id="refer_no">
+                   <input type="text" class="form-control" name="refer_no" id="refer_no" readonly>
                    <input type="hidden" class="form-control" name="refer_code" id="refer_code">
+                   <input type="hidden" class="form-control" name="refer_name" id="refer_name">
                    <input type="hidden" class="form-control" name="code_gen_refer" id="code_gen_refer">
                </div>
                <label for="เลขที่ใบส่งตัว" class="col-md-auto col-form-label mb-1">Hn</label>
                <div class="col-md-auto">
-                   <input type="text" class="form-control" name="hn" id="hn">
+                   <input type="text" class="form-control" name="hn" id="hn" readonly>
                </div>
-               <label for="เลขที่ใบส่งตัว" class="col-md-auto col-form-label mb-1">บัตรประชาชน:</label>
+               <label for="เลขที่ใบส่งตัว" class="col-md-auto col-form-label mb-1" readonly>บัตรประชาชน:</label>
                <div class="col-md-auto">
-                   <input type="text" class="form-control" id="cid" name="cid">
+                   <input type="text" class="form-control" id="cid" name="cid" readonly>
                </div>
                <label for="อายุ" class="col-md-auto col-form-label mb-1">อายุ:</label>
                <div class="col-md-auto">
-                   <input type="text" class="form-control" id="age" name="age">
+                   <input type="text" class="form-control" id="age" name="age" readonly>
+               </div>
+               <label for="เพศ" class="col-md-auto col-form-label mb-1">เพศ</label>
+               <div class="col-md-auto">
+                   <input type="text" class="form-control" id="gender" name="gender" readonly>
                </div>
                <label for="อายุ" class="col-md-auto col-form-label mb-1">วันที่ส่ง และ เวลาส่ง :</label>
                <div class="col-md-auto">
-                   <input type="text" class="form-control" id="refer_time" name="refer_time">
+                   <input type="text" class="form-control" id="refer_time" name="refer_time" readonly>
                </div>
                <label for="อายุ" class="col-md-auto col-form-label mb-1">คำนำหน้า:</label>
                <div class="col-md-auto">
-                   <input type="text" class="form-control" id="pname" name="pname">
+                   <input type="text" class="form-control" id="pname" name="pname" readonly>
                </div>
                <label for="อายุ" class="col-md-auto col-form-label mb-1">ชื่อ:</label>
                <div class="col-md-auto">
-                   <input type="text" class="form-control" id="fname" name="fname">
+                   <input type="text" class="form-control" id="fname" name="fname" readonly>
                </div>
-               <label for="อายุ" class="col-md-auto col-form-label mb-1  ">นามสกุล:</label>
+               <label for="ที่อยู่" class="col-md-auto col-form-label mb-1  ">ที่อยู่</label>
                <div class="col-md-auto">
-                   <input type="text" class="form-control" id="lname" name="Lname">
+                   <input type="text" class="form-control" name="addr" id="addr" placeholder="" readonly>
                </div>
-               <label for="อายุ" class="col-md-auto col-form-label mb-1  ">แพ้ยา:</label>
-               <div class="col-md-auto">
-                   <input type="text" class="form-control" id="aligy" name="aligy">
-               </div>
-               <!-- <label for="แพทย์ผู้สั่ง" class="col-md-auto col-form-label mb-1  ">แพทย์ผู้สั่ง:</label>
-            <div class="col-md-auto">
-                <input type="text" class="form-control" id="doctorname" name="doctorname">
-            </div> -->
 
+               <label for="หมู่" class="col-md-auto col-form-label mb-1  ">หมู่</label>
+               <div class="col-md-auto">
+                   <input type="text" class="form-control" name="moopart" id="moopart" placeholder="" readonly>
+               </div>
+               <label for="ตำบล" class="col-md-auto col-form-label mb-1  ">ตำบล</label>
+               <div class="col-md-auto">
+                   <input type="text" class="form-control" name="tmbpart" id="tmbpart" placeholder="" readonly>
+               </div>
+               <label for="อำเภอ" class="col-md-auto col-form-label mb-1  ">อำเภอ</label>
+               <div class="col-md-auto">
+                   <input type="text" class="form-control" name="amppart" id="amppart" placeholder="" readonly>
+               </div>
+               <label for="จังหวัด" class="col-md-auto col-form-label mb-1  ">จังหวัด</label>
+               <div class="col-md-auto">
+                   <input type="text" class="form-control" name="chwpart" id="chwpart" placeholder="" readonly>
+
+               </div>
+               <label>แพ้ยา </label>
+               <div class="col-md-6">
+                   <input type="text" class="form-control" name="aligy" id="aligy" placeholder="" readonly>
+
+               </div>
            </div>
            <div class="col-md-12">
                <div class="card ">
@@ -73,22 +92,24 @@
                                            <div class="form-group row">
                                                <label class="col-md-autocol-form-label">ชื่อสถานพยาบาลปลายทาง</label>
                                                <div class=" col-md-4">
-                                                   <input type="text " class="form-control" id="hosReferDes" name="hosReferDes" style="width: 100%;" />
+                                                   <input type="text " class="form-control" id="hosReferDes" name="hosReferDes" style="width: 100%;" readonly />
                                                </div>
 
-                                               <input type="hidden" class="form-control" id="codeReferDes" name="codeReferDes" style="width: 100%;" />
+                                               <input type="hidden" class="form-control" id="codeReferDes" name="codeReferDes" style="width: 100%;" readonly />
 
                                                <label class="col-md-auto col-form-label" style="color:red" align="left">วันหมดอายุใบนำส่ง</label>
                                                <div class="input-group-prepend col-md-5  col-lg-5 ">
                                                    <span class="input-group-text "><i class="far fa-clock"></i></span>
-                                                   <input type="text" class="form-control" id="reservationtimeExpireDes" name="reservationtimeExpireDes">
+                                                   <input type="text" class="form-control" id="reservationtimeExpireDes" name="reservationtimeExpireDes" readonly>
                                                </div>
                                            </div>
                                            <div class="form-group row">
                                                <div class="col-md-auto">
                                                    <div class="form-group">
+                                                       <label>ห้องตรวจต้นทาง</label>
+                                                       <input class="form-control " type="text" style="width: 100%;" id="getStationService" name="getStationService" readonly />
                                                        <label>ห้องตรวจปลายทาง</label>
-                                                       <input class="form-control " type="text" style="width: 100%;" id="getStationServiceDestinationDes" name="getStationServiceDestinationDes" />
+                                                       <input class="form-control " type="text" style="width: 100%;" id="getStationServiceDestinationDes" name="getStationServiceDestinationDes" readonly />
 
                                                    </div>
                                                </div>
@@ -96,14 +117,14 @@
                                                    <!-- text input -->
                                                    <div class="form-group">
                                                        <label>Level of Acuity:</label>
-                                                       <input type="text" class="form-control" id="lvAcityDes" name="lvAcityDes">
+                                                       <input type="text" class="form-control" id="lvAcityDes" name="lvAcityDes" readonly>
                                                    </div>
                                                </div>
                                                <div class="col-md-auto">
                                                    <!-- select -->
                                                    <div class="form-group">
                                                        <label>เป็นผู้ป่วยแผนก : </label>
-                                                       <input type="text" class="form-control" id="clinicgroupDes" name="clinicgroupDes">
+                                                       <input type="text" class="form-control" id="clinicgroupDes" name="clinicgroupDes" readonly>
                                                    </div>
 
                                                </div>
@@ -112,13 +133,13 @@
                                                    <!-- select -->
                                                    <div class="form-group">
                                                        <label>ประเภทผู้ป่วย :</label>
-                                                       <input class="form-control " name="TypeptDes" id="TypeptDes" type="text " />
+                                                       <input class="form-control " name="TypeptDes" id="TypeptDes" type="text " readonly />
                                                    </div>
                                                </div>
                                                <div class="col-md-4">
                                                    <div class="form-group">
                                                        <label>วิธีการนำส่ง :</label>
-                                                       <input class="form-control  " id="loadsDes" name="loadsDes" />
+                                                       <input class="form-control  " id="loadsDes" name="loadsDes" readonly />
 
                                                    </div>
                                                </div>
@@ -126,38 +147,38 @@
                                                    <div class="form-group">
                                                        <label>Service Plane :</label>
 
-                                                       <input class="form-control " name="servicePlaneDes" id="servicePlaneDes" type="text " />
+                                                       <input class="form-control " name="servicePlaneDes" id="servicePlaneDes" type="text " readonly />
                                                    </div>
                                                </div>
                                                <div class="col-md-2">
                                                    <div class="form-group">
                                                        <label>ทะเบียนรถนำส่ง :</label>
-                                                       <input type="text" class="form-control" name="carReferDes" id="carReferDes" aria-describedby="helpId" placeholder="">
+                                                       <input type="text" class="form-control" name="carReferDes" id="carReferDes" aria-describedby="helpId" placeholder="" readonly>
                                                    </div>
                                                </div>
                                                <div class="col-md-4">
                                                    <div class="form-group">
                                                        <label>เหตุผลการส่ง :</label>
-                                                       <input type="text" class="form-control" name="causeReferoutDes" id="causeReferoutDes" aria-describedby="helpId" placeholder="">
+                                                       <input type="text" class="form-control" name="causeReferoutDes" id="causeReferoutDes" aria-describedby="helpId" placeholder="" readonly>
 
                                                    </div>
                                                </div>
                                                <div class="col-md-4" id="otherCauseReferout" style=" display: none;">
                                                    <div class="form-group">
                                                        <label>อื่น :</label>
-                                                       <input type="text" class="form-control" name="otherCauseReferout" placeholder="ป้อนเหตุผล">
+                                                       <input type="text" class="form-control" name="otherCauseReferout" placeholder="ป้อนเหตุผล" readonly>
                                                    </div>
                                                </div>
                                                <div class="col-md-4">
                                                    <div class="form-group">
                                                        <label>แพทย์ผู้สั่ง :</label>
-                                                       <input class="form-control  " name="doctorNameDes" id="doctorNameDes" />
+                                                       <input class="form-control  " name="doctorNameDes" id="doctorNameDes" readonly />
                                                    </div>
                                                </div>
                                                <div class="col-md-auto">
                                                    <div class="form-group">
                                                        <label>ระบบการประสานงาน (contract is)</label>
-                                                       <input class="form-control  " name="coordinateIs" id="coordinateIs" />
+                                                       <input class="form-control  " name="coordinateIs" id="coordinateIs" readonly />
 
                                                    </div>
 
@@ -167,7 +188,7 @@
                                                        <div class="row ">
                                                            <div class="col-md-5">
                                                                <label>การประเมินผู้ป่วย</label>
-                                                               <input class="form-control  " name="conscious" id="conscious" />
+                                                               <input class="form-control  " name="conscious" id="conscious" readonly />
 
                                                            </div>
                                                        </div>
@@ -382,6 +403,8 @@
                                                    <button type="button" id="UpStatusReferOutDes" style="display:none;" class="btn btn-success " onclick="UpStatusReferOutIsSave()">
                                                        รับ Refer </button>
                                                    <button type="button" class="btn btn-warning" id="refuse-button" style="display:none;" data-bs-toggle="modal" data-bs-target="#mmmodal-refuse-case">ปฏิเสธการส่งตัว </button>
+
+                                                   <button type="submit" class="btn btn-info"> Download แบบฟอร์มใบส่งตัว </button>
                                                    <button type="button" class="btn btn-primary" style="display:none;" id="UpdateRefRefer" onclick="PutCaseReferOut()"> Update ข้อมูลไปให้ปลายทาง
                                                    </button>
                                                    <span id="referCancle"></span>
@@ -536,8 +559,9 @@
                                            </div>
                                        </div>
                                    </div>
-
                                </form>
+                               <input type="text" name="listDrugs" id="ListDrugs" />
+
                            </div>
                            <!-- /.tab-pane -->
                            <div class="tab-pane" id="labs">
