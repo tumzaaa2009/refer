@@ -101,7 +101,6 @@ if (isset($_GET['destroy'])) {
             -webkit-text-size-adjust: 100%;
             -webkit-tap-highlight-color: transparent;
         }
-
         .modal-body {
             max-height: 400px;
             overflow-y: auto;
@@ -388,7 +387,7 @@ if (isset($_GET['destroy'])) {
                     <!-- Left col -->
                     <section class="col-lg-12">
                         <?php
-
+                    
                         if (isset($_GET['onfrom'])) {
                             $pageActive = ''; // กำหนดค่าเริ่มต้นของตัวแปร $pageActive
                             if ($_GET['onfrom'] == "formreferout") {
@@ -586,7 +585,6 @@ if (isset($_GET['destroy'])) {
     let tokenApi = ''
 
     const typeConnect = '<?php echo $typeConnect ?>'
- 
     // ? typeConnect
     if (typeConnect == "ConnectToAPI") {
         tokenApi = '<?php echo decryptPassword($calToken) ?>';
@@ -1074,7 +1072,7 @@ if (isset($_GET['destroy'])) {
                         DrugLabs(response.lab)
                     }
 
-                } else if (response.status == 400) {
+                } else if (response.status==400) {
                     alert('ไม่พบเลข Hn / Cid')
                     $("#hn").val("");
                     $("#cid").val("");
@@ -1091,7 +1089,7 @@ if (isset($_GET['destroy'])) {
                     $("#opd_allergy").val("");
                     $("#treeview").html('');
                     $("#treeviewLabs").html('');
-                } else if (response.status == 500) {
+                }else if(response.status==500){
                     alert(response.message)
                 }
             },

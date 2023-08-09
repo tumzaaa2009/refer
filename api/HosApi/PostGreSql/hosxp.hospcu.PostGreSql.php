@@ -59,6 +59,7 @@ function InputHn()
             array_push($personDurgallergy, $fetchDurgallergy['agent'] . '(' . $fetchDurgallergy['symptom'] . ')');
         }
 
+
         $rsHn = array('status' => 200, 'Person' => array('hn' => $fetchHn['hn'], 'cid' => $fetchHn['cid'], 'pname' => $fetchHn['pname'], 'fname' => $fetchHn['fname'], 'lname' => $fetchHn['lname'], 'birthday' => $fetchHn['birthday'], 'sex' => $fetchHn['sex'], 'allergy' => $personDurgallergy,  'addr' => $fetchHn['addrpart'], 'moopart' => '0' . $fetchHn['moopart'], 'tmbpart' => $fetchHn['tmbpart'], 'amppart' => $fetchHn['amppart'], 'chwpart' => $fetchHn['chwpart']));
 
         $addressfull = $rsHn['Person']['chwpart'] . $rsHn['Person']['amppart'] . $rsHn['Person']['tmbpart'];
@@ -70,12 +71,35 @@ function InputHn()
         $selectSubAddress = "SELECT area_name FROM thaiaddress_sub_hcode WHERE address_id='" . $addressSub . "'";
         $querySubAddress = mysqli_query($objconnectHis, $selectSubAddress);
         $fetchSubAddress = mysqli_fetch_array($querySubAddress);
-        $rsHn = array_merge($rsHn, array('address' => array_merge(array("addr" => $rsHn['Person']['addr'], "tmbpart" => $arrFetchAddress[0], "amppart" => $arrFetchAddress[1], "chwpart" => $arrFetchAddress[2]), array('mooparth' => $fetchSubAddress['area_name']))));
-
+        $rsHn = array(
+            'status' => 200,
+            'person' => array(
+                'hn' => $fetchHn['hn'],
+                'cid' => $fetchHn['cid'],
+                'pname' => $fetchHn['pname'],
+                'fname' => $fetchHn['fname'],
+                'lname' => $fetchHn['lname'],
+                'birthday' => $fetchHn['birthday'],
+                'sex' => $fetchHn['sex'],
+                'allergy' => $personDurgallergy,
+                'address' => array(
+                    'addr' => $fetchHn['addrpart'],
+                    'tmbpart' => $arrFetchAddress[0],
+                    'amppart' => $arrFetchAddress[1],
+                    'chwpart' => $arrFetchAddress[2],
+                    'mooparth' => $fetchSubAddress['area_name'],
+                ),
+                'moopart' => '0' . $fetchHn['moopart'],
+                'tmbpart' => $fetchHn['tmbpart'],
+                'amppart' => $fetchHn['amppart'],
+                'chwpart' => $fetchHn['chwpart'],
+            )
+        );
     } else {
-        $rsHn = array('status' => false);
+        $rsHn = array('status' => 400);
     }
-         echo json_encode($rsHn);
+    echo json_encode($rsHn);
+         
     //
 }
 
@@ -160,8 +184,23 @@ function ListDrugItems($hn){
     }
     while ($row = pg_fetch_assoc($queryItemDrug)) {
         $date = $row['vstdate'];
-        $item = array("status"=>"true","drugname"=>$row['name'],"unit"=>$row['units'] , "therapeutic"=>$row['therapeutic'],"qty"=>$row['qty'],);
-        $data[$date]["optimerece"][] =$item;
+        $item = array(
+            "status" => "true",
+            "drugname" => $row['name'],
+            "unit" => $row['units'],
+            "therapeutic" => $row['therapeutic'],
+            "qty" => $row['qty'],
+        );
+
+        if (!isset($drugData[$date])) {
+            $drugData[$date] = array();
+        }
+
+        if (!isset($drugData[$date]["optimerece"])) {
+            $drugData[$date]["optimerece"] = array();
+        }
+
+        $drugData[$date]["optimerece"][] = $item;
     }
     // 4. แสดงผลลัพธ์เป็น Array
     echo json_encode($data);
@@ -183,7 +222,7 @@ function ListDrugLabs($hn){
     $querylabs = pg_query(pg_connect("host=$serverHis port=$portHis dbname=$dbNameHis user=$userHis password=$passHis"), $selectLabs);
     while ($fetchLabs = pg_fetch_array($querylabs)) {
         $date = $fetchLabs['order_date'];
-        $item = array("status" => "true","type"=>"Labs", "lab_items_code" => $fetchLabs['lab_items_code'], "lab_items_name" => $fetchLabs['lab_items_name'], "lab_items_normal_value" => $fetchLabs['lab_items_normal_value']);
+        $item = array("lab" => "true", "type" => "Labs", "lab_items_code" => $fetchLabs['lab_items_code'], "lab_items_name" => $fetchLabs['lab_items_name'], "lab_items_normal_value" => $fetchLabs['lab_items_normal_value'], "lab_order_result" => $fetchLabs['lab_order_result']);
         $data[$date][] = $item;
     }
     echo json_encode($data);
