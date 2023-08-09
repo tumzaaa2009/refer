@@ -1,6 +1,20 @@
 <?php
+function decryptPassword($encryptedPassword)
+{
+  $data = base64_decode($encryptedPassword);
+  $key = substr(
+    $data,
+    0,
+    32
+  );
+  $iv = substr($data, 32, openssl_cipher_iv_length('aes-256-cbc'));
+  $encrypted = substr($data, 32 + openssl_cipher_iv_length('aes-256-cbc'));
+
+  return openssl_decrypt($encrypted, 'aes-256-cbc', $key, 0, $iv);
+}
 $json = file_get_contents('./sysconfig/sysconfig.json');
 $jsonData = json_decode($json, true);
+
 $countRwController = 0;
 if (isset($jsonData)) {
   if (json_encode($jsonData) == null) {
@@ -38,8 +52,10 @@ if ($countRwController > 0) {
     $callPathRefer = $jsonData[0]['callPathRefer'];
   }
   if ($jsonData[1]['ContentTypeHis'] == "his") {
-    $typeConnect =  $jsonData[1]['typeConnect'];
+ 
+  
     if ($jsonData[1]['typeConnect'] == "ConnectToDb") {
+      $typeConnect =  $jsonData[1]['typeConnect'];
       $dbTypeHis = $jsonData[1]['DB_TYPE_HIS'];
       $contentTypeHis = $jsonData[1]['ContentTypeHis'];
       $typeHis =    $jsonData[1]['Type_His'];
@@ -49,20 +65,10 @@ if ($countRwController > 0) {
       $dbNameHis  = $jsonData[1]['Database_NameHis'];
       $portHis = $jsonData[1]['portHis'];
       $callPathHis = $jsonData[1]['callPathHis'];
-    } else if ($jsonData[1]['typeConnect'] == "ConnectToAPI") {
-      function decryptPassword($encryptedPassword)
-      {
-        $data = base64_decode($encryptedPassword);
-        $key = substr(
-          $data,
-          0,
-          32
-        );
-        $iv = substr($data, 32, openssl_cipher_iv_length('aes-256-cbc'));
-        $encrypted = substr($data, 32 + openssl_cipher_iv_length('aes-256-cbc'));
-
-        return openssl_decrypt($encrypted, 'aes-256-cbc', $key, 0, $iv);
-      }
+     }
+    else if ($jsonData[1]['typeConnect'] == "ConnectToAPI") {
+      $typeConnect =  $jsonData[1]['typeConnect'];
+     
       $callUrl = $jsonData[1]['URl'];
       $calToken = $jsonData[1]['TOKEN'];
       $testconnect = $jsonData[1]['testconnect'];
