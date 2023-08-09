@@ -31,10 +31,7 @@
                <div class="col-md-auto">
                    <input type="text" class="form-control" id="refer_time" name="refer_time" readonly>
                </div>
-               <label for="อายุ" class="col-md-auto col-form-label mb-1">คำนำหน้า:</label>
-               <div class="col-md-auto">
-                   <input type="text" class="form-control" id="pname" name="pname" readonly>
-               </div>
+
                <label for="อายุ" class="col-md-auto col-form-label mb-1">ชื่อ:</label>
                <div class="col-md-auto">
                    <input type="text" class="form-control" id="fname" name="fname" readonly>
@@ -59,12 +56,16 @@
                <label for="จังหวัด" class="col-md-auto col-form-label mb-1  ">จังหวัด</label>
                <div class="col-md-auto">
                    <input type="text" class="form-control" name="chwpart" id="chwpart" placeholder="" readonly>
-
                </div>
-               <label>แพ้ยา </label>
-               <div class="col-md-6">
-                   <input type="text" class="form-control" name="aligy" id="aligy" placeholder="" readonly>
-
+               <div class="row">
+                   <div class="col-md-6">
+                       <label>แพ้ยา </label>
+                       <input type="text" class="form-control" name="aligy" id="aligy" placeholder="" readonly>
+                   </div>
+                   <div class="col-md-6">
+                       <label>สิทธิ์การรักษา </label>
+                       <input type="text" class="form-control" name="pttype" id="getpttype" placeholder="" readonly>
+                   </div>
                </div>
            </div>
            <div class="col-md-12">
@@ -294,6 +295,7 @@
                                                            </div>
                                                        </div>
                                                    </div>
+                                                   <input type="hidden" name="detailRiskTurmar" id="detailRiskTurmar" />
                                                </div>
 
 
@@ -353,6 +355,7 @@
                                                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal" aria-hidden="true">
                                                        รายละเอียด ICD10
                                                    </button>
+                                                   <input type="hidden" name="icd10Detail" id="icd10Detail">
                                                </div>
                                                <!-- Button trigger modal -->
 
@@ -373,6 +376,7 @@
                                                                            <span id="trDetailIcd10"> </span>
                                                                        </div>
                                                                        <!-- /.card-body -->
+
                                                                    </div>
                                                                    <!-- /.card -->
                                                                </div>
@@ -560,7 +564,7 @@
                                        </div>
                                    </div>
                                </form>
-                               <input type="text" name="listDrugs" id="ListDrugs" />
+                               <input type="hidden" name="listDrugs" id="ListDrugs" />
 
                            </div>
                            <!-- /.tab-pane -->
@@ -576,8 +580,8 @@
                                            </div>
                                        </div>
                                    </div>
-
                                </form>
+                               <input type="hidden" name="detailLabs" id="detailLabs" />
                            </div>
                            <!-- /.tab-pane -->
                            <div class="tab-pane" id="consultfiles">

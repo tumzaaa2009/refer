@@ -29,13 +29,14 @@
            </div>
            <!-- /.card-header -->
            <!-- form start -->
-           <form enctype="multipart/form-data" id="refer-back-form">
+           <form id="refer-back-form" method="POST" enctype="multipart/form-data" action="./form/FormReferBack/print.refer.back.php">
                <div class="card-body">
                    <div class="form-group row">
                        <label for="เลขที่ใบส่งตัว" class="col-md-auto col-form-label mb-1">เลขที่ใบส่งตัว</label>
                        <div class="col-md-auto">
                            <input type="text" class="form-control" name="refer_no" id="refer_no" readonly>
                            <input type="hidden" class="form-control" name="refer_code" id="refer_code">
+                           <input type="hidden" class="form-control" name="refer_name" id="refer_name">
                            <input type="hidden" class="form-control" name="code_gen_refer" id="code_gen_refer">
                        </div>
                        <label for="เลขที่ใบส่งตัว" class="col-md-auto col-form-label mb-1">Hn</label>
@@ -54,23 +55,35 @@
                        <div class="col-md-auto">
                            <input type="text" class="form-control" id="refer_time" name="refer_time" readonly>
                        </div>
-                       <label for="อายุ" class="col-md-auto col-form-label mb-1">คำนำหน้า:</label>
-                       <div class="col-md-auto">
-                           <input type="text" class="form-control" id="pname" name="pname" readonly>
-                       </div>
                        <label for="อายุ" class="col-md-auto col-form-label mb-1">ชื่อ:</label>
                        <div class="col-md-auto">
                            <input type="text" class="form-control" id="fname" name="fname" readonly>
                        </div>
-                       <label for="อายุ" class="col-md-auto col-form-label mb-1  ">นามสกุล:</label>
+                       <label for="ที่อยู่" class="col-md-auto col-form-label mb-1  ">ที่อยู่</label>
                        <div class="col-md-auto">
-                           <input type="text" class="form-control" id="lname" name="Lname" readonly>
-                       </div>
-                       <div class="col-md-6">
-                           <label>แพ้ยา:</label>
-                           <input type="text" class="form-control" id="aligy" name="aligy" readonly>
+                           <input type="text" class="form-control" name="addr" id="addr" placeholder="" readonly>
                        </div>
 
+                       <label for="หมู่" class="col-md-auto col-form-label mb-1  ">หมู่</label>
+                       <div class="col-md-auto">
+                           <input type="text" class="form-control" name="moopart" id="moopart" placeholder="" readonly>
+                       </div>
+                       <label for="ตำบล" class="col-md-auto col-form-label mb-1  ">ตำบล</label>
+                       <div class="col-md-auto">
+                           <input type="text" class="form-control" name="tmbpart" id="tmbpart" placeholder="" readonly>
+                       </div>
+                       <label for="อำเภอ" class="col-md-auto col-form-label mb-1  ">อำเภอ</label>
+                       <div class="col-md-auto">
+                           <input type="text" class="form-control" name="amppart" id="amppart" placeholder="" readonly>
+                       </div>
+                       <label for="จังหวัด" class="col-md-auto col-form-label mb-1  ">จังหวัด</label>
+                       <div class="col-md-auto">
+                           <input type="text" class="form-control" name="chwpart" id="chwpart" placeholder="" readonly>
+                       </div>
+                       <label for="อายุ" class="col-md-auto col-form-label mb-1">แพ้ยา</label>
+                       <div class="col-md-6">
+                           <input type="text" class="form-control" id="aligy" name="aligy" readonly>
+                       </div>
                    </div>
 
                    <div class="col-12 col-sm-12">
@@ -211,6 +224,8 @@
                                                        </div>
                                                    </div>
                                                </div>
+                                               <input type="hidden" name="detailRiskTurmar" id="detailRiskTurmar" />
+
                                            </div>
                                            <div class="form-group">
                                                <div class="col-md-12">
@@ -238,6 +253,8 @@
                                                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal" aria-hidden="true">
                                                    รายละเอียด ICD10
                                                </button>
+                                               <button type="submit" class="btn btn-info"> Download แบบฟอร์มใบส่งกลับ</button>
+                                               <input type="hidden" name="icd10Detail" id="icd10Detail">
                                            </div>
                                            <!-- Button trigger modal -->
 
@@ -272,8 +289,8 @@
                                            <div align="right">
                                                <button type="button" class="btn btn-primary" data-bs-toggle="modal" style="display:none;" id="open-modal-case-referHocode" data-bs-target="#mmmodalReferCode"> ส่งต่อ
                                                </button>
-                                            
-                              
+
+
                                            </div>
                                            <div class="modal fade" id='mmmodalReferCode' tabindex="-1" aria-hidden="true">
                                                <div class="modal-dialog modal-xl">
@@ -336,8 +353,9 @@
                                                    </div>
                                                </div>
                                            </div>
-
                                        </form>
+                                       <input type="hidden" name="listDrugs" id="ListDrugs" />
+
                                    </div>
                                    <!-- /.tab-pane -->
                                    <div class="tab-pane" id="labs">
@@ -352,8 +370,9 @@
                                                    </div>
                                                </div>
                                            </div>
-
                                        </form>
+                                       <input type="hidden" name="detailLabs" id="detailLabs" />
+
                                    </div>
                                    <div class="tab-pane" id="consultfiles">
                                        <form class="form-horizontal">

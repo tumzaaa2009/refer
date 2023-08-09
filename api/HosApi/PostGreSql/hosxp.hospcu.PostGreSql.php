@@ -59,18 +59,18 @@ function InputHn()
             array_push($personDurgallergy, $fetchDurgallergy['agent'] . '(' . $fetchDurgallergy['symptom'] . ')');
         }
 
-        $rsHn = array('status' => true, 'hn' => $fetchHn['hn'], 'cid' => $fetchHn['cid'], 'pname' => $fetchHn['pname'], 'fname' => $fetchHn['fname'], 'lname' => $fetchHn['lname'], 'birthday' => $fetchHn['birthday'], 'sex' => $fetchHn['sex'], 'allergy' => $personDurgallergy,  'addr' => $fetchHn['addrpart'], 'moopart' => '0'.$fetchHn['moopart'], 'tmbpart' => $fetchHn['tmbpart'], 'amppart' => $fetchHn['amppart'], 'chwpart' => $fetchHn['chwpart']);
+        $rsHn = array('status' => 200, 'Person' => array('hn' => $fetchHn['hn'], 'cid' => $fetchHn['cid'], 'pname' => $fetchHn['pname'], 'fname' => $fetchHn['fname'], 'lname' => $fetchHn['lname'], 'birthday' => $fetchHn['birthday'], 'sex' => $fetchHn['sex'], 'allergy' => $personDurgallergy,  'addr' => $fetchHn['addrpart'], 'moopart' => '0' . $fetchHn['moopart'], 'tmbpart' => $fetchHn['tmbpart'], 'amppart' => $fetchHn['amppart'], 'chwpart' => $fetchHn['chwpart']));
 
-        $addressfull = $rsHn['chwpart'] . $rsHn['amppart'] . $rsHn['tmbpart'];
-        $addressSub =  $rsHn['chwpart'] . $rsHn['amppart'] . $rsHn['tmbpart']. $rsHn['moopart'];
+        $addressfull = $rsHn['Person']['chwpart'] . $rsHn['Person']['amppart'] . $rsHn['Person']['tmbpart'];
+        $addressSub =  $rsHn['Person']['chwpart'] . $rsHn['Person']['amppart'] . $rsHn['Person']['tmbpart'] . $rsHn['Person']['moopart'];
         $selctFullAddress = "SELECT full_name FROM thaiaddress WHERE addressid ='" . $addressfull . "'";
-        $queryFullAddress = pg_query(pg_connect("host=$serverHis port=$portHis dbname=$dbNameHis user=$userHis password=$passHis"), $selctFullAddress);
-        $fetchQueryAddress = pg_fetch_array($queryFullAddress);
+        $queryFullAddress = mysqli_query($objconnectHis, $selctFullAddress);
+        $fetchQueryAddress = mysqli_fetch_array($queryFullAddress);
         $arrFetchAddress = explode(" ", $fetchQueryAddress['full_name']);
-        $selectSubAddress= "SELECT area_name FROM thaiaddress_sub_hcode WHERE address_id='". $addressSub."'";
-        $querySubAddress =pg_query(pg_connect("host=$serverHis port=$portHis dbname=$dbNameHis user=$userHis password=$passHis"),$selectSubAddress);
-        $fetchSubAddress =pg_fetch_array($querySubAddress);
-        $rsHn = array_merge($rsHn, array('address' => array_merge(array("tmbpart"=>$arrFetchAddress[0], "amppart"=> $arrFetchAddress[1], "chwpart"=> $arrFetchAddress[2]), array('mooparth' => $fetchSubAddress['area_name']))));
+        $selectSubAddress = "SELECT area_name FROM thaiaddress_sub_hcode WHERE address_id='" . $addressSub . "'";
+        $querySubAddress = mysqli_query($objconnectHis, $selectSubAddress);
+        $fetchSubAddress = mysqli_fetch_array($querySubAddress);
+        $rsHn = array_merge($rsHn, array('address' => array_merge(array("addr" => $rsHn['Person']['addr'], "tmbpart" => $arrFetchAddress[0], "amppart" => $arrFetchAddress[1], "chwpart" => $arrFetchAddress[2]), array('mooparth' => $fetchSubAddress['area_name']))));
 
     } else {
         $rsHn = array('status' => false);

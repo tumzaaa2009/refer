@@ -6,6 +6,7 @@ session_start();
 
 include_once("./connect/file.refer.connec.php");
 
+
 // โค้ดของคุณที่ต้องการทำงาน
 
 if ($countRwController == 0 || $_SESSION['hosCode'] == '') { ?>
@@ -100,10 +101,6 @@ if (isset($_GET['destroy'])) {
             -webkit-text-size-adjust: 100%;
             -webkit-tap-highlight-color: transparent;
         }
-
-
-
-
         .modal-body {
             max-height: 400px;
             overflow-y: auto;
@@ -313,7 +310,6 @@ if (isset($_GET['destroy'])) {
                                 <p>ส่งกลับ</p>
                             </a>
                         </li>
-
                         <!-- <li class="nav-item">
                             <a href="indexfromuse.php?onfrom=referintablewait" class="nav-link <?php echo ($_GET['onfrom'] == 'referintablewait') ? 'active' : '' ?>">
                                 <i class=" far fa-circle nav-icon"></i>
@@ -391,6 +387,7 @@ if (isset($_GET['destroy'])) {
                     <!-- Left col -->
                     <section class="col-lg-12">
                         <?php
+                    
                         if (isset($_GET['onfrom'])) {
                             $pageActive = ''; // กำหนดค่าเริ่มต้นของตัวแปร $pageActive
                             if ($_GET['onfrom'] == "formreferout") {
@@ -583,7 +580,20 @@ if (isset($_GET['destroy'])) {
     const hosPassCode = '<?php echo $_SESSION['passCode']; ?>'
     const hosOpreator = '<?php echo $_SESSION['hosOpreator']; ?>'
     const callPathRefer = '<?php echo $callPathRefer; ?>'
-    const callPathHis = '<?php echo $callPathHis; ?>'
+
+    let callPathHis = ''
+    let tokenApi = ''
+
+    const typeConnect = '<?php echo $typeConnect ?>'
+    // ? typeConnect
+    if (typeConnect == "ConnectToAPI") {
+        tokenApi = '<?php echo decryptPassword($calToken) ?>';
+        callPathHis = '<?php echo $callUrl . $endPoint ?>';
+    } else if (typeConnect == "ConnectToDb") {
+        callPathHis = '<?php echo $callPathHis; ?>'
+    }
+    //* ENDPOINT 
+
     let dateToday = new Date();
     var onfrom = '<?php echo isset($_GET['onfrom']) ? $_GET['onfrom'] : ""; ?>';
     var idrefer = '<?php echo isset($_GET['idrefer']) ? $_GET['idrefer'] : ""; ?>';
@@ -827,9 +837,7 @@ if (isset($_GET['destroy'])) {
                 ],
 
             }
-        }, function(start, end, label) {
-            console.log("A new date selection was made: " + start.format('DD-MM-YYYY') + ' to ' + end.format('DD-MM-YYYY'));
-        });
+        }, function(start, end, label) {});
         $('#reservationtime').daterangepicker({
             "timePicker": true,
             "timePicker24Hour": true,
@@ -1021,6 +1029,9 @@ if (isset($_GET['destroy'])) {
     }
     const HnInput = (value) => {
         $.ajax({
+            headers: {
+                "x-access-key-token": tokenApi,
+            },
             type: "POST",
             url: `${callPathHis}`,
             data: {
@@ -1028,11 +1039,10 @@ if (isset($_GET['destroy'])) {
             },
             dataType: "JSON",
             success: function(response) {
-
                 // 4. แสดงผลลัพธ์
-                if (response.status == true) {
+                if (response.status == 200) {
                     var today = new Date();
-                    var pastDate = new Date(response.birthday);
+                    var pastDate = new Date(response.person.birthday);
                     var diffYears = today.getFullYear() - pastDate.getFullYear();
                     if (response.sex == 1) {
                         var sex = "ชาย";
@@ -1041,22 +1051,29 @@ if (isset($_GET['destroy'])) {
                     } else {
                         var sex = "อื่น";
                     }
-
-                    $("#hn").val(response.hn);
-                    $("#cid").val(response.cid);
-                    $("#pname").val(response.pname);
-                    $("#fname").val(response.fname);
-                    $("#lname").val(response.lname);
+                    $("#hn").val(response.person.hn);
+                    $("#cid").val(response.person.cid);
+                    $("#pname").val(response.person.pname);
+                    $("#fname").val(response.person.fname);
+                    $("#lname").val(response.person.lname);
                     $("#age").val(diffYears);
                     $("#sex").val(sex);
-                    $("#addr").val(response.addr);
-                    $("#moopart").val(response.address.mooparth);
-                    $("#amppart").val(response.address.amppart);
-                    $("#tmbpart").val(response.address.tmbpart);
-                    $("#chwpart").val(response.address.chwpart);
-                    $("#opd_allergy").val(response.allergy);
-                } else {
-                    alert('ไม่พบเลข Hn')
+                    $("#addr").val(response.person.address.addr);
+                    $("#moopart").val(response.person.address.mooparth);
+                    $("#amppart").val(response.person.address.amppart);
+                    $("#tmbpart").val(response.person.address.tmbpart);
+                    $("#chwpart").val(response.person.address.chwpart);
+                    $("#opd_allergy").val(response.person.allergy);
+                    if (typeConnect == "ConnectToDb") {
+                        DrugItemdetailDes(response.person.hn)
+                        DrugLabs(response.person.hn)
+                    } else if (typeConnect == "ConnectToAPI") {
+                        DrugItemdetailDes(response.drug)
+                        DrugLabs(response.lab)
+                    }
+
+                } else if (response.status==400) {
+                    alert('ไม่พบเลข Hn / Cid')
                     $("#hn").val("");
                     $("#cid").val("");
                     $("#pname").val("");
@@ -1070,67 +1087,15 @@ if (isset($_GET['destroy'])) {
                     $("#tmbpart").val("");
                     $("#chwpart").val("");
                     $("#opd_allergy").val("");
+                    $("#treeview").html('');
+                    $("#treeviewLabs").html('');
+                }else if(response.status==500){
+                    alert(response.message)
                 }
-                DrugItemdetailDes(response.hn)
-                DrugLabs(response.hn)
             },
         });
     };
-    const CidInput = (value) => {
-        $.ajax({
-            type: "POST",
-            url: `${callPathHis}`,
-            data: {
-                cid: value,
-            },
-            dataType: "JSON",
-            success: function(response) {
-                // 4. แสดงผลลัพธ์
-                if (response.status == true) {
-                    var today = new Date();
-                    var pastDate = new Date(response.birthday);
-                    var diffYears = today.getFullYear() - pastDate.getFullYear();
-                    if (response.sex == 1) {
-                        var sex = "ชาย";
-                    } else if (response.sex == 2) {
-                        var sex = "หญิง";
-                    } else {
-                        var sex = "อื่น";
-                    }
-                    $("#hn").val(response.hn);
-                    $("#cid").val(response.cid);
-                    $("#pname").val(response.pname);
-                    $("#fname").val(response.fname);
-                    $("#lname").val(response.lname);
-                    $("#age").val(diffYears);
-                    $("#sex").val(sex);
-                    $("#addr").val(response.addr);
-                    $("#moopart").val(response.address.mooparth);
-                    $("#amppart").val(response.address[1]);
-                    $("#tmbpart").val(response.address[0]);
-                    $("#chwpart").val(response.address[2]);
-                    $("#opd_allergy").val(response.allergy);
-                } else {
-                    alert('ไม่พบเลข Cid')
-                    $("#hn").val("");
-                    $("#cid").val("");
-                    $("#pname").val("");
-                    $("#fname").val("");
-                    $("#lname").val("");
-                    $("#age").val("");
-                    $("#sex").val("");
-                    $("#addr").val("");
-                    $("#moopart").val("");
-                    $("#amppart").val("");
-                    $("#tmbpart").val("");
-                    $("#chwpart").val("");
-                    $("#opd_allergy").val("");
-                }
-                DrugItemdetailDes(response.hn)
-                DrugLabs(response.hn)
-            },
-        });
-    };
+
 
     // ? เรียก api cloud rh4
     const SearchHosMain = () => {
@@ -1392,7 +1357,7 @@ if (isset($_GET['destroy'])) {
                 const carService = [];
                 carService.push(`<option id='' value='0' selected>ระบุเลขทะเบียนรถ</option>`)
                 for (let index = 0; index < response.length; index++) {
-                    console.log(response[index].name)
+
                     carService.push(
                         ` <option id = '${response[index].id}'  value = '${response[index].name}' >${response[index].name} </option>`
                     );
@@ -1438,7 +1403,7 @@ if (isset($_GET['destroy'])) {
             success: function(response) {
 
                 $("#coordinateIs").html(response);
-                console.log(document.getElementById("coordinateIs"))
+
             },
         });
     };
@@ -1651,42 +1616,55 @@ if (isset($_GET['destroy'])) {
 
     // * ลาก ITEM ยา มา
     function DrugItemdetailDes(hn) {
-        $.ajax({
-            type: `POST`,
-            url: `${callPathHis}`,
-            data: {
-                drugHn: hn
-            },
-            dataType: "JSON",
-            success: function(response) {
-                generateTreeView(response)
-            }
-        });
+        if (typeConnect == "ConnectToDb") {
+            $.ajax({
+                type: `POST`,
+                url: `${callPathHis}`,
+                data: {
+                    drugHn: hn
+                },
+                dataType: "JSON",
+                success: function(response) {
+                    generateTreeView(response)
+                }
+            });
+        } else if (typeConnect == "ConnectToAPI") {
+
+            generateTreeView(hn)
+        }
+
     }
     // drug Item Labs
     function DrugLabs(hn) {
+        if (typeConnect == "ConnectToDb") {
+            $.ajax({
+                type: `POST`,
+                url: `${callPathHis}`,
+                data: {
+                    drugLabs: hn
+                },
+                dataType: "JSON",
+                success: function(response) {
 
-        $.ajax({
-            type: `POST`,
-            url: `${callPathHis}`,
-            data: {
-                drugLabs: hn
-            },
-            dataType: "JSON",
-            success: function(response) {
-                generateTreeView(response)
-            }
-        });
+                    generateTreeView(response)
+                }
+            });
+        } else if (typeConnect == "ConnectToAPI") {
+            generateTreeView(hn)
+        }
+
     }
 
     //* generrate ยา // lab
     function generateTreeView(data) {
-        let genHtml = '';
 
+
+        let genHtml = '';
         let html =
             '<div class="col"><ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">';
         for (let date in data) {
             if (data[date].optimerece) {
+
                 genHtml = 1;
 
                 if (date !== "status") {
@@ -1720,10 +1698,12 @@ if (isset($_GET['destroy'])) {
                             item.drugname +
                             '"></td>' +
                             '<td style="width: fit-content"><input type="text" class="form-control" readonly value="' +
-                            item.therapeutic +
+                            item
+                            .therapeutic +
                             '"></td>' +
                             '<td style="width: fit-content"><input type="text" class="form-control" readonly value="' +
-                            item.unit +
+                            item
+                            .unit +
                             '"></td></tr>';
                     }
 
@@ -1799,7 +1779,7 @@ if (isset($_GET['destroy'])) {
         function toggleAllItems(event) {
             const checkAllItem = event.target;
             const date = checkAllItem.getAttribute('data-date');
-            console.log(date)
+
             const drugCheckboxes = document.querySelectorAll(
                 'input[id="itemCheckbox' + date + '"]'
             );
@@ -1859,7 +1839,7 @@ if (isset($_GET['destroy'])) {
 
     // *** funtion Modal
     async function modalDerivery(value) {
-        console.log(value)
+
         if (value == "อื่น") {
 
             $("#OtherCaseSendRefer").show();

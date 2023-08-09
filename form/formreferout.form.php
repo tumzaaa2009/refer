@@ -78,7 +78,7 @@ if ($_GET['onfrom'] === "formreferout") { ?>
 
                         <div class="form-group">
                             <label>เลขที่บัตรประชาชน</label>
-                            <input type="text" name="cid" class="form-control" name="cid" placeholder="" id="cid" onchange="CidInput(this.value)">
+                            <input type="text" name="cid" class="form-control" name="cid" placeholder="" id="cid" onchange="HnInput(this.value)">
                         </div>
                     </div>
                     <div class="col-sm-3">
@@ -459,7 +459,7 @@ if ($_GET['onfrom'] === "formreferout") { ?>
                                         <div class="col-md-6">
                                             <div class="form-group">
                                                 <label>เหตุผลการส่ง :</label>
-                                                <select class="form-control select2" name="causeReferout" id="causeReferout"  onchange="ValueOtherCaseReferOut(this.value)"></select>
+                                                <select class="form-control select2" name="causeReferout" id="causeReferout" onchange="ValueOtherCaseReferOut(this.value)"></select>
                                             </div>
                                         </div>
                                         <div class="col-md-12">
