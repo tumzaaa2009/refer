@@ -216,6 +216,7 @@ if (isset($_POST['submitPost'])) {
                     password: passCodeCheck,
                     opreator: opreator
                 },
+                
                 dataType: "JSON",
                 success: function(response) {
                     // ถ้ามี response 

@@ -1,1 +1,24 @@
-{"hosCode":{"hosCode":" 10757","hosName":"\u0e23\u0e1e\u0e08\u0e23\u0e34\u0e07\u0e46\u0e19\u0e30"},"0":{"ContentTypeRefer":"refer","DB_TYPE_REFER":"Mysql","Server_NameRefer":"localhost","Database_NameRefer":"referdb_hos","userRefer":"root","Password":"mysql","portRefer":"3306","callPathRefer":".\/api\/Refer\/Mysql\/referdb_hos.Mysql.php"},"1":{"typeConnect":"ConnectToDb","ContentTypeHis":"his","DB_TYPE_HIS":"PostGreSql","Type_His":"hosxp.hospcu","Server_NameHis":"localhost","Database_NameHis":"hos","useHis":"postgres","Password":"mysql","portHis":"5432","callPathHis":".\/api\/HosApi\/PostGreSql\/hosxp.hospcu.PostGreSql.php"}}
+{
+    "hosCode": {
+        "hosCode": " 10757",
+        "hosName": "\u0e23\u0e1e\u0e08\u0e23\u0e34\u0e07\u0e46\u0e19\u0e30"
+    },
+    "0": {
+        "ContentTypeRefer": "refer",
+        "DB_TYPE_REFER": "Mysql",
+        "Server_NameRefer": "localhost",
+        "Database_NameRefer": "referdb_hos",
+        "userRefer": "root",
+        "Password": "mysql",
+        "portRefer": "3306",
+        "callPathRefer": ".\/api\/Refer\/Mysql\/referdb_hos.Mysql.php"
+    },
+    "1": {
+        "typeConnect": "ConnectToAPI",
+        "ContentTypeHis": "his",
+        "URl": "https:\/\/api.srbr.in.th",
+        "testconnect": "\/refer\/api\/patient\/",
+        "endPoint": "",
+        "TOKEN": "d0hCS5eNefDye0dYP6JcNTu98yntoCWjeiN4n6YDWW7keoS9ctGjr0zXCVdo6x51R2k4L3RZRVp1cGZuWlUxelBYZ3pWdlpTL2NzQzRHUHJuRndJWDkvVjJsektXUkJJNExtTVlqTC9CYXA5bEJWNW01a3ZOdHZUK0VtYzdOM2xZRG9DbUE9PQ=="
+    }
+}

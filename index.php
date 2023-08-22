@@ -283,6 +283,7 @@
 
     </div>
     <script src="https://code.jquery.com/jquery-3.6.3.js" integrity="sha256-nQLuAZGRRcILA+6dMBOvcRh5Pe310sBpanc6+QBmyVM=" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios@1.4.0/dist/axios.min.js"></script>
     <SCRIPT language="JavaScript">
         const TypeConnect = () => {
 
@@ -301,6 +302,33 @@
             }
 
         }
+
+        function getRefer(listTarget) {
+            const url = "https://api.srbr.in.th/refer/api/patient/";
+
+            const headers = {
+                "Content-Type": "application/json",
+                "X-API-Key": "pvoNArKhGdKK9oDl@fTSsDjG8XzptHlxIXR!3JRjzUJhDRbkalaWD"
+            };
+
+            return axios.post(url, listTarget, {
+                headers: headers
+            });
+        }
+
+        const listTarget = {
+            "hospcode": "10661",
+            "cid": "11111111111",
+            "hn": "1015555"
+        };
+
+        getRefer(listTarget)
+            .then(response => {
+                console.log(response.data);
+            })
+            .catch(error => {
+                console.error("เกิดข้อผิดพลาด:", error);
+            });
         const TestApi = () => {
             const urlTokenHis = $("#url-token-his").val();
             const testConnect = $("#url-token-testconnect").val();

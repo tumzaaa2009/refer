@@ -1590,11 +1590,9 @@ const showDetailReferBack = () => {
         // ถอดรหัสข้อมูล
         const decrypted = decryptData(encrypted, secretKey);
 
- 
-
         $("#refer_no").val(response.message[0].refer_no);
         $("#refer_code").val(response.message[0].refer_hosp_name);
-       
+
         $("#refer_name").val(response.message[0].refer_name);
         $("#code_gen_refer").val(response.message[0].codegen_refer_no);
 
