@@ -65,6 +65,7 @@ if ($_POST['connect-type'] == "refer") {
       )
     );
   } else if ($_POST['select-type-connect']  == "ConnectToAPI") {
+    $headAuth = $_POST['head-auth-his'];
     $urlTokenHis = $_POST['url-token-his'];
     $testConnect = $_POST['url-token-testconnect'];
     $endPoint =$_POST['url-end-point'];
@@ -77,6 +78,7 @@ if ($_POST['connect-type'] == "refer") {
         "URl" => $urlTokenHis,
         "testconnect"=>$testConnect,
         "endPoint"=>$endPoint,
+        "Auth"=>$headAuth,
         "TOKEN" => $token
       )
     );
