@@ -17,11 +17,10 @@ router.post('/refer/testconnectapi/', function(req, resJson, next) {
     }
     if(req.body.hn !=""){
         hn =req.body.hn
-        
     }else{
         hn =null
     }
-    console.log(`${req.body.urlTokenHis}${req.body.testConnect}`);
+    console.log(req.body)
   
     axios.post(`${req.body.urlTokenHis}${req.body.testConnect}`,{
         hospcode: hospCode,
@@ -50,14 +49,15 @@ router.post('/refer/api/', function(req, resJson, next) {
     const headderApi = `${req.body.headAuthHis}`
     const hospCode = req.body.hospCode
 
-    if (req.body.hn.length == 13) {
-      cid = req.body.hn;
-      hn = null;
-    } else if (req.body.hn != "" || req.body.hn.length < 13) {
-      hn = req.body.hn;
-      cid = null;
+    if(req.body.hn !="" || req.body.hn == 13 ){
+        cid =req.body.hn
+        hn =null
+    }else if(req.body.hn !="" || req.body.hn < 13){
+        hn =req.body.hn
+        cid =null
     }
    
+  
     axios.post(`${req.body.urlTokenHis}`,{
         hospcode: hospCode,
         cid: cid,
@@ -72,7 +72,7 @@ router.post('/refer/api/', function(req, resJson, next) {
       .catch((error) => {
         console.error(error)
       })
-console.log(hn);
+console.log(req.body)
     
    
 });

@@ -426,6 +426,42 @@ if (isset($_GET['destroy'])) {
                                     $pageActive = "active";
                                 }
                             }
+
+                            // else if ($_GET['onfrom'] == 'referintable') {
+                            //     $includedFile = './form/FormReferIn/table.referin.sus.php';
+                            //     include($includedFile);
+                            //     $includedFileName = basename($includedFile);
+                            //     $pageActive = "active";
+                            // }
+                            // else if ($_GET['onfrom'] == 'referintablewait') {
+                            //     $includedFile = './form/FormReferIn/table.referin.wait.php';
+                            //     include($includedFile);
+                            //     $includedFileName = basename($includedFile);
+                            //     $pageActive = "active";
+                            // }
+                            // else if ($_GET['onfrom'] == "showdetailreferin") {
+
+                            //     if ($_GET['idrefer'] != "") {
+                            //         $includedFile = './form/FormReferIn/show.detail.php';
+                            //         include($includedFile);
+                            //         $includedFileName = basename($includedFile);
+                            //         $pageActive = "active";
+                            //     }
+                            // }
+                            //  else if ($_GET['onfrom'] == "showdetailreferinOnsusecss") {
+
+                            //     if ($_GET['idrefer'] != "") {
+                            //         $includedFile = './form/FormReferIn/show.detail.onSuscess.php';
+                            //         include($includedFile);
+                            //         $includedFileName = basename($includedFile);
+                            //         $pageActive = "active";
+                            //     }
+                            // } else if ($_GET['onfrom'] == "referoutremovetable") {
+                            //     $includedFile = './form/CancleRefer/show.tabel.cancle.refer.php';
+                            //     include($includedFile);
+                            //     $includedFileName = basename($includedFile);
+                            //     $pageActive = "active";
+                            // }
                         }
                         ?>
                     </section>
@@ -436,7 +472,10 @@ if (isset($_GET['destroy'])) {
                 </div>
                 <!-- /.row (main row) -->
             </div>
-
+            <!-- /.container-fluid -->
+            <!-- </section> -->
+            <!-- <div id="audio-container"></div> -->
+            <!-- /.content -->
         </div>
         <!-- /.content-wrapper -->
         <footer class="main-footer">
@@ -545,16 +584,16 @@ if (isset($_GET['destroy'])) {
 
     let callPathHis = ''
     let tokenApi = ''
-
+    
     const typeConnect = '<?php echo $typeConnect ?>'
     // ? typeConnect
     if (typeConnect == "ConnectToAPI") {
         auth = '<?php echo $calAuth; ?>'
+        console.log(auth)
         tokenApi = '<?php echo decryptPassword($calToken) ?>';
         callPathHis = '<?php echo $callUrl . $endPoint ?>';
     } else if (typeConnect == "ConnectToDb") {
         callPathHis = '<?php echo $callPathHis; ?>'
-
     }
     //* ENDPOINT 
 
@@ -992,149 +1031,74 @@ if (isset($_GET['destroy'])) {
 
     }
     const HnInput = (value) => {
-        if (typeConnect == "ConnectToAPI") {
-            $.ajax({
-                url: 'http://localhost:8080/refer/api/',
-                type: "POST",
-                beforeSend: function() {
-                    // แสดงข้อความโหลดก่อนส่งข้อมูล
-                    $("#loader").show();
-                },
-                complete: function() {
-                    // ซ่อนข้อความโหลดเมื่อสำเร็จหรือเกิดข้อผิดพลาด
-                    $("#loader").hide();
-                },
-                data: {
-                    headAuthHis: auth,
-                    urlTokenHis: callPathHis,
-                    keyTokenHis: tokenApi,
-                    hospCode: 10661,
-                    hn: value
-                },
-                dataType: "JSON",
-                success: function(response) {
-                    // 4. แสดงผลลัพธ์
-
-                    if (response.status == 200) {
-                        var today = new Date();
-                        var pastDate = new Date(response.person.birthday);
-                        var diffYears = today.getFullYear() - pastDate.getFullYear();
-                        if (response.person.sex == 1) {
-                            var sex = "ชาย";
-                        } else if (response.person.sex == 2) {
-                            var sex = "หญิง";
-                        } else {
-                            var sex = "อื่น";
-                        }
-                        $("#hn").val(response.person.hn);
-                        $("#cid").val(response.person.cid);
-                        $("#pname").val(response.person.pname);
-                        $("#fname").val(response.person.fname);
-                        $("#lname").val(response.person.lname);
-                        $("#age").val(diffYears);
-                        $("#sex").val(sex);
-                        $("#addr").val(response.person.address.addr);
-                        $("#moopart").val(response.person.address.mooparth);
-                        $("#amppart").val(response.person.address.amppart);
-                        $("#tmbpart").val(response.person.address.tmbpart);
-                        $("#chwpart").val(response.person.address.chwpart);
-                        $("#opd_allergy").val(response.person.allergy);
-                        if (typeConnect == "ConnectToDb") {
-                            DrugItemdetailDes(response.person.hn)
-                            DrugLabs(response.person.hn)
-                        } else if (typeConnect == "ConnectToAPI") {
-                            DrugItemdetailDes(response.drug)
-                            DrugLabs(response.lab)
-                        }
-
-                    } else if (response.status == 400) {
-                        alert('ไม่พบเลข Hn / Cid')
-                        $("#hn").val("");
-                        $("#cid").val("");
-                        $("#pname").val("");
-                        $("#fname").val("");
-                        $("#lname").val("");
-                        $("#age").val("");
-                        $("#sex").val("");
-                        $("#addr").val("");
-                        $("#moopart").val("");
-                        $("#amppart").val("");
-                        $("#tmbpart").val("");
-                        $("#chwpart").val("");
-                        $("#opd_allergy").val("");
-                        $("#treeview").html('');
-                        $("#treeviewLabs").html('');
-                    } else if (response.status == 500) {
-                        alert(response.message)
+        $.ajax({
+            url: 'http://localhost:8080/refer/api/',
+            type: "POST",
+            data: {
+                headAuthHis: auth,
+                urlTokenHis:callPathHis,
+                keyTokenHis:tokenApi,
+                hospCode:10661,
+                hn: value
+            },
+            dataType: "JSON",
+            success: function(response) {
+                // 4. แสดงผลลัพธ์
+               
+                if (response.status == 200) {
+                    var today = new Date();
+                    var pastDate = new Date(response.person.birthday);
+                    var diffYears = today.getFullYear() - pastDate.getFullYear();
+                    if (response.person.sex == 1) {
+                        var sex = "ชาย";
+                    } else if (response.person.sex == 2) {
+                        var sex = "หญิง";
+                    } else {
+                        var sex = "อื่น";
                     }
-                },
-            });
-        } else if (typeConnect == "ConnectToDb") {
-            $.ajax({
-                url: callPathHis,
-                type: "POST",
-                data: {
-                    hn: value
-                },
-                dataType: "JSON",
-                success: function(response) {
-                    // 4. แสดงผลลัพธ์
-
-                    if (response.status == 200) {
-                        var today = new Date();
-                        var pastDate = new Date(response.person.birthday);
-                        var diffYears = today.getFullYear() - pastDate.getFullYear();
-                        if (response.person.sex == 1) {
-                            var sex = "ชาย";
-                        } else if (response.person.sex == 2) {
-                            var sex = "หญิง";
-                        } else {
-                            var sex = "อื่น";
-                        }
-                        $("#hn").val(response.person.hn);
-                        $("#cid").val(response.person.cid);
-                        $("#pname").val(response.person.pname);
-                        $("#fname").val(response.person.fname);
-                        $("#lname").val(response.person.lname);
-                        $("#age").val(diffYears);
-                        $("#sex").val(sex);
-                        $("#addr").val(response.person.address.addr);
-                        $("#moopart").val(response.person.address.mooparth);
-                        $("#amppart").val(response.person.address.amppart);
-                        $("#tmbpart").val(response.person.address.tmbpart);
-                        $("#chwpart").val(response.person.address.chwpart);
-                        $("#opd_allergy").val(response.person.allergy);
-                        if (typeConnect == "ConnectToDb") {
-                            DrugItemdetailDes(response.person.hn)
-                            DrugLabs(response.person.hn)
-                        } else if (typeConnect == "ConnectToAPI") {
-                            DrugItemdetailDes(response.drug)
-                            DrugLabs(response.lab)
-                        }
-
-                    } else if (response.status == 400) {
-                        alert('ไม่พบเลข Hn / Cid')
-                        $("#hn").val("");
-                        $("#cid").val("");
-                        $("#pname").val("");
-                        $("#fname").val("");
-                        $("#lname").val("");
-                        $("#age").val("");
-                        $("#sex").val("");
-                        $("#addr").val("");
-                        $("#moopart").val("");
-                        $("#amppart").val("");
-                        $("#tmbpart").val("");
-                        $("#chwpart").val("");
-                        $("#opd_allergy").val("");
-                        $("#treeview").html('');
-                        $("#treeviewLabs").html('');
-                    } else if (response.status == 500) {
-                        alert(response.message)
+                    $("#hn").val(response.person.hn);
+                    $("#cid").val(response.person.cid);
+                    $("#pname").val(response.person.pname);
+                    $("#fname").val(response.person.fname);
+                    $("#lname").val(response.person.lname);
+                    $("#age").val(diffYears);
+                    $("#sex").val(sex);
+                    $("#addr").val(response.person.address.addr);
+                    $("#moopart").val(response.person.address.mooparth);
+                    $("#amppart").val(response.person.address.amppart);
+                    $("#tmbpart").val(response.person.address.tmbpart);
+                    $("#chwpart").val(response.person.address.chwpart);
+                    $("#opd_allergy").val(response.person.allergy);
+                    if (typeConnect == "ConnectToDb") {
+                        DrugItemdetailDes(response.person.hn)
+                        DrugLabs(response.person.hn)
+                    } else if (typeConnect == "ConnectToAPI") {
+                        DrugItemdetailDes(response.drug)
+                        DrugLabs(response.lab)
                     }
-                },
-            });
-        }
+
+                } else if (response.status == 400) {
+                    alert('ไม่พบเลข Hn / Cid')
+                    $("#hn").val("");
+                    $("#cid").val("");
+                    $("#pname").val("");
+                    $("#fname").val("");
+                    $("#lname").val("");
+                    $("#age").val("");
+                    $("#sex").val("");
+                    $("#addr").val("");
+                    $("#moopart").val("");
+                    $("#amppart").val("");
+                    $("#tmbpart").val("");
+                    $("#chwpart").val("");
+                    $("#opd_allergy").val("");
+                    $("#treeview").html('');
+                    $("#treeviewLabs").html('');
+                } else if (response.status == 500) {
+                    alert(response.message)
+                }
+            },
+        });
     };
 
 
