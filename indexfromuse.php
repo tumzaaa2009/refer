@@ -584,10 +584,12 @@ if (isset($_GET['destroy'])) {
 
     let callPathHis = ''
     let tokenApi = ''
-
+    
     const typeConnect = '<?php echo $typeConnect ?>'
     // ? typeConnect
     if (typeConnect == "ConnectToAPI") {
+        auth = '<?php echo $calAuth; ?>'
+        console.log(auth)
         tokenApi = '<?php echo decryptPassword($calToken) ?>';
         callPathHis = '<?php echo $callUrl . $endPoint ?>';
     } else if (typeConnect == "ConnectToDb") {
@@ -1030,24 +1032,26 @@ if (isset($_GET['destroy'])) {
     }
     const HnInput = (value) => {
         $.ajax({
-            headers: {
-                "X-API-KEY": tokenApi,
-            },
+            url: 'http://localhost:8080/refer/api/',
             type: "POST",
-            url: `${callPathHis}`,
             data: {
-                hn: value,
+                headAuthHis: auth,
+                urlTokenHis:callPathHis,
+                keyTokenHis:tokenApi,
+                hospCode:10661,
+                hn: value
             },
             dataType: "JSON",
             success: function(response) {
                 // 4. แสดงผลลัพธ์
+               
                 if (response.status == 200) {
                     var today = new Date();
                     var pastDate = new Date(response.person.birthday);
                     var diffYears = today.getFullYear() - pastDate.getFullYear();
-                    if (response.sex == 1) {
+                    if (response.person.sex == 1) {
                         var sex = "ชาย";
-                    } else if (response.sex == 2) {
+                    } else if (response.person.sex == 2) {
                         var sex = "หญิง";
                     } else {
                         var sex = "อื่น";

@@ -64,6 +64,7 @@ if ($countRwController > 0) {
     } else if ($jsonData[1]['typeConnect'] == "ConnectToAPI") {
 
       $callUrl = $jsonData[1]['URl'];
+      $calAuth = $jsonData[1]['Auth'];
       $calToken = $jsonData[1]['TOKEN'];
       $testconnect = $jsonData[1]['testconnect'];
       $endPoint = $jsonData[1]['endPoint'];

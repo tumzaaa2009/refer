@@ -259,8 +259,24 @@
                                                         <input type="text" class="form-control" name="url-end-point" id="url-end-point" placeholder="/endpoint" value="<?php echo $endPoint; ?>">
                                                     </div>
                                                     <div class="col-sm-12">
+                                                        <label for="inputPassword3" class="col-sm-2 col-form-label">Headder Auth</label>
+                                                        <input type="text" class="form-control" name="head-auth-his" id="head-auth-his" >
+                                                    </div>
+                                                    <div class="col-sm-12">
                                                         <label for="inputPassword3" class="col-sm-2 col-form-label">input Token</label>
                                                         <input type="password" class="form-control" name="key-token-his" id="key-token-his" value="<?php echo decryptPassword($calToken); ?>">
+                                                    </div>
+                                                    <div class="col-sm-12">
+                                                        <label for="inputPassword3" class="col-sm-2 col-form-label">ตัวแปร รหัสรพ </label>
+                                                        <input type="text" class="form-control" name="key-hopscode-his" id="key-hospcode-his" >
+                                                    </div>
+                                                    <div class="col-sm-12">
+                                                        <label for="inputPassword3" class="col-sm-2 col-form-label">ตัวแปร cid </label>
+                                                        <input type="password" class="form-control" name="key-cid-his" id="key-cid-his" >
+                                                    </div>
+                                                    <div class="col-sm-12">
+                                                        <label for="inputPassword3" class="col-sm-2 col-form-label">ตัวแปร hn </label>
+                                                        <input type="password" class="form-control" name="key-hn-his" id="key-hn-his" >
                                                     </div>
                                                     <div class="col-sm mt-3">
                                                         <button type="button" class="btn btn-primary" onclick="TestApi()">ทดสอบ token </button>
@@ -303,54 +319,34 @@
 
         }
 
-        function getRefer(listTarget) {
-            const url = "https://api.srbr.in.th/refer/api/patient/";
-
-            const headers = {
-                "Content-Type": "application/json",
-                "X-API-Key": "pvoNArKhGdKK9oDl@fTSsDjG8XzptHlxIXR!3JRjzUJhDRbkalaWD"
-            };
-
-            return axios.post(url, listTarget, {
-                headers: headers
-            });
-        }
-
-        const listTarget = {
-            "hospcode": "10661",
-            "cid": "11111111111",
-            "hn": "1015555"
-        };
-
-        getRefer(listTarget)
-            .then(response => {
-                console.log(response.data);
-            })
-            .catch(error => {
-                console.error("เกิดข้อผิดพลาด:", error);
-            });
         const TestApi = () => {
             const urlTokenHis = $("#url-token-his").val();
             const testConnect = $("#url-token-testconnect").val();
+            const headAuthHis =$("#head-auth-his").val();
             const keyTokenHis = $("#key-token-his").val();
+            const hospCode = $("#key-hospcode-his").val();
+            const cid = $("#key-cid-his").val()
+            const hn = $("#key-hn-his").val()
             let result = urlTokenHis.concat(testConnect);
 
             if (urlTokenHis != "" && keyTokenHis != "") {
                 $.ajax({
-                    headers: {
-                        "x-access-key-token": keyTokenHis
-                    },
                     type: "POST",
-                    url: `${result}`,
+                    url: 'http://localhost:8080/refer/testconnectapi/',
                     data: {
-                        data: {
-                            urlTokenHis
-                        }
+                            headAuthHis,
+                            urlTokenHis,
+                            testConnect,
+                            keyTokenHis,
+                            hospCode,
+                            cid,
+                            hn
                     },
                     dataType: "JSON",
                     success: function(response) {
+                        console.log(response.status)
                         if (response.status == 200) {
-                            alert("เชื่อมต่อข้อมูลถูกต้อง")
+                            alert(JSON.stringify(response))
                         } else if (response.status == 500) {
                             alert("Token ไม่ถูกต้อง")
                         } else if (response.status == 400) {
