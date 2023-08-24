@@ -260,7 +260,7 @@
                                                     </div>
                                                     <div class="col-sm-12">
                                                         <label for="inputPassword3" class="col-sm-2 col-form-label">Headder Auth</label>
-                                                        <input type="text" class="form-control" name="head-auth-his" id="head-auth-his" >
+                                                        <input type="text" class="form-control" name="head-auth-his" id="head-auth-his" value="<?php echo $calAuth; ?>">
                                                     </div>
                                                     <div class="col-sm-12">
                                                         <label for="inputPassword3" class="col-sm-2 col-form-label">input Token</label>
@@ -268,15 +268,15 @@
                                                     </div>
                                                     <div class="col-sm-12">
                                                         <label for="inputPassword3" class="col-sm-2 col-form-label">ตัวแปร รหัสรพ </label>
-                                                        <input type="text" class="form-control" name="key-hopscode-his" id="key-hospcode-his" >
+                                                        <input type="text" class="form-control" name="key-hopscode-his" id="key-hospcode-his">
                                                     </div>
                                                     <div class="col-sm-12">
                                                         <label for="inputPassword3" class="col-sm-2 col-form-label">ตัวแปร cid </label>
-                                                        <input type="password" class="form-control" name="key-cid-his" id="key-cid-his" >
+                                                        <input type="password" class="form-control" name="key-cid-his" id="key-cid-his">
                                                     </div>
                                                     <div class="col-sm-12">
                                                         <label for="inputPassword3" class="col-sm-2 col-form-label">ตัวแปร hn </label>
-                                                        <input type="password" class="form-control" name="key-hn-his" id="key-hn-his" >
+                                                        <input type="password" class="form-control" name="key-hn-his" id="key-hn-his">
                                                     </div>
                                                     <div class="col-sm mt-3">
                                                         <button type="button" class="btn btn-primary" onclick="TestApi()">ทดสอบ token </button>
@@ -301,7 +301,19 @@
     <script src="https://code.jquery.com/jquery-3.6.3.js" integrity="sha256-nQLuAZGRRcILA+6dMBOvcRh5Pe310sBpanc6+QBmyVM=" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/axios@1.4.0/dist/axios.min.js"></script>
     <SCRIPT language="JavaScript">
-        const TypeConnect = () => {
+        const TypeConnect = (value) => {
+            let typeConnect = "<?php echo $typeConnect ?>";
+            $.ajax({
+                type: "POST",
+                url: './test.php',
+                data: {
+                    value: $("#select-type-connect").val(),
+                    typeConnect: typeConnect
+                },
+                dataType: "JSON",
+                success: function(response) {}
+            });
+
 
             if ($("#select-type-connect").val() == "NonConnect") {
                 return console.log($("#select-type-connect").val())
@@ -322,7 +334,7 @@
         const TestApi = () => {
             const urlTokenHis = $("#url-token-his").val();
             const testConnect = $("#url-token-testconnect").val();
-            const headAuthHis =$("#head-auth-his").val();
+            const headAuthHis = $("#head-auth-his").val();
             const keyTokenHis = $("#key-token-his").val();
             const hospCode = $("#key-hospcode-his").val();
             const cid = $("#key-cid-his").val()
@@ -334,13 +346,13 @@
                     type: "POST",
                     url: 'http://localhost:8080/refer/testconnectapi/',
                     data: {
-                            headAuthHis,
-                            urlTokenHis,
-                            testConnect,
-                            keyTokenHis,
-                            hospCode,
-                            cid,
-                            hn
+                        headAuthHis,
+                        urlTokenHis,
+                        testConnect,
+                        keyTokenHis,
+                        hospCode,
+                        cid,
+                        hn
                     },
                     dataType: "JSON",
                     success: function(response) {
