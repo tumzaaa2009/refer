@@ -1008,7 +1008,7 @@ if (isset($_GET['destroy'])) {
                     headAuthHis: auth,
                     urlTokenHis: callPathHis,
                     keyTokenHis: tokenApi,
-                    hospCode: 10661,
+                    hospCode: hosCode,
                     hn: value
                 },
                 dataType: "JSON",

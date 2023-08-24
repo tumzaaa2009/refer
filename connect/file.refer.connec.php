@@ -66,6 +66,7 @@ if ($countRwController > 0) {
       $callUrl = $jsonData[1]['URl'];
       $calAuth = $jsonData[1]['Auth'];
       $calToken = $jsonData[1]['TOKEN'];
+      $hospCode =$jsonData[1]['hospCode'];
       $testconnect = $jsonData[1]['testconnect'];
       $endPoint = $jsonData[1]['endPoint'];
     }

@@ -130,7 +130,8 @@ if (isset($_POST['submitPost'])) {
                                         <br>
                                         <button class="btn btn-lg btn-success btn-block" type="button" onClick="Login();">เช็ค Sync </button>
                                         <a href="loginadmin.php" class="btn btn-lg btn-primary" type="button">หน้าการตั้งค่าระบบ Refer </a>
-                                        <a href="register.php" class="btn btn-lg btn-dark   " type="button">สมัครเข้าใช้งาน </a>
+                                        <a  href="index.php" type="button" class="btn btn-primary btn-lg mx-2" >ตั้งค่าการเชื่อมต่อฐานข้อมูล/API</ฟ>
+                                        <a href="register.php" class="btn btn-lg btn-dark " type="button">สมัครเข้าใช้งาน </a>
                                     </fieldset>
                                 </form>
                             </div>
@@ -216,7 +217,7 @@ if (isset($_POST['submitPost'])) {
                     password: passCodeCheck,
                     opreator: opreator
                 },
-                
+
                 dataType: "JSON",
                 success: function(response) {
                     // ถ้ามี response 

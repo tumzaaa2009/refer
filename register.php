@@ -136,7 +136,7 @@
         if (valueKey.length == 5) {
             $.ajax({
                 type: "POST",
-                url: "https://rh4cloudcenter.moph.go.th/referapi/gethoscode",
+                url: "https://rh4cloudcenter.moph.go.th:3000/referapi/gethoscode",
                 data: {
                     hosCode: valueKey
                 },
@@ -168,7 +168,7 @@
         } else {
             $.ajax({
                 type: "POST",
-                url: "https://rh4cloudcenter.moph.go.th/referapi/createuser",
+                url: "https://rh4cloudcenter.moph.go.th:3000/referapi/createuser",
                 data: {
                     hosCode: $("#hosCode").val(),
                     hosName: $("#hosName").val(),
