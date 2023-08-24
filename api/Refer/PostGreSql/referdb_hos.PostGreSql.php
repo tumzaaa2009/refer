@@ -15,7 +15,7 @@ function conDBdw()
     global $dbNameRefer;
     global $objconnectRefer;
     global $portRefer;
-    $objconnectRefer = pg_connect("host=$serverRefer port=$portRefer dbname=$dbNameRefer user=$userRefer password=$passRefer");
+    $objconnectRefer = pg_connect("host=$serverRefer port=$portRefer dbname=$dbNameRefer user=$userRefer password= $passRefer");
 
     if (!$objconnectRefer) {
         echo "Failed to connect : " . mysqli_connect_error();

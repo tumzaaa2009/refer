@@ -133,7 +133,7 @@
                                             <div class="form-group row">
                                                 <label for="inputPassword3" class="col-sm-2 col-form-label">Password:</label>
                                                 <div class="col-sm-6">
-                                                    <input type="password" class="form-control" name="user-password-thairefer" id="user-password-thairefer" value="<?php echo $passRefer; ?>">
+                                                    <input type="password" class="form-control" name="user-password-thairefer" id="user-password-thairefer" value="<?php echo decryptPassword($passRefer); ?>">
                                                 </div>
                                             </div>
                                             <div class="form-group row">
@@ -230,7 +230,7 @@
                                                     <div class="form-group row">
                                                         <label for="inputPassword3" class="col-sm-2 col-form-label">Password:</label>
                                                         <div class="col-sm-6">
-                                                            <input type="password" class="form-control" name="user-password-his" id="user-password-his" value="<?php echo $passHis; ?>">
+                                                            <input type="password" class="form-control" name="user-password-his" id="user-password-his" value="<?php echo decryptPassword($passHis); ?>">
                                                         </div>
                                                     </div>
                                                     <div class="form-group row">

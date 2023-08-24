@@ -23,7 +23,7 @@ if ($_POST['connect-type'] == "refer") {
   $serverName = $_POST['server-name-thairefer'];
   $databaseName = $_POST['database-name-thairefer'];
   $useRefer = $_POST['use-id-thairefer'];
-  $password = $_POST['user-password-thairefer'];
+  $password = encryptPassword($_POST['user-password-thairefer']);
   $contentType = $_POST['connect-type'];
   $portRefer = $_POST['portRefer'];
   // array
@@ -47,7 +47,7 @@ if ($_POST['connect-type'] == "refer") {
     $serverNameHis = $_POST['sever-name-his'];
     $databaseNameHis = $_POST['database-name-his'];
     $useHis = $_POST['use-id-his'];
-    $usePassHis = $_POST['user-password-his'];
+    $usePassHis = encryptPassword($_POST['user-password-his']);
     $portHis = $_POST['portHis'];
  
     $hisArray = array(
