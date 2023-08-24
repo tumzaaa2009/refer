@@ -1,1 +1,26 @@
-{"hosCode":{"hosCode":" 10757","hosName":"\u0e23\u0e1e\u0e08\u0e23\u0e34\u0e07\u0e46\u0e19\u0e30"},"0":{"ContentTypeRefer":"refer","DB_TYPE_REFER":"Mysql","Server_NameRefer":"localhost","Database_NameRefer":"referdb_hos","userRefer":"root","Password":"mysql","portRefer":"3306","callPathRefer":".\/api\/Refer\/Mysql\/referdb_hos.Mysql.php"},"1":{"ContentTypeHis":"his","DB_TYPE_HIS":"Mysql","Type_His":"hosxp.hospcu","Server_NameHis":"localhost","Database_NameHis":"hos","useHis":"root","Password":"mysql","portHis":"3306","callPathHis":".\/api\/HosApi\/Mysql\/hosxp.hospcu.Mysql.php"}}
+{
+  "hosCode": {
+    "hosCode": "10661",
+    "hosName": "\u0e23\u0e1e \u0e2a\u0e23\u0e30\u0e1a\u0e38\u0e23\u0e35"
+  },
+  "0": {
+    "ContentTypeRefer": "refer",
+    "DB_TYPE_REFER": "Mysql",
+    "Server_NameRefer": "localhost",
+    "Database_NameRefer": "referdb_hos",
+    "userRefer": "root",
+    "Password": "u2YBpGPqRT4/SwREoipCGXC/RnFzlybmdKrB9kXBkvEIcNm0oernOo0Kf4yr9yjCcmp5TUhTVVVES2xKR0Zwd3NsMDFGdz09",
+    "portRefer": "3306",
+    "callPathRefer": "./api/Refer/Mysql/referdb_hos.Mysql.php"
+  },
+  "1": {
+    "typeConnect": "ConnectToAPI",
+    "ContentTypeHis": "his",
+    "URl": "https://api.srbr.in.th",
+    "testconnect": "/refer/api/patient/",
+    "endPoint": "/refer/api/patient/",
+    "Auth": "x-api-key",
+    "hospCode": "10661",
+    "TOKEN": "LmL+OQ6kbjqSs27K4zoTel2ux1GT99MYJ3Eh9BzbG1qsdoPMvG8YWNB119UTK2LXNWZHYjBhZWxBZlVhdENXUDhvaC9qb01UN09OdXoxR3NyQlE2UUppcnhyWVZpM0hDUEtXNEIwWkMwZmZzeEM2T3lUUmpNWExROEdER1pQN2QrU01TZmc9PQ=="
+  }
+}

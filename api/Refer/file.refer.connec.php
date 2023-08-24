@@ -14,7 +14,18 @@ $serverHis='';
 $dbNameHis='';
 $userHis='';
 $passHis='';
-
+function decryptPassword($encryptedPassword)
+{
+  $data = base64_decode($encryptedPassword);
+  $key = substr(
+    $data,
+    0,
+    32
+  );
+  $iv = substr($data, 32, openssl_cipher_iv_length('aes-256-cbc'));
+  $encrypted = substr($data, 32 + openssl_cipher_iv_length('aes-256-cbc'));
+  return openssl_decrypt($encrypted, 'aes-256-cbc', $key, 0, $iv);
+}
 if($countRwController > 0) {        
  
               if($jsonData[0]['ContentTypeRefer'] == "refer"){ 
@@ -22,7 +33,7 @@ if($countRwController > 0) {
                 $dbTypeRefer = $jsonData[0]['DB_TYPE_REFER'] ; 
                 $serverRefer = $jsonData[0]['Server_NameRefer'] ;
                 $userRefer   = $jsonData[0]['userRefer'] ;
-                $passRefer   = $jsonData[0]['Password'] ;
+                $passRefer   = decryptPassword($jsonData[0]['Password']) ;
                 $dbNameRefer = $jsonData[0]['Database_NameRefer'] ;
                 $portRefer   = $jsonData[0]['portRefer'];
               }
@@ -32,7 +43,7 @@ if($countRwController > 0) {
                 $typeHis =    $jsonData[1]['Type_His'];
                 $serverHis  = $jsonData[1]['Server_NameHis']  ; 
                 $userHis    = $jsonData[1]['useHis'] ;
-                $passHis    = $jsonData[1]['Password'] ;
+                $passHis    = decryptPassword($jsonData[1]['Password']) ;
                 $dbNameHis  = $jsonData[1]['Database_NameHis'] ;
                 $portHis = $jsonData[1]['portHis'];
                 }
@@ -44,7 +55,7 @@ if($countRwController > 0) {
                 $dbTypeRefer =$_POST['dbTypeRefer'] ; 
                 $serverRefer =$_POST['serverNameRefer'] ;
                 $userRefer   =$_POST['userNameRefer'] ;
-                $passRefer   =$_POST['passwordRefer'] ;
+                $passRefer   = decryptPassword($_POST['passwordRefer']) ;
                 $dbNameRefer =$_POST['databaseNameUseRefer'] ;
                 $portRefer = $_POST['portRefer'];
                
@@ -56,7 +67,7 @@ if($countRwController > 0) {
                 $hisType = $_POST['hisType'];
                 $serverHis = $_POST['serverNameHis']; 
                 $userHis   = $_POST['userNameHis'];
-                $passHis   = $_POST['passwordHis'];
+                $passHis   = decryptPassword($_POST['passwordHis']);
                 $dbNameHis = $_POST['databaseNameUseHis'];
                 $portHis = $_POST['portHis'];
          } 

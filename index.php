@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
-<?php include("./connect/file.refer.connec.php"); ?>
+<?php include("./connect/file.refer.connec.php");
+
+?>
 
 <head>
 
@@ -38,12 +40,14 @@
             <div class="d-flex justify-content-center align-items-center vh-100">
                 <form action="loginuser.php" id="form_create" method="post" class="needs-validation" enctype="multipart/form-data" novalidate>
                     <div class="row">
-                        <div class="col-md-12mt-6">
+                        <div class="col-md-12">
                             <button type="submit" class="btn btn-success mb-3">หน้าผู้ใช้งาน</button>
                         </div>
                     </div>
                 </form>
-                <button type="button" class="btn btn-primary mb-3" data-bs-toggle="modal" href="#sysconf-dbrefer" role="button" type="button">ตั้งค่าการเชื่อมต่อฐานข้อมูล</button>
+                <button type="button" class="btn btn-primary mb-3 mx-2" data-bs-toggle="modal" href="#sysconf-dbrefer" role="button" type="button">ตั้งค่าการเชื่อมต่อฐานข้อมูล/API</button>
+
+
             </div>
         </div>
         <div class="modal fade" id="sysconf-dbrefer" aria-hidden="true" aria-labelledby="exampleModalToggleLabel" tabindex="-1">
@@ -97,9 +101,9 @@
                                                             <option value="PostGreSql" <?php if ($dbTypeRefer == "PostGreSql") echo 'selected="selected"'; ?>>
                                                                 POSTGRESS
                                                             </option>
-                                                            <option value="SqlServer" <?php if ($dbTypeHis == "SQLSERVER") echo 'selected="selected"'; ?>>
+                                                            <!-- <option value="SqlServer" <?php if ($dbTypeHis == "SQLSERVER") echo 'selected="selected"'; ?>>
                                                                 SQLSERVER
-                                                            </option>
+                                                            </option> -->
                                                         </select>
                                                     </div>
                                                 </div>
@@ -129,7 +133,7 @@
                                             <div class="form-group row">
                                                 <label for="inputPassword3" class="col-sm-2 col-form-label">Password:</label>
                                                 <div class="col-sm-6">
-                                                    <input type="password" class="form-control" name="user-password-thairefer" id="user-password-thairefer" value="<?php echo $passRefer; ?>">
+                                                    <input type="password" class="form-control" name="user-password-thairefer" id="user-password-thairefer" value="<?php echo decryptPassword($passRefer); ?>">
                                                 </div>
                                             </div>
                                             <div class="form-group row">
@@ -155,77 +159,130 @@
                                             <!-- form start -->
                                             <div class="card-body">
                                                 <div class="form-group row">
-                                                    <label for="inputEmail3" class="col-sm-2 col-form-label">DB-HIS:TYPE</label>
+                                                    <label for="inputEmail3" class="col-sm-2 col-form-label">TYPE:Connect</label>
                                                     <div class="col-sm-4">
-                                                        <input type="hidden" name="connect-type-his" id="connect-type-his" value="his" />
                                                         <div class="form-group">
-                                                            <select class="form-control" name="select-typedb-his" id="select-typedb-his">
-                                                                <option value="Mysql" <?php if ($dbTypeHis == "MYSQL") echo 'selected="selected"'; ?>>
-                                                                    MYSQL
+                                                            <select class="form-control" name="select-type-connect" id="select-type-connect" onchange="TypeConnect(this.value)">
+                                                                <option value="NonConnect" select>
+                                                                    ---ระบุประเภทการเชื่อมต่อ---
                                                                 </option>
-                                                                <option value="PostGreSql" <?php if ($dbTypeHis == "PostGreSql") echo 'selected="selected"'; ?>>
-                                                                    POSTGRESS
+                                                                <option value="ConnectToDb" <?php if ($typeConnect == "ConnectToDb") echo 'selected="selected"'; ?>>
+                                                                    ConnectToDb
                                                                 </option>
-                                                                <option value="SqlServer" <?php if ($dbTypeHis == "SQLSERVER") echo 'selected="selected"'; ?>>
-                                                                    SQLSERVER
+                                                                <option value="ConnectToAPI" <?php if ($typeConnect == "ConnectToAPI") echo 'selected="selected"'; ?>>
+                                                                    ConnectToAPI
                                                                 </option>
                                                             </select>
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <div class="form-group row">
-                                                    <label for="inputEmail3" class="col-sm-2 col-form-label">HISType</label>
-                                                    <div class="col-sm-6">
-                                                        <div class="form-group">
-                                                            <select class="form-control" name="select-type-his" id="select-type-his">
-                                                                <option value="hosxp.hospcu" <?php if ($hisType == "hosxp-hospcu") echo 'selected="selected"'; ?>>
-                                                                    hosxp-hospcu
-                                                                </option>
-                                                                <!-- <option value="HOS-XE" <?php if ($hisType == "HOS-XE") echo 'selected="selected"'; ?>>
-                                                                    HOS-XE
-                                                                </option> -->
-                                                            </select>
+                                                <div id="HISDB" style="display:none;">
+                                                    <div class="form-group row">
+                                                        <label for="inputEmail3" class="col-sm-2 col-form-label">DB-HIS:TYPE</label>
+                                                        <div class="col-sm-4">
+                                                            <input type="hidden" name="connect-type-his" id="connect-type-his" value="his" />
+                                                            <div class="form-group">
+                                                                <select class="form-control" name="select-typedb-his" id="select-typedb-his">
+                                                                    <option value="Mysql" <?php if ($dbTypeHis == "MYSQL") echo 'selected="selected"'; ?>>
+                                                                        MYSQL
+                                                                    </option>
+                                                                    <option value="PostGreSql" <?php if ($dbTypeHis == "PostGreSql") echo 'selected="selected"'; ?>>
+                                                                        POSTGRESS
+                                                                    </option>
+                                                                </select>
+                                                            </div>
                                                         </div>
                                                     </div>
-                                                </div>
-                                                <div class="form-group row">
-                                                    <label for="inputPassword3" class="col-sm-2 col-form-label">Server
-                                                        Name</label>
-                                                    <div class="col-sm-6">
-                                                        <input type="text" class="form-control" name="sever-name-his" id="sever-name-his" value="<?php echo $serverHis; ?>">
+
+                                                    <div class="form-group row">
+                                                        <label for="inputEmail3" class="col-sm-2 col-form-label">HISType</label>
+                                                        <div class="col-sm-6">
+                                                            <div class="form-group">
+                                                                <select class="form-control" name="select-type-his" id="select-type-his">
+                                                                    <option value="hosxp.hospcu" <?php if ($hisType == "hosxp-hospcu") echo 'selected="selected"'; ?>>
+                                                                        hosxp v3,v4-hospcu
+                                                                    </option>
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group row">
+                                                        <label for="inputPassword3" class="col-sm-2 col-form-label">Server
+                                                            Name</label>
+                                                        <div class="col-sm-6">
+                                                            <input type="text" class="form-control" name="sever-name-his" id="sever-name-his" value="<?php echo $serverHis; ?>">
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group row">
+                                                        <label for="inputPassword3" class="col-sm-2 col-form-label">Database
+                                                            Name</label>
+                                                        <div class="col-sm-6">
+                                                            <input type="text" class="form-control" name="database-name-his" id="database-name-his" value="<?php echo $dbNameHis; ?>">
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group row">
+                                                        <label for="inputPassword3" class="col-sm-2 col-form-label">User
+                                                            ID:</label>
+                                                        <div class="col-sm-6">
+                                                            <input type="text" class="form-control" name="use-id-his" id="use-id-his" value="<?php echo $userHis; ?>">
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group row">
+                                                        <label for="inputPassword3" class="col-sm-2 col-form-label">Password:</label>
+                                                        <div class="col-sm-6">
+                                                            <input type="password" class="form-control" name="user-password-his" id="user-password-his" value="<?php echo decryptPassword($passHis); ?>">
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group row">
+                                                        <label for="inputPassword3" class="col-sm-2 col-form-label">PORTRHos:</label>
+                                                        <div class="col-sm-6">
+                                                            <input type="number" class="form-control" name="portHis" id="portHis" value="<?php echo $portHis; ?>">
+                                                        </div>
+                                                    </div>
+                                                    <div class="card footer">
+                                                        <button type="button" class="btn btn-primary" onclick="onTestConnect('His')">ทดสอบการเชื่อมต่อระบบ
+                                                            His
+                                                        </button>
                                                     </div>
                                                 </div>
-                                                <div class="form-group row">
-                                                    <label for="inputPassword3" class="col-sm-2 col-form-label">Database
-                                                        Name</label>
-                                                    <div class="col-sm-6">
-                                                        <input type="text" class="form-control" name="database-name-his" id="database-name-his" value="<?php echo $dbNameHis; ?>">
+                                                <div id="HISAPI" style="display:none;">
+                                                    <div class="col-sm-12">
+                                                        <label for="inputPassword3" class="col-sm-2 col-form-label">URL</label>
+                                                        <input type="text" class="form-control" name="url-token-his" id="url-token-his" placeholder="https://xxxx.moph.go.th" value="<?php echo $callUrl; ?>">
+                                                    </div>
+                                                    <div class="col-sm-12">
+                                                        <label for="inputPassword3" class="col-sm-2 col-form-label">PathTestConnect</label>
+                                                        <input type="text" class="form-control" name="url-token-testconnect" id="url-token-testconnect" placeholder="/testconnect" value="<?php echo $testconnect; ?>">
+                                                    </div>
+                                                    <div class="col-sm-12">
+                                                        <label for="inputPassword3" class="col-sm-2 col-form-label">Apiเรียก HN หรือ CID</label>
+                                                        <input type="text" class="form-control" name="url-end-point" id="url-end-point" placeholder="/endpoint" value="<?php echo $endPoint; ?>">
+                                                    </div>
+                                                    <div class="col-sm-12">
+                                                        <label for="inputPassword3" class="col-sm-2 col-form-label">Headder Auth</label>
+                                                        <input type="text" class="form-control" name="head-auth-his" id="head-auth-his" value="<?php echo $calAuth; ?>">
+                                                    </div>
+                                                    <div class="col-sm-12">
+                                                        <label for="inputPassword3" class="col-sm-2 col-form-label">input Token</label>
+                                                        <input type="password" class="form-control" name="key-token-his" id="key-token-his" value="<?php echo decryptPassword($calToken); ?>">
+                                                    </div>
+                                                    <div class="col-sm-12">
+                                                        <label for="inputPassword3" class="col-sm-2 col-form-label">ตัวแปร รหัสรพ </label>
+                                                        <input type="text" class="form-control" name="key-hopscode-his" id="key-hospcode-his">
+                                                    </div>
+                                                    <div class="col-sm-12">
+                                                        <label for="inputPassword3" class="col-sm-2 col-form-label">ตัวแปร cid </label>
+                                                        <input type="password" class="form-control" name="key-cid-his" id="key-cid-his">
+                                                    </div>
+                                                    <div class="col-sm-12">
+                                                        <label for="inputPassword3" class="col-sm-2 col-form-label">ตัวแปร hn </label>
+                                                        <input type="password" class="form-control" name="key-hn-his" id="key-hn-his">
+                                                    </div>
+                                                    <div class="col-sm mt-3">
+                                                        <button type="button" class="btn btn-primary" onclick="TestApi()">ทดสอบ token </button>
                                                     </div>
                                                 </div>
-                                                <div class="form-group row">
-                                                    <label for="inputPassword3" class="col-sm-2 col-form-label">User
-                                                        ID:</label>
-                                                    <div class="col-sm-6">
-                                                        <input type="text" class="form-control" name="use-id-his" id="use-id-his" value="<?php echo $userHis; ?>">
-                                                    </div>
-                                                </div>
-                                                <div class="form-group row">
-                                                    <label for="inputPassword3" class="col-sm-2 col-form-label">Password:</label>
-                                                    <div class="col-sm-6">
-                                                        <input type="password" class="form-control" name="user-password-his" id="user-password-his" value="<?php echo $passHis; ?>">
-                                                    </div>
-                                                </div>
-                                                <div class="form-group row">
-                                                    <label for="inputPassword3" class="col-sm-2 col-form-label">PORTRHos:</label>
-                                                    <div class="col-sm-6">
-                                                        <input type="number" class="form-control" name="portHis" id="portHis" value="<?php echo $portHis; ?>">
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <!-- /.card-body -->
-                                            <div class="card footer">
-                                                <button type="button" class="btn btn-primary" onclick="onTestConnect('His')">ทดสอบการเชื่อมต่อระบบ
-                                                    His</button>
+                                                <!-- /.card-body -->
                                             </div>
                                         </div>
                                         <!-- /.card-info -->
@@ -242,7 +299,77 @@
 
     </div>
     <script src="https://code.jquery.com/jquery-3.6.3.js" integrity="sha256-nQLuAZGRRcILA+6dMBOvcRh5Pe310sBpanc6+QBmyVM=" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios@1.4.0/dist/axios.min.js"></script>
     <SCRIPT language="JavaScript">
+        const TypeConnect = (value) => {
+            let typeConnect = "<?php echo $typeConnect ?>";
+            $.ajax({
+                type: "POST",
+                url: './test.php',
+                data: {
+                    value: $("#select-type-connect").val(),
+                    typeConnect: typeConnect
+                },
+                dataType: "JSON",
+                success: function(response) {}
+            });
+
+
+            if ($("#select-type-connect").val() == "NonConnect") {
+                return console.log($("#select-type-connect").val())
+            }
+            if ($("#select-type-connect").val() == "ConnectToDb") {
+
+                $("#HISDB").show();
+                $("#HISAPI").hide();
+
+            } else if ($("#select-type-connect").val() == "ConnectToAPI") {
+                $("#HISDB").hide();
+                $("#HISAPI").show();
+
+            }
+
+        }
+
+        const TestApi = () => {
+            const urlTokenHis = $("#url-token-his").val();
+            const testConnect = $("#url-token-testconnect").val();
+            const headAuthHis = $("#head-auth-his").val();
+            const keyTokenHis = $("#key-token-his").val();
+            const hospCode = $("#key-hospcode-his").val();
+            const cid = $("#key-cid-his").val()
+            const hn = $("#key-hn-his").val()
+            let result = urlTokenHis.concat(testConnect);
+
+            if (urlTokenHis != "" && keyTokenHis != "") {
+                $.ajax({
+                    type: "POST",
+                    url: 'http://localhost:8080/refer/testconnectapi/',
+                    data: {
+                        headAuthHis,
+                        urlTokenHis,
+                        testConnect,
+                        keyTokenHis,
+                        hospCode,
+                        cid,
+                        hn
+                    },
+                    dataType: "JSON",
+                    success: function(response) {
+                        console.log(response.status)
+                        if (response.status == 200) {
+                            alert(JSON.stringify(response))
+                        } else if (response.status == 500) {
+                            alert("Token ไม่ถูกต้อง")
+                        } else if (response.status == 400) {
+                            alert("ข้อมูลไม่ถูกต้อง")
+                        }
+                    }
+                });
+            }
+
+        }
+        TypeConnect();
         const ConnecT = () => {
             if ($("#hosCode").val() == "" || $("#hosName").val() == "") {
                 alert("ระบุข้อมูล รพ.")
@@ -261,8 +388,6 @@
                 });
             }
         }
-
-
         const onTestConnect = (params) => {
             if (params == "refer") {
                 const contentTypeRefer = $("#conttent-type-refer").val();
@@ -319,33 +444,6 @@
             }
         }
 
-        //  function chklogin() {
-        //      if (document.formlogin.hosCode.value == "") {
-        //          alert("กรุณากรอก ชื่อผู้ใช้");
-        //          document.formlogin.hosCode.focus();
-        //      } else
-        //      if (document.formlogin.passCode.value == "") {
-        //          alert("กรุณากรอก รหัสผ่าน");
-        //          document.formlogin.passCode.focus();
-        //      } else {
-        //          document.formlogin.submit();
-
-        //      }
-
-        //      let input = $("#input").val()
-        //      $.ajax({
-        //          type: "POST",
-        //          url: "",
-        //          data: {
-        //              hosCode: $("#hosCode").val(),
-        //              passCode: $("#passCode").val()
-        //          },
-        //          dataType: "JSON",
-        //          success: function(response) {
-        //              console.log(response)
-        //          }
-        //      });
-        //  }
 
         function en_username() {
             e_k = event.keyCode
@@ -362,14 +460,6 @@
                 document.formlogin.pass_code.focus();
             }
         }
-
-        //  const myModal = new bootstrap.Modal("#exampleModal");
-
-
-        //  myModalEl.addEventListener('hidden.bs.modal', function(event) {
-        //      // do something...
-        //  })
-        //  myModal.show();
     </SCRIPT>
 </body>
 

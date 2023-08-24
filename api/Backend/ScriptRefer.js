@@ -690,7 +690,7 @@ function showDetailReferOut() {
         // ถอดรหัสข้อมูล
         const decrypted = decryptData(encrypted, secretKey);
 
-        console.log("ข้อมูลที่ถอดรหัส:", decrypted);
+        // console.log("ข้อมูลที่ถอดรหัส:", decrypted);
         const json = JSON.parse(response.message[0].image_api);
         const count = Object.keys(json).length;
         $("#countPictureXray").html(`(${count})`);
@@ -730,7 +730,7 @@ function showDetailReferOut() {
             ict10Detail.push(`(${index + 1}.${icd10Arr[index].name}),`);
           }
         }
-
+        $("#icd10Detail").val(ict10Detail);
         $("#trDetailIcd10").html(ict10Detail.join("")); // ใช้ join เพื่อรวม array เป็น string โดยไม่มีตัวคั่น
 
         // * icd 10
@@ -738,18 +738,20 @@ function showDetailReferOut() {
         if (detaildrugArr != null) {
           const jsonDataDurg = JSON.parse(detaildrugArr);
           const groupedData = groupByDate(jsonDataDurg);
+          const listdateDrug = [];
 
-          const drugArray = Object.keys(groupedData).map((date) => {
+          const drugArray = Object.keys(groupedData).map((date, index) => {
             const drugs = groupedData[date];
+            listdateDrug.push(groupedData[date]);
             const drugListItems = drugs
-              .map((drug) => {
-                return `<tr><td>${drug.drugname}</td><td>${drug.therapeutic}</td><td>${drug.unit}</td></tr>`;
+              .map((drug, indexListItem) => {
+                return `<tr><td>${drug.drugname} </td><td> ${drug.therapeutic}"</td><td>${drug.unit}</td></tr>`;
               })
               .join("");
             return `<div class="col">
                     <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
                       <li class="nav-item">
-                        <a class="nav-link"><i class="fas fa-angle-left right"></i>${date}</a>
+                        <a class="nav-link"><i class="fas fa-angle-left right"></i>  ${date}</a>
                         <ul class="nav nav-treeview">
                           <li class="nav-item">
                             <div class="table-responsive">
@@ -771,6 +773,8 @@ function showDetailReferOut() {
                   </div>`;
           });
 
+          $("#ListDrugs").val(JSON.stringify(listdateDrug));
+
           $("#treeviewDes").html(drugArray);
         }
         // ** detail labs
@@ -778,9 +782,11 @@ function showDetailReferOut() {
         if (detailLabs != null) {
           const jsonDataLabs = JSON.parse(detailLabs);
           const groupedDataLabs = groupByDate(jsonDataLabs);
+          const listLabs = [];
 
           const labsArray = Object.keys(groupedDataLabs).map((date) => {
             const labs = groupedDataLabs[date];
+            listLabs.push(labs);
             const labsListItems = labs
               .map((lab) => {
                 return `<tr><td>${lab.lab_items_code}</td><td>${lab.lab_items_name}</td><td>${lab.lab_items_normal_value}</td><td>${lab.lab_order_result}</td></tr>`;
@@ -812,6 +818,7 @@ function showDetailReferOut() {
                   </div>`;
           });
           $("#treeviewLabs").html(labsArray);
+          $("#detailLabs").val(JSON.stringify(listLabs));
         }
         //* labs
         const consultfilesArray = response.message[0].counsult_api;
@@ -834,18 +841,29 @@ function showDetailReferOut() {
         // ? Consult files
         $("#refer_no").val(response.message[0].refer_no);
         $("#refer_code").val(response.message[0].refer_code);
-
+        $("#refer_name").val(response.message[0].refer_name);
+        $("#gender").val(decrypted.sex);
         $("#codeGenRefer").val(response.message[0].codegen_refer_no);
         $("#hn").val(decrypted.hn);
         $("#cid").val(decrypted.cid);
         $("#age").val(decrypted.age);
+
         $("#refer_time").val(
-          `${response.message[0].formatteStartDate} เวลา:${response.message[0].refer_time}`
+          `${formatDateToThai(response.message[0].formatteStartDate)} เวลา:${
+            response.message[0].refer_time
+          }`
         );
 
-        $("#pname").val(decrypted.pname);
-        $("#fname").val(decrypted.fname);
-        $("#lname").val(decrypted.lname);
+        $("#getStationService").val(response.message[0].location_org);
+        $("#fname").val(
+          `${decrypted.pname} ${decrypted.fname} ${decrypted.lname} `
+        );
+        $("#lname").val();
+        $("#addr").val(decrypted.addr);
+        $("#moopart").val(decrypted.moopart);
+        $("#tmbpart").val(decrypted.tmbpart);
+        $("#amppart").val(decrypted.amppart);
+        $("#chwpart").val(decrypted.chwpart);
         $("#aligy").val(response.message[0].drug_aligy);
 
         $("#doctorname").val(response.message[0].doctor_name);
@@ -858,12 +876,7 @@ function showDetailReferOut() {
         $("#getStationServiceDestinationDes").val(
           `${response.message[0].location_des}`
         );
-        $("#getStationServiceDestinationDes").val(
-          `${response.message[0].location_des}`
-        );
-        $("#getStationServiceDestinationDes").val(
-          `${response.message[0].location_des}`
-        );
+
         $("#lvAcityDes").val(`${response.message[0].level_actual}`);
         $("#lvAcityDes").css(
           "background-color",
@@ -878,6 +891,7 @@ function showDetailReferOut() {
         $("#otherCauseReferout").val(
           `${response.message[0].cause_referout_other}`
         );
+        $("#getpttype").val(`${response.message[0].pttype_id}`);
         $("#codeReferDes").val(`${response.message[0].refer_hospcode}`);
         $("#doctorNameDes").val(response.message[0].doctor_name);
         $("#coordinateIs").val(response.message[0].coordinate_name);
@@ -886,17 +900,19 @@ function showDetailReferOut() {
         // ? ตาราง risk torma
         if (response.message[0].risk_turma != "") {
           const jsonRiskTurma = JSON.parse(response.message[0].risk_turma);
-
+          const listTurmar = [];
           const riskTurmaArray = Object.keys(jsonRiskTurma).map((key) => {
             if (key === "riskturma") {
               const riskTurma = jsonRiskTurma[key];
               return riskTurma.map((item) => {
+                listTurmar.push(item);
                 return `<tr class="table-active table-bordered"><td>${item.Consciousness}</td><td>${item.time}</td><td>${item.e}</td><td>${item.v}</td><td>${item.m}</td><td>${item.pupilR}</td><td>${item.pupilL}</td><td>${item.Tc}</td><td>${item.prF}</td><td>${item.pfM}</td><td>${item.bp}</td><td>${item.mmHg}</td><td>${item.spo2}</td></tr>`;
                 // ส่งค่าที่ต้องการให้กลับจาก map
               });
             }
           });
 
+          $("#detailRiskTurmar").val(JSON.stringify(listTurmar));
           $("#riskturmatbody").html(riskTurmaArray);
         }
 
@@ -1566,19 +1582,36 @@ const showDetailReferBack = () => {
       expDateString = `${expDay}/${expMonth}/${expYear}`;
 
       if (response.status == 200) {
+        const encrypted = response.message[0].data_encrypt;
+
+        // คีย์ที่ใช้ในการถอดรหัส
+        const secretKey = "Rh4Refer";
+
+        // ถอดรหัสข้อมูล
+        const decrypted = decryptData(encrypted, secretKey);
+
         $("#refer_no").val(response.message[0].refer_no);
-        $("#refer_code").val(response.message[0].refer_code);
+        $("#refer_code").val(response.message[0].refer_hosp_name);
+
+        $("#refer_name").val(response.message[0].refer_name);
         $("#code_gen_refer").val(response.message[0].codegen_refer_no);
 
-        $("#hn").val(response.message[0].hn);
-        $("#cid").val(response.message[0].cid);
-        $("#age").val(response.message[0].age);
+        $("#hn").val(decrypted.hn);
+        $("#cid").val(decrypted.cid);
+        $("#age").val(decrypted.age);
+        $("#addr").val(decrypted.addr);
+        $("#moopart").val(decrypted.moopart);
+        $("#tmbpart").val(decrypted.tmbpart);
+        $("#amppart").val(decrypted.amppart);
+        $("#chwpart").val(decrypted.chwpart);
         $("#refer_time").val(
           `${response.message[0].formatteStartDate} เวลา:${response.message[0].refer_time}`
         );
         $("#pname").val(response.message[0].pname);
-        $("#fname").val(response.message[0].fname);
-        $("#lname").val(response.message[0].lname);
+        $("#fname").val(
+          `${decrypted.pname} ${decrypted.fname} ${decrypted.lname} `
+        );
+
         $("#aligy").val(response.message[0].drug_aligy);
         $("#getStationService").val(response.message[0].location_org);
         $("#department").val(response.message[0].location_id);
@@ -1611,20 +1644,21 @@ const showDetailReferBack = () => {
         const json = JSON.parse(response.message[0].image_api);
 
         // ? ตาราง risk torma
-        // ? ตาราง risk torma
         if (response.message[0].risk_turma != "") {
           const jsonRiskTurma = JSON.parse(response.message[0].risk_turma);
-
+          const listTurmar = [];
           const riskTurmaArray = Object.keys(jsonRiskTurma).map((key) => {
             if (key === "riskturma") {
               const riskTurma = jsonRiskTurma[key];
               return riskTurma.map((item) => {
+                listTurmar.push(item);
                 return `<tr class="table-active table-bordered"><td>${item.time}</td><td>${item.e}</td><td>${item.v}</td><td>${item.m}</td><td>${item.pupilR}</td><td>${item.pupilL}</td><td>${item.Tc}</td><td>${item.prF}</td><td>${item.pfM}</td><td>${item.bp}</td><td>${item.mmHg}</td><td>${item.spo2}</td></tr>`;
                 // ส่งค่าที่ต้องการให้กลับจาก map
               });
             }
           });
 
+          $("#detailRiskTurmar").val(JSON.stringify(listTurmar));
           $("#riskturmatbody").html(riskTurmaArray);
         }
 
@@ -1666,14 +1700,13 @@ const showDetailReferBack = () => {
             ict10Detail.push(`(${index + 1}.${icd10Arr[index].name}),`);
           }
         }
-
+        $("#icd10Detail").val(ict10Detail);
         $("#trDetailIcd10").html(ict10Detail.join("")); // ใช้ join เพื่อรวม array เป็น string โดยไม่มีตัวคั่น
 
         //* labs
         const consultfilesArray = response.message[0].counsult_api;
         if (consultfilesArray != null) {
           const jsonDataConsult = JSON.parse(consultfilesArray);
-          console.log(jsonDataConsult);
           const consultArray = Object.keys(jsonDataConsult).map(
             (counsultFile) => {
               return `
@@ -1692,9 +1725,10 @@ const showDetailReferBack = () => {
         if (detailLabs != null) {
           const jsonDataLabs = JSON.parse(detailLabs);
           const groupedDataLabs = groupByDate(jsonDataLabs);
-
+          const listLabs = [];
           const labsArray = Object.keys(groupedDataLabs).map((date) => {
             const labs = groupedDataLabs[date];
+            listLabs.push(labs);
             const labsListItems = labs
               .map((lab) => {
                 return `<tr><td>${lab.lab_items_code}</td><td>${lab.lab_items_name}</td><td>${lab.lab_items_normal_value}</td><td>${lab.lab_order_result}</td></tr>`;
@@ -1731,9 +1765,10 @@ const showDetailReferBack = () => {
         if (detaildrugArr != null) {
           const jsonDataDurg = JSON.parse(detaildrugArr);
           const groupedData = groupByDate(jsonDataDurg);
-
+          const listdateDrug = [];
           const drugArray = Object.keys(groupedData).map((date) => {
             const drugs = groupedData[date];
+            listdateDrug.push(groupedData[date]);
             const drugListItems = drugs
               .map((drug) => {
                 return `<tr><td>${drug.drugname}</td><td>${drug.therapeutic}</td><td>${drug.unit}</td></tr>`;
