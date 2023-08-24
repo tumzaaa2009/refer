@@ -305,7 +305,7 @@
             let typeConnect = "<?php echo $typeConnect ?>";
             $.ajax({
                 type: "POST",
-                url: './test.php',
+                url: './ShRunApi.php',
                 data: {
                     value: $("#select-type-connect").val(),
                     typeConnect: typeConnect
