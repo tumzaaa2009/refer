@@ -563,6 +563,7 @@ if (isset($_GET['destroy'])) {
     var idrefer = '<?php echo isset($_GET['idrefer']) ? $_GET['idrefer'] : ""; ?>';
     // ?Socketio
     var socket = io.connect("https://rh4cloudcenter.moph.go.th:3000", {
+
         transport: ["websocket", "polling", "flashsocket"],
     });
     // login Check
@@ -591,8 +592,10 @@ if (isset($_GET['destroy'])) {
         passCode: hosPassCode,
         opreator: hosOpreator
     });
+    // test 
 
     socket.on(`send_status ${hosCode}`, function(data) {
+        alert('asdasdasd')
         if ((data.message = "มี RefNo เข้า  ")) {
             toastr.success(`มี RefNo เข้า ${data.refNo}`, "", {
                 positionClass: "toast-top-full-width",
@@ -756,12 +759,10 @@ if (isset($_GET['destroy'])) {
     });
 
 
-
-
-
     // ?Socketio
 
     $(document).ready(function() {
+ 
         jQuery.support.cors = true; //corss
         $('.image-container').click(function() {
             $('.close-button').fadeIn();

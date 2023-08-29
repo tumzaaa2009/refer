@@ -66,7 +66,7 @@
 
                           <div class="form-group">
                               <label>เลขที่บัตรประชาชน</label>
-                              <input type="text" name="cid" class="form-control" name="cid" placeholder="" id="cid" onchange="CidInput(this.value)">
+                              <input type="text" name="cid" class="form-control" name="cid" placeholder="" id="cid" onchange="HnInput(this.value)">
                           </div>
                       </div>
                       <div class="col-sm-3">
