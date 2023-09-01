@@ -28,13 +28,48 @@
         <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
         <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
-    <SCRIPT language="JavaScript">
+    <style>
+        .loader-container {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 9999;
+        }
 
-    </SCRIPT>
+        .loader {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #3498db;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+    </style>
 
 </head>
 
 <body>
+    <div id="loader" class="loader-container">
+        <div class="loader"></div>
+    </div>
     <div class="d-flex justify-content-center align-items-center vh-100">
         <div class="container-xl p-3 my-3 border " style="background-color: #E8E8E8;border-radius: 25px; width: 1000px; height: 500px; box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);">
             <div class="d-flex justify-content-center align-items-center vh-100">
@@ -353,6 +388,14 @@
                         hospCode,
                         cid,
                         hn
+                    },
+                    beforeSend: function() {
+                        // แสดงข้อความโหลดก่อนส่งข้อมูล
+                        $("#loader").show();
+                    },
+                    complete: function() {
+                        // ซ่อนข้อความโหลดเมื่อสำเร็จหรือเกิดข้อผิดพลาด
+                        $("#loader").hide();
                     },
                     dataType: "JSON",
                     success: function(response) {
