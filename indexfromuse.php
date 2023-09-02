@@ -311,14 +311,6 @@ if (isset($_GET['destroy'])) {
                                 <p>ส่งกลับ</p>
                             </a>
                         </li>
-                        <!-- <li class="nav-item">
-                            <a href="indexfromuse.php?onfrom=referintablewait" class="nav-link <?php echo ($_GET['onfrom'] == 'referintablewait') ? 'active' : '' ?>">
-                                <i class=" far fa-circle nav-icon"></i>
-                                <p>รายชื่อผู้ป่วยรอส่งตัวกลับ (เฉพาะเคสที่ได้รับ ReferBack)</p>
-                            </a>
-                        </li> -->
-                        <!-- </ul> -->
-                        <!-- </li> -->
                         <li class="nav-header">Menu รายชื่อผู้ป่วย</li>
                         <li class="nav-item">
                             <a href="indexfromuse.php?onfrom=referouttable" class="nav-link <?php echo ($_GET['onfrom'] == 'referouttable') ? 'active' : '' ?>">
@@ -332,28 +324,6 @@ if (isset($_GET['destroy'])) {
                                 <p>แสดงรายชื่อผู้ป่วยส่งต่อ</p>
                             </a>
                         </li>
-
-
-                        <!-- <li class="nav-item">
-                            <a href="indexfromuse.php?onfrom=referoutDestinationtable" class="nav-link <?php echo ($_GET['onfrom'] == 'referoutDestinationtable') ? 'active' : '' ?>">
-                                <i class="nav-icon fas fa-file"></i>
-                                <p>แสดงรายชื่อผู้ป่วยรับ Refer</p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="indexfromuse.php?onfrom=referintable" class="nav-link <?php echo ($_GET['onfrom'] == 'referintable') ? 'active' : '' ?>">
-                                <i class=" nav-icon fas fa-file"></i>
-                                <p>แสดงรายชื่อผู้ป่วยส่งตัวกลับ</p>
-                            </a>
-                        </li>
-                        <li class="nav-header">Menu แสดงการปฏิเสธ-ยกเลิก เคส Refer</li>
-                        <li class="nav-item">
-                            <a href="indexfromuse.php?onfrom=referoutremovetable" class="nav-link <?php echo ($_GET['onfrom'] == 'referoutremovetable') ? 'active' : '' ?>">
-                                <i class=" nav-icon fas fa-file"></i>
-                                <p>แสดงรายชื่อผู้ป่วยยกเลิกการส่งตัว (รพ.ต้นทาง)-(รพ.ปลายทาง)</p>
-                            </a>
-                        </li> -->
-
                         <li class="nav-header">LABELS</li>
                         <?php if (isset($_GET['userfrom']) && $_GET['userfrom'] == 'admin') { ?>
                             <li class="nav-item">
@@ -595,7 +565,6 @@ if (isset($_GET['destroy'])) {
     // test 
 
     socket.on(`send_status ${hosCode}`, function(data) {
-        alert('asdasdasd')
         if ((data.message = "มี RefNo เข้า  ")) {
             toastr.success(`มี RefNo เข้า ${data.refNo}`, "", {
                 positionClass: "toast-top-full-width",
@@ -700,13 +669,15 @@ if (isset($_GET['destroy'])) {
             audio.autoplay = true;
             if (onfrom == "referouttable") {
                 showTableReferOut()
+            } else if (idrefer != "" && idrefer != undefined) {
+
+                showDetailReferOut()
             }
 
         }
     });
 
     socket.on(`send_statusreferIn ${hosCode} `, function(data) {
-
         if ((data.message = "ส่งตัวเคส ")) {
             toastr.info(`ส่งกลับเคส ${data.refNo}`, "", {
                 positionClass: "toast-top-full-width",
@@ -719,7 +690,12 @@ if (isset($_GET['destroy'])) {
             });
             const audio = new Audio("./sound_alert/com_linecorp_line_whistle.ogg");
             audio.autoplay = true;
-            showTableReferOut();
+            if (onfrom == "referouttable") {
+                showTableReferOut()
+            } else if (idrefer != "" && idrefer != undefined) {
+
+                showDetailReferOut()
+            }
         }
     });
 
@@ -762,7 +738,7 @@ if (isset($_GET['destroy'])) {
     // ?Socketio
 
     $(document).ready(function() {
- 
+
         jQuery.support.cors = true; //corss
         $('.image-container').click(function() {
             $('.close-button').fadeIn();
@@ -1912,7 +1888,6 @@ if (isset($_GET['destroy'])) {
 
     // *** funtion Modal
     async function modalDerivery(value) {
-
         if (value == "อื่น") {
 
             $("#OtherCaseSendRefer").show();
@@ -1928,10 +1903,9 @@ if (isset($_GET['destroy'])) {
             });
         });
     }
-
     async function InputOtherCase(value) {
-        return new Promise((resolve) => {
 
+        return new Promise((resolve) => {
             resolve({
                 otherCase: value
             });

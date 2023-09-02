@@ -1372,8 +1372,15 @@ function showDetailReferOut() {
             $("#UpStatusReferOutDesResive").hide();
             $("#UpStatusReferOutDes").hide();
           }
+        }else if (response.message[0].is_save==14){
+       
+          $("#refuse-button-drv").show()
+          const showText =`${response.message[0].select_type_drv +' '+'ลายละเอียดแนบ'+' '+response.message[0].result_text_drv+' อื่นๆ:'+response.message[0].result_text_other_drv}`;
+          $("#formDry").text(showText);
+
         }
       }
+    
     },
   });
 }
@@ -1387,9 +1394,8 @@ async function SendReferIn() {
   const ccDes = $("#DiagonosisDes").val();
   const mDes = $("#ccDestination").val();
   const selectTypeDrv = await modalDerivery($("#deriveryService").val());
-  const resultTextOther = await InputOtherCase($("#inputOtherCase").val());
+  const resultTextOther = await InputOtherCase($("#inputOtherCaseDrv").val())
   const inputDeriveryCase = $("#inputDeriveryCase").val();
-
   $.ajax({
     headers: {
       "x-access-token": hosPassCode,
@@ -1403,7 +1409,7 @@ async function SendReferIn() {
       ccDes,
       mDes,
       selectTypeDrv: selectTypeDrv.otherCase,
-      resultTextOther: resultTextOther.otherCase,
+      resultTextOther:resultTextOther.otherCase,
       inputDeriveryCase: inputDeriveryCase,
     },
     success: function (response) {
@@ -1422,8 +1428,9 @@ async function SendReferIn() {
         $(".modal-backdrop").fadeOut();
         $("#UpStatusReferOutDesResive").hide();
         $("#UpStatusReferOutDes").hide();
-
+        $("#open-modal-case-referHosCodeDes").hide();
         $("#referSus").html("รับการส่งตัวแล้ว").css("color", "green");
+        showDetailReferOut()
       } else if (response.send === "info") {
         toastr.info(`${response.msg}`, "", {
           positionClass: "toast-top-center",
@@ -1441,6 +1448,7 @@ async function SendReferIn() {
             );
           },
         });
+        showDetailReferOut()
       } else {
         toastr.error(`${response.msg}`, "", {
           positionClass: "toast-top-center",
@@ -1450,6 +1458,7 @@ async function SendReferIn() {
           hideMethod: "fadeOut",
           closeButton: true,
         });
+        showDetailReferOut()
       }
     },
   });
