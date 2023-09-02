@@ -578,7 +578,7 @@ const showTableReferOut = () => {
 
           // คีย์ที่ใช้ในการถอดรหัส
           const secretKey = "Rh4Refer";
-
+ 
           // ถอดรหัสข้อมูล
           const decrypted = decryptData(encrypted, secretKey);
           let typeRefer;
@@ -1038,6 +1038,7 @@ function showDetailReferOut() {
 
             if (refNew != "" && refOld != "" && refOld != undefined) {
               $("#referSus").show();
+              if( hosCode == referHoscode)
               $("#referSus").html(
                 `<a href="indexfromuse.php?onfrom=showdetailreferout&idrefer=${refOld}-${refNew}">อ้างอิงส่งตัวเก่า</a>`
               );
@@ -1243,7 +1244,7 @@ function showDetailReferOut() {
           $("#UpStatusReferOutDes").hide();
         } else if (response.message[0].is_save == -11) {
           // ?? กรณี ที่ รพ ต้นทาง == ข้อมูลใบส่งตัว แล้วให้เป็น modal เพื่อเปลี่ยนสถานะส่งตัว
-
+        
           $("#cancleRefer-status-10-11").show();
           if (
             response.message[0].cancle_org !== null &&
@@ -1263,15 +1264,22 @@ function showDetailReferOut() {
           }
           if (hosCode == referHoscode) {
           } else {
-            if (
-              response.message[0].cancle_org !== null &&
-              response.message[0].cancle_des !== null
-            ) {
-              $("#open-modal-case-referout-cancelorg").hide();
-            } else {
+            // if (
+            //   response.message[0].cancle_org !== null  && 
+            //   response.message[0].cancle_des !== null
+            // ) {
+            //   $("#open-modal-case-referout-cancelorg").hide();
+            // } else {
+            //   $("#open-modal-case-referout-cancelorg").show();
+            // }
+            if(response.message[0].cancle_org =="" ||response.message[0].cancle_org == null  ){
+              $("#open-modal-case-referHocode").show();
               $("#open-modal-case-referout-cancelorg").show();
+            }else if (response.message[0].cancle_org !=""){
+              $("#open-modal-case-referHocode").hide();
+        
             }
-            $("#open-modal-case-referHocode").show();
+          
             $("#open-modal-case-referin").hide();
             $("#UpStatusReferOutDesResive").hide();
             $("#UpStatusReferOutDes").hide();
@@ -1363,6 +1371,7 @@ function showDetailReferOut() {
               response.message[0].codegen_refer_no.split("-");
             if (refNew != "" && refOld != "") {
               $("#referSus").show();
+                if( hosCode == referHoscode)
               $("#referSus").html(
                 `<a href="indexfromuse.php?onfrom=showdetailreferout&idrefer=${refNew}-${refOld}">อ้างอิงส่งตัวใหม่</a>`
               );

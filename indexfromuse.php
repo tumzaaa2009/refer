@@ -543,7 +543,7 @@ if (isset($_GET['destroy'])) {
             $(".div-status").css({
                 'color': 'red',
                 'font-size': '15px;'
-            }).html("Status ReferR4: Lost Connecting");
+            }).html("Status ReferR4: Lost Connect");
         } else {
             console.log("เกิดข้อผิดพลาดในการเชื่อมต่อ Socket.IO: ", error);
         }
@@ -730,7 +730,34 @@ if (isset($_GET['destroy'])) {
             });
             const audio = new Audio("./sound_alert/com_linecorp_line_whistle.ogg");
             audio.autoplay = true;
-            showTableReferOut();
+            if (onfrom == "referouttable") {
+                showTableReferOut()
+            } else if (idrefer != "" && idrefer != undefined) {
+
+                showDetailReferOut()
+            }
+        }
+    });
+    //ปลายทางปล่วยหน่วยบริการ
+    socket.on(`chang_hos ${hosCode}`, function(data) {
+        if ((data.data = 200)) {
+            toastr.info(`${data.message}`, "", {
+                positionClass: "toast-top-full-width",
+                timeOut: false,
+                extendedTimeOut: "1000",
+                showMethod: "fadeIn",
+                hideMethod: "fadeOut",
+                closeButton: true,
+                toastClass: "toast-black"
+            });
+            const audio = new Audio("./sound_alert/com_linecorp_line_whistle.ogg");
+            audio.autoplay = true;
+            if (onfrom == "referouttable") {
+                showTableReferOut()
+            } else if (idrefer != "" && idrefer != undefined) {
+
+                showDetailReferOut()
+            }
         }
     });
 
