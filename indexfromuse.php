@@ -1706,7 +1706,7 @@ if (isset($_GET['destroy'])) {
             });
         } else if (typeConnect == "ConnectToAPI") {
 
-            generateTreeView(hn)
+             generateTreeView(hn)
         }
 
     }
@@ -1726,7 +1726,7 @@ if (isset($_GET['destroy'])) {
                 }
             });
         } else if (typeConnect == "ConnectToAPI") {
-            generateTreeView(hn)
+             generateTreeView(hn)
         }
 
     }
