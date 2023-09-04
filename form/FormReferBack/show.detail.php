@@ -290,6 +290,8 @@
                                                <button type="button" class="btn btn-primary" data-bs-toggle="modal" style="display:none;" id="open-modal-case-referHocode" data-bs-target="#mmmodalReferCode"> ส่งต่อ
                                                </button>
 
+                                               <button type="button" class="btn btn-info" id="suscecc-refer-back" style="display:none;" onclick="SendReferBack()">ยืนยันการรับตัว</button>
+                                               <h3 id="ShowSecess" style="display:none;color:green"></h3>
 
                                            </div>
                                            <div class="modal fade" id='mmmodalReferCode' tabindex="-1" aria-hidden="true">
@@ -306,10 +308,10 @@
                                                                    <label class="col-md-autocol-form-label">จุดบริการปลายทาง</label>
                                                                    <select class="form-control " id="getStationServiceDestination" name="getStationServiceDestination"></select>
                                                                </div>
-                                                               <!-- <div class="form-group" id="OtherCase">
+                                                               <div class="form-group" id="OtherCase">
                                                                    <label for="exampleInputEmail1">Other Case</label>
                                                                    <input type="text" class="form-control" id="inputOtherCase" name="inputOtherCase">
-                                                               </div> -->
+                                                               </div>
                                                            </div>
                                                        </div>
                                                        <div class="modal-footer justify-content-between">

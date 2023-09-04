@@ -30,7 +30,7 @@
                <label for="อายุ" class="col-md-auto col-form-label mb-1">วันที่ส่ง และ เวลาส่ง :</label>
                <div class="col-md-auto">
                    <input type="text" class="form-control" id="refer_time" name="refer_time" readonly>
-               </div>
+                </div>
 
                <label for="อายุ" class="col-md-auto col-form-label mb-1">ชื่อ:</label>
                <div class="col-md-auto">
@@ -422,7 +422,7 @@
                                                        <div class="modal-content">
                                                            <div class="modal-header">
                                                                <h4 class="modal-title">เหตุผลการยกเลิกส่งตัว</h4>
-                                                              <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                                               <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                                                            </div>
                                                            <div class="modal-body">
                                                                <div class="form-group">
@@ -528,18 +528,18 @@
                                                        <div class="modal-content">
                                                            <div class="modal-header">
                                                                <h4 class="modal-title">รายละเอียดการส่งตัว</h4>
-                                                              <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                                               <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                                                            </div>
                                                            <div class="modal-body">
                                                                <div class="form-group">
-                                                                    <textarea  class="col-md-12" readonly id="formDry"></textarea>
+                                                                   <textarea class="col-md-12" readonly id="formDry"></textarea>
                                                                </div>
                                                                <div class="modal-footer justify-content-between">
-                                                               <button type="button" class="btn  btn-secondary" data-bs-dismiss="modal">Close</button>
-                                                      
+                                                                   <button type="button" class="btn  btn-secondary" data-bs-dismiss="modal">Close</button>
+
+                                                               </div>
                                                            </div>
-                                                           </div>
-                                                           
+
                                                        </div>
                                                    </div>
                                                </div>

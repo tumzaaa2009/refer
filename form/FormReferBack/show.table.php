@@ -59,8 +59,9 @@
                                 <label>สถานะการรับ Refer</label>
                                 <select class="form-control" name="statusRefer">
                                     <option value="" selected>ทั้งหมด</option>
-                                    <option value="11">เฉพาะส่งต่อ</option>
+                                    <option value="-110">เฉพาะส่งต่อ</option>
                                     <option value="10">เฉพาะส่งกลับ</option>
+                                    <option value="11">เสร็จสิ้น</option>
                                 </select>
                             </div>
                         </div>
@@ -108,7 +109,7 @@
         </div>
     </div>
     <!-- * div modal  -->
-    <div class="col">
+    <!-- <div class="col">
         <span class="mr-5" style="color:rgba(255, 0, 0, 0.5)">Resuscitation</span> <span class="mr-5" style="color: rgba(224, 26, 237, 1)">Emergency</span><span class="mr-5" style="color:  rgba(218, 221, 21, 1);">Urgency</span>
         <span class="mr-5" style="color:  rgba(55, 191, 21, 1);">semi-urgency</span> <span class="mr-5" style="color: white ;background-color:black">Non-urgency</span>
         <span class="mr-5"> <i class="fa fa-exclamation-triangle" aria-hidden="true" style="color: black;"></i>ปฏิเสธการส่งตัว</span>
@@ -116,7 +117,7 @@
         <span class="mr-5"> <i class="fa fa-check" aria-hidden="true" style="color: black;"></i>ยืนยันการรับตัว</span>
         <span class="mr-5"> <i class="fa fa-ambulance" aria-hidden="true"></i>รับการส่งตัวกลับ</span>
         <span class="mr-5"> <i class="fa fa-exchange-alt"></i>เปลี่ยนสถานที่ปลายทาง</span>
-    </div>
+    </div> -->
 </div>
 
 <!-- /.container-fluid -->

@@ -719,7 +719,7 @@ if (isset($_GET['destroy'])) {
     });
     socket.on(`sendreferbackonlysend ${hosCode}`, function(data) {
         if ((data.data = 200)) {
-            toastr.info(`ส่งต่อ ${data.refNo}`, "", {
+            toastr.info(`${data.message} ${data.refNo}`, "", {
                 positionClass: "toast-top-full-width",
                 timeOut: false,
                 extendedTimeOut: "1000",
@@ -730,11 +730,11 @@ if (isset($_GET['destroy'])) {
             });
             const audio = new Audio("./sound_alert/com_linecorp_line_whistle.ogg");
             audio.autoplay = true;
-            if (onfrom == "referouttable") {
+            if (onfrom == "referbacktable") {
                 showTableReferOut()
             } else if (idrefer != "" && idrefer != undefined) {
-
-                showDetailReferOut()
+                
+                showDetailReferBack()
             }
         }
     });

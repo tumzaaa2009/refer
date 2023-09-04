@@ -847,12 +847,8 @@ function showDetailReferOut() {
         $("#hn").val(decrypted.hn);
         $("#cid").val(decrypted.cid);
         $("#age").val(decrypted.age);
-
-        $("#refer_time").val(
-          `${formatDateToThai(response.message[0].formatteStartDate)} เวลา:${
-            response.message[0].refer_time
-          }`
-        );
+    
+        $("#refer_time").val(`${response.message[0].formatteStartDate} เวลา:${response.message[0].refer_time}`  );
 
         $("#getStationService").val(response.message[0].location_org);
         $("#fname").val(
@@ -865,7 +861,7 @@ function showDetailReferOut() {
         $("#amppart").val(decrypted.amppart);
         $("#chwpart").val(decrypted.chwpart);
         $("#aligy").val(response.message[0].drug_aligy);
-
+        
         $("#doctorname").val(response.message[0].doctor_name);
         $("#hosReferDes").val(response.message[0].refer_hosp_name);
 
@@ -1574,6 +1570,7 @@ const showTableReferBack = () => {
   });
 };
 const showDetailReferBack = () => {
+  
   $.ajax({
     headers: {
       "x-access-token": hosPassCode,
@@ -1585,6 +1582,7 @@ const showDetailReferBack = () => {
     },
     dataType: "JSON",
     success: function (response) {
+       
       const dateTimeString = response.message[0].refer_date;
       const date = new Date(dateTimeString);
       const day = date.getUTCDate().toString().padStart(2, "0");
@@ -1609,7 +1607,7 @@ const showDetailReferBack = () => {
         const decrypted = decryptData(encrypted, secretKey);
 
         $("#refer_no").val(response.message[0].refer_no);
-        $("#refer_code").val(response.message[0].refer_hosp_name);
+        $("#refer_code").val(response.message[0].refer_code);
 
         $("#refer_name").val(response.message[0].refer_name);
         $("#code_gen_refer").val(response.message[0].codegen_refer_no);
@@ -1818,10 +1816,21 @@ const showDetailReferBack = () => {
           });
           $("#treeviewDes").html(drugArray);
         }
+       
         if (response.message[0].is_save == 10) {
+           
           if (hosCode == response.message[0].refer_hospcode) {
-            $("#open-modal-case-referHocode").show();
+                $("#open-modal-case-referHocode").show();
+            $("#suscecc-refer-back").show();
+          
           }
+        } else if (response.message[0].is_save == 11) {
+           $("#ShowSecess").show();
+              $("#ShowSecess").html(
+                `เสร็จสิ้นการส่งกลับ ${response.message[0].input_text_othercase_tranfer_referback}`
+              );
+                $("#open-modal-case-referHocode").hide();
+              $("#suscecc-refer-back").hide();
         }
       }
     },
@@ -1832,6 +1841,7 @@ const sendFromReferBackhosCode = () => {
   const forms = document.getElementById("refer-back-form");
   const formData = new FormData(forms);
   formData.append("HoscodeCheck", hosCode);
+     formData.append("statusCode", -110);
   if ($("#hosCodeRefer").val() === "0") {
     alert("กรุณาเลือกโรงพยาบาลที่จะส่งต่อ");
     return false;
@@ -1851,7 +1861,7 @@ const sendFromReferBackhosCode = () => {
     processData: false,
     success: function (response) {
       console.log(response);
-      if (response.message === "Success") {
+      if (response.data === 200) {
         Swal.fire({
           position: "top-center",
           icon: "success",
@@ -1873,3 +1883,39 @@ const sendFromReferBackhosCode = () => {
     },
   });
 };
+
+const SendReferBack = () => {
+     const forms = document.getElementById("refer-back-form");
+     const formData = new FormData(forms);
+      formData.append("statusCode", 11);
+    $.ajax({
+      headers: {
+        "x-access-token": hosPassCode,
+      },
+      type: "POST",
+      url: "https://rh4cloudcenter.moph.go.th:3000/referapi/putreferbackonlysend",
+      data: formData,
+      contentType: false,
+      processData: false,
+      success: function (response) {
+        if (response.message === "Success") {
+          Swal.fire({
+            position: "top-center",
+            icon: "success",
+            title: "รับการส่งตัว",
+            showConfirmButton: false,
+            timer: 1500,
+          });
+          setTimeout(function () {
+            $("#mmmodalReferCode").modal("hide");
+            $(".modal-backdrop").hide();
+            // $("#referSus").html(
+            //   `<a href="indexfromuse.php?onfrom=showdetailshowdetailreferout&idrefer=${response.refNo}">อ้างอิงเอกสารสงตัวเก่าคลิ๊ก ${response.referNo}</a>`
+            // );
+            $("#open-modal-case-referout-cancelorg").hide();
+            location.href = "indexfromuse.php?onfrom=referbacktable";
+          }, 2000);
+        }
+      },
+    });
+  };
