@@ -40,10 +40,8 @@
                             <div class="form-group">
                                 <label>รหัสสถานพยาบาลต้นทาง</label>
                                 <input type="number" class="form-control" placeholder="" name="hosrefer" max="5">
-
                             </div>
                         </div>
-
                         <div class="col-sm">
                             <div class="form-group">
                                 <label>เลขที่บัตรประชาชน</label>
