@@ -290,8 +290,20 @@
                                                         <input type="text" class="form-control" name="url-token-testconnect" id="url-token-testconnect" placeholder="/testconnect" value="<?php echo $testconnect; ?>">
                                                     </div>
                                                     <div class="col-sm-12">
-                                                        <label for="inputPassword3" class="col-sm-2 col-form-label">Apiเรียก HN หรือ CID</label>
+                                                        <label for="inputPassword3" class="col-sm-2 col-form-label">Api เรียกข้อมูลบุคคล</label>
                                                         <input type="text" class="form-control" name="url-end-point" id="url-end-point" placeholder="/endpoint" value="<?php echo $endPoint; ?>">
+                                                    </div>
+                                                    <div class="col-sm-12">
+                                                        <label for="inputPassword3" class="col-sm-2 col-form-label">Api VisitDate</label>
+                                                        <input type="text" class="form-control" name="url-end-point-VisitDate" id="url-end-point-VisitDate" placeholder="/endpoint/" value="<?php echo ''; ?>">
+                                                    </div>
+                                                    <div class="col-sm-12">
+                                                        <label for="inputPassword3" class="col-sm-2 col-form-label">Api LabsVist</label>
+                                                        <input type="text" class="form-control" name="url-end-point-LabsVist" id="url-end-point-LabsVist" placeholder="/endpoint/" value="<?php echo ''; ?>">
+                                                    </div>
+                                                    <div class="col-sm-12">
+                                                        <label for="inputPassword3" class="col-sm-2 col-form-label">Api DrugVist</label>
+                                                        <input type="text" class="form-control" name="url-end-point-DrugVist" id="url-end-point-DrugVist" placeholder="/endpoint/" value="<?php echo ''; ?>">
                                                     </div>
                                                     <div class="col-sm-12">
                                                         <label for="inputPassword3" class="col-sm-2 col-form-label">Headder Auth</label>

@@ -70,8 +70,10 @@ if ($_POST['connect-type'] == "refer") {
     $urlTokenHis = $_POST['url-token-his'];
     $testConnect = $_POST['url-token-testconnect'];
     $endPoint =$_POST['url-end-point'];
+    $endPointVstDate = $_POST['url-end-point-VisitDate'];
+    $endPointLabVst =$_POST['url-end-point-LabsVist'];
+    $endPintDrugVst =$_POST['url-end-point-DrugVist'];
     $token = encryptPassword($_POST['key-token-his']);
-    
     $hisArray = array(
       "1" => array(
         "typeConnect" => $_POST['select-type-connect'],
@@ -79,6 +81,9 @@ if ($_POST['connect-type'] == "refer") {
         "URl" => $urlTokenHis,
         "testconnect"=>$testConnect,
         "endPoint"=>$endPoint,
+        "visitDate"=>$endPointVstDate,
+        "visitLabs"=>$endPointLabVst,
+        "visitDrug"=>$endPintDrugVst,
         "Auth"=>$headAuth,
         "hospCode"=> $hospCode,
         "TOKEN" => $token

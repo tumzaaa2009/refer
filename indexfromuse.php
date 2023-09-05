@@ -515,13 +515,19 @@ if (isset($_GET['destroy'])) {
 
     let callPathHis = ''
     let tokenApi = ''
-
+    let vsDate = '';
+    let labDetail = '';
+    let drugDetail = '';
     const typeConnect = '<?php echo $typeConnect ?>'
     // ? typeConnect
     if (typeConnect == "ConnectToAPI") {
         auth = '<?php echo $calAuth; ?>'
         tokenApi = '<?php echo decryptPassword($calToken) ?>';
-        callPathHis = '<?php echo $callUrl . $endPoint ?>';
+        patien = '<?php echo $endPoint ?>';
+        vsDate = '<?php echo $vsDate; ?>';
+        labDetail = '<?php echo $labDetail; ?>';
+        drugDetail = '<?php echo $visitDrug; ?>';
+        callPathHis = '<?php echo $callUrl  ?>';
     } else if (typeConnect == "ConnectToDb") {
         callPathHis = '<?php echo $callPathHis; ?>'
 
@@ -733,7 +739,7 @@ if (isset($_GET['destroy'])) {
             if (onfrom == "referbacktable") {
                 showTableReferOut()
             } else if (idrefer != "" && idrefer != undefined) {
-                
+
                 showDetailReferBack()
             }
         }
@@ -1011,6 +1017,7 @@ if (isset($_GET['destroy'])) {
                 data: {
                     headAuthHis: auth,
                     urlTokenHis: callPathHis,
+                    patien: patien,
                     keyTokenHis: tokenApi,
                     hospCode: hosCode,
                     hn: value
@@ -1018,38 +1025,39 @@ if (isset($_GET['destroy'])) {
                 dataType: "JSON",
                 success: function(response) {
                     // 4. แสดงผลลัพธ์
-                    console.log(response)
+
                     if (response.status == 200) {
                         var today = new Date();
-                        var pastDate = new Date(response.person.birthday);
+                        var pastDate = new Date(response.person[0].birthday);
                         var diffYears = today.getFullYear() - pastDate.getFullYear();
-                        if (response.person.sex == 1) {
+
+                        if (response.person[0].sex == 1) {
                             var sex = "ชาย";
-                        } else if (response.person.sex == 2) {
+                        } else if (response.person[0].sex == 2) {
                             var sex = "หญิง";
                         } else {
                             var sex = "อื่น";
                         }
-                        $("#hn").val(response.person.hn);
-                        $("#cid").val(response.person.cid);
-                        $("#pname").val(response.person.pname);
-                        $("#fname").val(response.person.fname);
-                        $("#lname").val(response.person.lname);
+                        $("#hn").val(response.person[0].hn);
+                        $("#cid").val(response.person[0].cid);
+                        $("#pname").val(response.person[0].pname);
+                        $("#fname").val(response.person[0].fname);
+                        $("#lname").val(response.person[0].lname);
                         $("#age").val(diffYears);
                         $("#sex").val(sex);
-                        $("#addr").val(response.person.address.addr);
-                        $("#moopart").val(response.person.address.mooparth);
-                        $("#amppart").val(response.person.address.amppart);
-                        $("#tmbpart").val(response.person.address.tmbpart);
-                        $("#chwpart").val(response.person.address.chwpart);
-                        $("#opd_allergy").val(response.person.allergy);
-                        if (typeConnect == "ConnectToDb") {
-                            DrugItemdetailDes(response.person.hn)
-                            DrugLabs(response.person.hn)
-                        } else if (typeConnect == "ConnectToAPI") {
-                            DrugItemdetailDes(response.drug)
-                            DrugLabs(response.lab)
-                        }
+                        $("#addr").val(response.person[0].address.addr);
+                        $("#moopart").val(response.person[0].address.mooparth);
+                        $("#amppart").val(response.person[0].address.amppart);
+                        $("#tmbpart").val(response.person[0].address.tmbpart);
+                        $("#chwpart").val(response.person[0].address.chwpart);
+                        $("#opd_allergy").val(response.person[0].allergy);
+                        // if (typeConnect == "ConnectToDb") {
+                        //     DrugItemdetailDes(response.person.hn)
+                        //     DrugLabs(response.person.hn)
+                        // } else if (typeConnect == "ConnectToAPI") {
+                        //     DrugItemdetailDes(response.drug)
+                        //     DrugLabs(response.lab)
+                        // }
 
                     } else if (response.status == 400) {
                         alert('ไม่พบเลข Hn / Cid')
@@ -1104,6 +1112,7 @@ if (isset($_GET['destroy'])) {
                     }
                 },
             });
+
         } else if (typeConnect == "ConnectToDb") {
             $.ajax({
                 url: callPathHis,
@@ -1171,6 +1180,35 @@ if (isset($_GET['destroy'])) {
             });
         }
     };
+
+    // api เรียก drug และ lab 
+    const VstDate = (value) => {
+        $.ajax({
+            url: 'http://localhost:8080/refer/api/',
+            type: "POST",
+            // beforeSend: function() {
+            //     // แสดงข้อความโหลดก่อนส่งข้อมูล
+            //     $("#loader").show();
+            // },
+            // complete: function() {
+            //     // ซ่อนข้อความโหลดเมื่อสำเร็จหรือเกิดข้อผิดพลาด
+            //     $("#loader").hide();
+            // },
+            data: {
+                headAuthHis: auth,
+                urlTokenHis: callPathHis,
+                vstDate: vsDate,
+                keyTokenHis: tokenApi,
+                hospCode: hosCode,
+                hn: $("hn").val(),
+                cid:$("cid").val() ,
+                eventTypeName: value
+            },
+            dataType: "JSON",
+            success: function(response) {}
+        })
+    }
+
 
 
     // ? เรียก api cloud rh4
@@ -1706,7 +1744,7 @@ if (isset($_GET['destroy'])) {
             });
         } else if (typeConnect == "ConnectToAPI") {
 
-             generateTreeView(hn)
+            generateTreeView(hn)
         }
 
     }
@@ -1726,7 +1764,7 @@ if (isset($_GET['destroy'])) {
                 }
             });
         } else if (typeConnect == "ConnectToAPI") {
-             generateTreeView(hn)
+            generateTreeView(hn)
         }
 
     }
@@ -1750,6 +1788,7 @@ if (isset($_GET['destroy'])) {
                         '</a><ul class="nav nav-treeview"><li class="nav-item"><div class="table-responsive"><table class="table table-bordered"><thead><tr><th>เลือกรายการยา</th><th>Drug Name</th><th>ประเภทยา</th><th>Unit</th></tr></thead><tbody>';
 
                     const optimereceItems = data[date].optimerece;
+
 
                     html +=
                         '<tr><td style="width: fit-content"><div class="form-check"><input class="  check-all-items" type="checkbox" data-date="' +

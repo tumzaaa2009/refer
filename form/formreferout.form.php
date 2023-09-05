@@ -359,17 +359,28 @@ if ($_GET['onfrom'] === "formreferout") { ?>
                                 <li class="nav-item">
                                     <a class="nav-link active" id="custom-tabs-one-home-tab" data-toggle="pill" href="#custom-tabs-one-home" role="tab" aria-controls="custom-tabs-one-home" aria-selected="false">ข้อมูลส่งตัวทั่วไป</a>
                                 </li>
+
                                 <li class="nav-item">
                                     <a class="nav-link" id="custom-tabs-one-profile-tab" data-toggle="pill" href="#custom-tabs-one-profile" role="tab" aria-controls="custom-tabs-one-profile" aria-selected="false">แนบภาพ</a>
                                 </li>
+                                <?php if ($typeConnect == "ConnectToAPI") {
+                                ?>
+                                    <li class="nav-item">
+                                        <a class="nav-link" id="custom-tabs-one-messages-tab" data-toggle="pill" href="#drugItem" role="tab" aria-controls="drugItem" aria-selected="false" onclick="VstDate('Drug')">ข้อมูลการใช้ยา</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" id="custom-tabs-one-messages-tab" data-toggle="pill" href="#labs" role="tab" aria-controls="labs" aria-selected="false" onclick="VstDate('Lab')">Labs</a>
+                                    </li>
+                                <?php } else { ?>
+                                    <li class="nav-item">
+                                        <a class="nav-link" id="custom-tabs-one-messages-tab" data-toggle="pill" href="#drugItem" role="tab" aria-controls="drugItem" aria-selected="false">ข้อมูลการใช้ยา</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" id="custom-tabs-one-messages-tab" data-toggle="pill" href="#labs" role="tab" aria-controls="labs" aria-selected="false">Labs</a>
+                                    </li>
+                                <?php } ?>
                                 <li class="nav-item">
-                                    <a class="nav-link" id="custom-tabs-one-messages-tab" data-toggle="pill" href="#drugItem" role="tab" aria-controls="drugItem" aria-selected="false">ข้อมูลการใช้ยา</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" id="custom-tabs-one-messages-tab" data-toggle="pill" href="#labs" role="tab" aria-controls="labs" aria-selected="false">LABS</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" id="custom-tabs-one-messages-tab" data-toggle="pill" href="#consult" role="tab" aria-controls="consult" aria-selected="false">ConsultFile</a>
+                                    <a class="nav-link" id="custom-tabs-one-messages-tab" data-toggle="pill" href="#consult" role="tab" aria-controls="consult" aria-selected="false">เอกสารแนบ</a>
                                 </li>
                                 <!-- <li class="nav-item">
                                      <a class="nav-link " id="custom-tabs-one-settings-tab" data-toggle="pill" href="#custom-tabs-one-settings" role="tab" aria-controls="custom-tabs-one-settings" aria-selected="true">Settings</a>
