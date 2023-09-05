@@ -366,10 +366,10 @@ if ($_GET['onfrom'] === "formreferout") { ?>
                                 <?php if ($typeConnect == "ConnectToAPI") {
                                 ?>
                                     <li class="nav-item">
-                                        <a class="nav-link" id="custom-tabs-one-messages-tab" data-toggle="pill" href="#drugItem" role="tab" aria-controls="drugItem" aria-selected="false" onclick="VstDate('Drug')">ข้อมูลการใช้ยา</a>
+                                        <a class="nav-link" id="custom-tabs-one-messages-tab" data-toggle="pill" href="#drugItem" role="tab" aria-controls="drugItem" aria-selected="false" onclick="VstDate('Drugs')">ข้อมูลการใช้ยา</a>
                                     </li>
                                     <li class="nav-item">
-                                        <a class="nav-link" id="custom-tabs-one-messages-tab" data-toggle="pill" href="#labs" role="tab" aria-controls="labs" aria-selected="false" onclick="VstDate('Lab')">Labs</a>
+                                        <a class="nav-link" id="custom-tabs-one-messages-tab" data-toggle="pill" href="#labs" role="tab" aria-controls="labs" aria-selected="false" onclick="VstDate('Labs')">Labs</a>
                                     </li>
                                 <?php } else { ?>
                                     <li class="nav-item">

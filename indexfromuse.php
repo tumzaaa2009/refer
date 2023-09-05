@@ -1025,7 +1025,7 @@ if (isset($_GET['destroy'])) {
                 dataType: "JSON",
                 success: function(response) {
                     // 4. แสดงผลลัพธ์
-
+                    console.log(response.person[0].hn)
                     if (response.status == 200) {
                         var today = new Date();
                         var pastDate = new Date(response.person[0].birthday);
@@ -1051,10 +1051,11 @@ if (isset($_GET['destroy'])) {
                         $("#tmbpart").val(response.person[0].address.tmbpart);
                         $("#chwpart").val(response.person[0].address.chwpart);
                         $("#opd_allergy").val(response.person[0].allergy);
-                        // if (typeConnect == "ConnectToDb") {
-                        //     DrugItemdetailDes(response.person.hn)
-                        //     DrugLabs(response.person.hn)
-                        // } else if (typeConnect == "ConnectToAPI") {
+                        if (typeConnect == "ConnectToDb") {
+                            DrugItemdetailDes(response.person.hn)
+                            DrugLabs(response.person.hn)
+                        }
+                        // else if (typeConnect == "ConnectToAPI") {
                         //     DrugItemdetailDes(response.drug)
                         //     DrugLabs(response.lab)
                         // }
@@ -1151,10 +1152,11 @@ if (isset($_GET['destroy'])) {
                         if (typeConnect == "ConnectToDb") {
                             DrugItemdetailDes(response.person.hn)
                             DrugLabs(response.person.hn)
-                        } else if (typeConnect == "ConnectToAPI") {
-                            DrugItemdetailDes(response.drug)
-                            DrugLabs(response.lab)
                         }
+                        // else if (typeConnect == "ConnectToAPI") {
+                        //     DrugItemdetailDes(response.drug)
+                        //     DrugLabs(response.lab)
+                        // }
 
                     } else if (response.status == 400) {
                         alert('ไม่พบเลข Hn / Cid')
@@ -1194,18 +1196,21 @@ if (isset($_GET['destroy'])) {
             //     // ซ่อนข้อความโหลดเมื่อสำเร็จหรือเกิดข้อผิดพลาด
             //     $("#loader").hide();
             // },
+
             data: {
                 headAuthHis: auth,
                 urlTokenHis: callPathHis,
                 vstDate: vsDate,
                 keyTokenHis: tokenApi,
                 hospCode: hosCode,
-                hn: $("hn").val(),
-                cid:$("cid").val() ,
+                hn: $("#hn").val(),
                 eventTypeName: value
             },
             dataType: "JSON",
-            success: function(response) {}
+            success: function(response) {
+                console.log(response)
+                DrugLabs(response.date)
+            }
         })
     }
 
@@ -1771,7 +1776,7 @@ if (isset($_GET['destroy'])) {
 
     //* generrate ยา // lab
     function generateTreeView(data) {
-
+        console.log("generateTreeView" + data)
 
         let genHtml = '';
         let html =

@@ -51,42 +51,60 @@ router.post("/refer/api/", async function (req, resJson, next) {
   const headderApi = `${req.body.headAuthHis}`;
   const hospCode = req.body.hospCode;
 
-  if (req.body.hn.length == 13) {
-    cid = req.body.hn;
-    hn = null;
-  } else if (req.body.hn != "" || req.body.hn.length < 13) {
-    hn = req.body.hn;
-    cid = null;
-  }
-  
-  const resPatien = await axios
-    .post(
-      `${req.body.urlTokenHis}${req.body.patien}`,
-      {
-        hospcode: hospCode,
-        cid: cid,
-        hn: hn,
-      },
-      {
-        headers: {
-          [headderApi]: `${req.body.keyTokenHis}`,
+  if (req.body.patien) {
+    if (req.body.hn.length == 13) {
+      cid = req.body.hn;
+      hn = null;
+    } else if (req.body.hn != "" || req.body.hn.length < 13) {
+      hn = req.body.hn;
+      cid = null;
+    }
+
+    const resPatien = await axios
+      .post(
+        `${req.body.urlTokenHis}${req.body.patien}`,
+        {
+          hospcode: hospCode,
+          cid: cid,
+          hn: hn,
         },
-      }
-    )
-    .then((res) => {
-      return resJson.send(res.data);
-    })
-    .catch((error) => {
-      return console.error(error);
-    });
-  // console.log(resPatien)
-    console.log(req.body)
-
-
+        {
+          headers: {
+            [headderApi]: `${req.body.keyTokenHis}`,
+          },
+        }
+      )
+      .then((res) => {
+        return  res.data;
+      })
+      .catch((error) => {
+        return console.error(error);
+      });
+    resJson.send(resPatien)
+  } else if (req.body.vstDate) {
+     
+    const resVsDate = await axios
+      .post(
+        `${req.body.urlTokenHis}${req.body.vstDate}`,
+        {
+          hospcode: req.body.hospCode,
+          hn: req.body.hn,
+          eventTypeName: req.body.eventTypeName,
+        },
+        {
+          headers: {
+            [headderApi]: `${req.body.keyTokenHis}`,
+          },
+        }
+      )
+      .then((res) => {
+        return res.data;
+      })
+      .catch((error) => {
+        return console.error(error);
+      });
+    resJson.send(resVsDate);
+  }
 });
-
-
-
-
 
 module.exports = router;
