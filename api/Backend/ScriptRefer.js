@@ -578,7 +578,7 @@ const showTableReferOut = () => {
 
           // คีย์ที่ใช้ในการถอดรหัส
           const secretKey = "Rh4Refer";
-
+ 
           // ถอดรหัสข้อมูล
           const decrypted = decryptData(encrypted, secretKey);
           let typeRefer;
@@ -847,12 +847,8 @@ function showDetailReferOut() {
         $("#hn").val(decrypted.hn);
         $("#cid").val(decrypted.cid);
         $("#age").val(decrypted.age);
-
-        $("#refer_time").val(
-          `${formatDateToThai(response.message[0].formatteStartDate)} เวลา:${
-            response.message[0].refer_time
-          }`
-        );
+    
+        $("#refer_time").val(`${response.message[0].formatteStartDate} เวลา:${response.message[0].refer_time}`  );
 
         $("#getStationService").val(response.message[0].location_org);
         $("#fname").val(
@@ -865,7 +861,7 @@ function showDetailReferOut() {
         $("#amppart").val(decrypted.amppart);
         $("#chwpart").val(decrypted.chwpart);
         $("#aligy").val(response.message[0].drug_aligy);
-
+        
         $("#doctorname").val(response.message[0].doctor_name);
         $("#hosReferDes").val(response.message[0].refer_hosp_name);
 
@@ -1038,6 +1034,7 @@ function showDetailReferOut() {
 
             if (refNew != "" && refOld != "" && refOld != undefined) {
               $("#referSus").show();
+              if( hosCode == referHoscode)
               $("#referSus").html(
                 `<a href="indexfromuse.php?onfrom=showdetailreferout&idrefer=${refOld}-${refNew}">อ้างอิงส่งตัวเก่า</a>`
               );
@@ -1243,7 +1240,7 @@ function showDetailReferOut() {
           $("#UpStatusReferOutDes").hide();
         } else if (response.message[0].is_save == -11) {
           // ?? กรณี ที่ รพ ต้นทาง == ข้อมูลใบส่งตัว แล้วให้เป็น modal เพื่อเปลี่ยนสถานะส่งตัว
-
+        
           $("#cancleRefer-status-10-11").show();
           if (
             response.message[0].cancle_org !== null &&
@@ -1263,15 +1260,22 @@ function showDetailReferOut() {
           }
           if (hosCode == referHoscode) {
           } else {
-            if (
-              response.message[0].cancle_org !== null &&
-              response.message[0].cancle_des !== null
-            ) {
-              $("#open-modal-case-referout-cancelorg").hide();
-            } else {
+            // if (
+            //   response.message[0].cancle_org !== null  && 
+            //   response.message[0].cancle_des !== null
+            // ) {
+            //   $("#open-modal-case-referout-cancelorg").hide();
+            // } else {
+            //   $("#open-modal-case-referout-cancelorg").show();
+            // }
+            if(response.message[0].cancle_org =="" ||response.message[0].cancle_org == null  ){
+              $("#open-modal-case-referHocode").show();
               $("#open-modal-case-referout-cancelorg").show();
+            }else if (response.message[0].cancle_org !=""){
+              $("#open-modal-case-referHocode").hide();
+        
             }
-            $("#open-modal-case-referHocode").show();
+          
             $("#open-modal-case-referin").hide();
             $("#UpStatusReferOutDesResive").hide();
             $("#UpStatusReferOutDes").hide();
@@ -1363,6 +1367,7 @@ function showDetailReferOut() {
               response.message[0].codegen_refer_no.split("-");
             if (refNew != "" && refOld != "") {
               $("#referSus").show();
+                if( hosCode == referHoscode)
               $("#referSus").html(
                 `<a href="indexfromuse.php?onfrom=showdetailreferout&idrefer=${refNew}-${refOld}">อ้างอิงส่งตัวใหม่</a>`
               );
@@ -1372,8 +1377,15 @@ function showDetailReferOut() {
             $("#UpStatusReferOutDesResive").hide();
             $("#UpStatusReferOutDes").hide();
           }
+        }else if (response.message[0].is_save==14){
+       
+          $("#refuse-button-drv").show()
+          const showText =`${response.message[0].select_type_drv +' '+'ลายละเอียดแนบ'+' '+response.message[0].result_text_drv+' อื่นๆ:'+response.message[0].result_text_other_drv}`;
+          $("#formDry").text(showText);
+
         }
       }
+    
     },
   });
 }
@@ -1387,9 +1399,8 @@ async function SendReferIn() {
   const ccDes = $("#DiagonosisDes").val();
   const mDes = $("#ccDestination").val();
   const selectTypeDrv = await modalDerivery($("#deriveryService").val());
-  const resultTextOther = await InputOtherCase($("#inputOtherCase").val());
+  const resultTextOther = await InputOtherCase($("#inputOtherCaseDrv").val())
   const inputDeriveryCase = $("#inputDeriveryCase").val();
-
   $.ajax({
     headers: {
       "x-access-token": hosPassCode,
@@ -1403,7 +1414,7 @@ async function SendReferIn() {
       ccDes,
       mDes,
       selectTypeDrv: selectTypeDrv.otherCase,
-      resultTextOther: resultTextOther.otherCase,
+      resultTextOther:resultTextOther.otherCase,
       inputDeriveryCase: inputDeriveryCase,
     },
     success: function (response) {
@@ -1422,8 +1433,9 @@ async function SendReferIn() {
         $(".modal-backdrop").fadeOut();
         $("#UpStatusReferOutDesResive").hide();
         $("#UpStatusReferOutDes").hide();
-
+        $("#open-modal-case-referHosCodeDes").hide();
         $("#referSus").html("รับการส่งตัวแล้ว").css("color", "green");
+        showDetailReferOut()
       } else if (response.send === "info") {
         toastr.info(`${response.msg}`, "", {
           positionClass: "toast-top-center",
@@ -1441,6 +1453,7 @@ async function SendReferIn() {
             );
           },
         });
+        showDetailReferOut()
       } else {
         toastr.error(`${response.msg}`, "", {
           positionClass: "toast-top-center",
@@ -1450,6 +1463,7 @@ async function SendReferIn() {
           hideMethod: "fadeOut",
           closeButton: true,
         });
+        showDetailReferOut()
       }
     },
   });
@@ -1556,6 +1570,7 @@ const showTableReferBack = () => {
   });
 };
 const showDetailReferBack = () => {
+  
   $.ajax({
     headers: {
       "x-access-token": hosPassCode,
@@ -1567,6 +1582,7 @@ const showDetailReferBack = () => {
     },
     dataType: "JSON",
     success: function (response) {
+       
       const dateTimeString = response.message[0].refer_date;
       const date = new Date(dateTimeString);
       const day = date.getUTCDate().toString().padStart(2, "0");
@@ -1591,7 +1607,7 @@ const showDetailReferBack = () => {
         const decrypted = decryptData(encrypted, secretKey);
 
         $("#refer_no").val(response.message[0].refer_no);
-        $("#refer_code").val(response.message[0].refer_hosp_name);
+        $("#refer_code").val(response.message[0].refer_code);
 
         $("#refer_name").val(response.message[0].refer_name);
         $("#code_gen_refer").val(response.message[0].codegen_refer_no);
@@ -1800,10 +1816,21 @@ const showDetailReferBack = () => {
           });
           $("#treeviewDes").html(drugArray);
         }
+       
         if (response.message[0].is_save == 10) {
+           
           if (hosCode == response.message[0].refer_hospcode) {
-            $("#open-modal-case-referHocode").show();
+                $("#open-modal-case-referHocode").show();
+            $("#suscecc-refer-back").show();
+          
           }
+        } else if (response.message[0].is_save == 11) {
+           $("#ShowSecess").show();
+              $("#ShowSecess").html(
+                `เสร็จสิ้นการส่งกลับ ${response.message[0].input_text_othercase_tranfer_referback}`
+              );
+                $("#open-modal-case-referHocode").hide();
+              $("#suscecc-refer-back").hide();
         }
       }
     },
@@ -1814,6 +1841,7 @@ const sendFromReferBackhosCode = () => {
   const forms = document.getElementById("refer-back-form");
   const formData = new FormData(forms);
   formData.append("HoscodeCheck", hosCode);
+     formData.append("statusCode", -110);
   if ($("#hosCodeRefer").val() === "0") {
     alert("กรุณาเลือกโรงพยาบาลที่จะส่งต่อ");
     return false;
@@ -1833,7 +1861,7 @@ const sendFromReferBackhosCode = () => {
     processData: false,
     success: function (response) {
       console.log(response);
-      if (response.message === "Success") {
+      if (response.data === 200) {
         Swal.fire({
           position: "top-center",
           icon: "success",
@@ -1855,3 +1883,39 @@ const sendFromReferBackhosCode = () => {
     },
   });
 };
+
+const SendReferBack = () => {
+     const forms = document.getElementById("refer-back-form");
+     const formData = new FormData(forms);
+      formData.append("statusCode", 11);
+    $.ajax({
+      headers: {
+        "x-access-token": hosPassCode,
+      },
+      type: "POST",
+      url: "https://rh4cloudcenter.moph.go.th:3000/referapi/putreferbackonlysend",
+      data: formData,
+      contentType: false,
+      processData: false,
+      success: function (response) {
+        if (response.message === "Success") {
+          Swal.fire({
+            position: "top-center",
+            icon: "success",
+            title: "รับการส่งตัว",
+            showConfirmButton: false,
+            timer: 1500,
+          });
+          setTimeout(function () {
+            $("#mmmodalReferCode").modal("hide");
+            $(".modal-backdrop").hide();
+            // $("#referSus").html(
+            //   `<a href="indexfromuse.php?onfrom=showdetailshowdetailreferout&idrefer=${response.refNo}">อ้างอิงเอกสารสงตัวเก่าคลิ๊ก ${response.referNo}</a>`
+            // );
+            $("#open-modal-case-referout-cancelorg").hide();
+            location.href = "indexfromuse.php?onfrom=referbacktable";
+          }, 2000);
+        }
+      },
+    });
+  };

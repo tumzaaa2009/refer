@@ -63,12 +63,16 @@ if ($countRwController > 0) {
       $callPathHis = $jsonData[1]['callPathHis'];
     } else if ($jsonData[1]['typeConnect'] == "ConnectToAPI") {
 
-      $callUrl = $jsonData[1]['URl'];
+   
       $calAuth = $jsonData[1]['Auth'];
       $calToken = $jsonData[1]['TOKEN'];
       $hospCode =$jsonData[1]['hospCode'];
       $testconnect = $jsonData[1]['testconnect'];
-      $endPoint = $jsonData[1]['endPoint'];
+      $callUrl = $jsonData[1]['URl']; //refer api 
+      $endPoint = $jsonData[1]['endPoint']; // patien
+      $vsDate = $jsonData[1]['visitDate'];
+      $labDetail =   $jsonData[1]['visitLabs'];
+      $drugDetail = $json[1]['visitDrug'];
     }
    
   }

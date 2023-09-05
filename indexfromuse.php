@@ -311,14 +311,6 @@ if (isset($_GET['destroy'])) {
                                 <p>ส่งกลับ</p>
                             </a>
                         </li>
-                        <!-- <li class="nav-item">
-                            <a href="indexfromuse.php?onfrom=referintablewait" class="nav-link <?php echo ($_GET['onfrom'] == 'referintablewait') ? 'active' : '' ?>">
-                                <i class=" far fa-circle nav-icon"></i>
-                                <p>รายชื่อผู้ป่วยรอส่งตัวกลับ (เฉพาะเคสที่ได้รับ ReferBack)</p>
-                            </a>
-                        </li> -->
-                        <!-- </ul> -->
-                        <!-- </li> -->
                         <li class="nav-header">Menu รายชื่อผู้ป่วย</li>
                         <li class="nav-item">
                             <a href="indexfromuse.php?onfrom=referouttable" class="nav-link <?php echo ($_GET['onfrom'] == 'referouttable') ? 'active' : '' ?>">
@@ -332,28 +324,6 @@ if (isset($_GET['destroy'])) {
                                 <p>แสดงรายชื่อผู้ป่วยส่งต่อ</p>
                             </a>
                         </li>
-
-
-                        <!-- <li class="nav-item">
-                            <a href="indexfromuse.php?onfrom=referoutDestinationtable" class="nav-link <?php echo ($_GET['onfrom'] == 'referoutDestinationtable') ? 'active' : '' ?>">
-                                <i class="nav-icon fas fa-file"></i>
-                                <p>แสดงรายชื่อผู้ป่วยรับ Refer</p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="indexfromuse.php?onfrom=referintable" class="nav-link <?php echo ($_GET['onfrom'] == 'referintable') ? 'active' : '' ?>">
-                                <i class=" nav-icon fas fa-file"></i>
-                                <p>แสดงรายชื่อผู้ป่วยส่งตัวกลับ</p>
-                            </a>
-                        </li>
-                        <li class="nav-header">Menu แสดงการปฏิเสธ-ยกเลิก เคส Refer</li>
-                        <li class="nav-item">
-                            <a href="indexfromuse.php?onfrom=referoutremovetable" class="nav-link <?php echo ($_GET['onfrom'] == 'referoutremovetable') ? 'active' : '' ?>">
-                                <i class=" nav-icon fas fa-file"></i>
-                                <p>แสดงรายชื่อผู้ป่วยยกเลิกการส่งตัว (รพ.ต้นทาง)-(รพ.ปลายทาง)</p>
-                            </a>
-                        </li> -->
-
                         <li class="nav-header">LABELS</li>
                         <?php if (isset($_GET['userfrom']) && $_GET['userfrom'] == 'admin') { ?>
                             <li class="nav-item">
@@ -545,13 +515,19 @@ if (isset($_GET['destroy'])) {
 
     let callPathHis = ''
     let tokenApi = ''
-
+    let vsDate = '';
+    let labDetail = '';
+    let drugDetail = '';
     const typeConnect = '<?php echo $typeConnect ?>'
     // ? typeConnect
     if (typeConnect == "ConnectToAPI") {
         auth = '<?php echo $calAuth; ?>'
         tokenApi = '<?php echo decryptPassword($calToken) ?>';
-        callPathHis = '<?php echo $callUrl . $endPoint ?>';
+        patien = '<?php echo $endPoint ?>';
+        vsDate = '<?php echo $vsDate; ?>';
+        labDetail = '<?php echo $labDetail; ?>';
+        drugDetail = '<?php echo $visitDrug; ?>';
+        callPathHis = '<?php echo $callUrl  ?>';
     } else if (typeConnect == "ConnectToDb") {
         callPathHis = '<?php echo $callPathHis; ?>'
 
@@ -573,7 +549,7 @@ if (isset($_GET['destroy'])) {
             $(".div-status").css({
                 'color': 'red',
                 'font-size': '15px;'
-            }).html("Status ReferR4: Lost Connecting");
+            }).html("Status ReferR4: Lost Connect");
         } else {
             console.log("เกิดข้อผิดพลาดในการเชื่อมต่อ Socket.IO: ", error);
         }
@@ -595,7 +571,6 @@ if (isset($_GET['destroy'])) {
     // test 
 
     socket.on(`send_status ${hosCode}`, function(data) {
-        alert('asdasdasd')
         if ((data.message = "มี RefNo เข้า  ")) {
             toastr.success(`มี RefNo เข้า ${data.refNo}`, "", {
                 positionClass: "toast-top-full-width",
@@ -700,13 +675,15 @@ if (isset($_GET['destroy'])) {
             audio.autoplay = true;
             if (onfrom == "referouttable") {
                 showTableReferOut()
+            } else if (idrefer != "" && idrefer != undefined) {
+
+                showDetailReferOut()
             }
 
         }
     });
 
     socket.on(`send_statusreferIn ${hosCode} `, function(data) {
-
         if ((data.message = "ส่งตัวเคส ")) {
             toastr.info(`ส่งกลับเคส ${data.refNo}`, "", {
                 positionClass: "toast-top-full-width",
@@ -719,7 +696,12 @@ if (isset($_GET['destroy'])) {
             });
             const audio = new Audio("./sound_alert/com_linecorp_line_whistle.ogg");
             audio.autoplay = true;
-            showTableReferOut();
+            if (onfrom == "referouttable") {
+                showTableReferOut()
+            } else if (idrefer != "" && idrefer != undefined) {
+
+                showDetailReferOut()
+            }
         }
     });
 
@@ -743,7 +725,7 @@ if (isset($_GET['destroy'])) {
     });
     socket.on(`sendreferbackonlysend ${hosCode}`, function(data) {
         if ((data.data = 200)) {
-            toastr.info(`ส่งต่อ ${data.refNo}`, "", {
+            toastr.info(`${data.message} ${data.refNo}`, "", {
                 positionClass: "toast-top-full-width",
                 timeOut: false,
                 extendedTimeOut: "1000",
@@ -754,7 +736,34 @@ if (isset($_GET['destroy'])) {
             });
             const audio = new Audio("./sound_alert/com_linecorp_line_whistle.ogg");
             audio.autoplay = true;
-            showTableReferOut();
+            if (onfrom == "referbacktable") {
+                showTableReferOut()
+            } else if (idrefer != "" && idrefer != undefined) {
+
+                showDetailReferBack()
+            }
+        }
+    });
+    //ปลายทางปล่วยหน่วยบริการ
+    socket.on(`chang_hos ${hosCode}`, function(data) {
+        if ((data.data = 200)) {
+            toastr.info(`${data.message}`, "", {
+                positionClass: "toast-top-full-width",
+                timeOut: false,
+                extendedTimeOut: "1000",
+                showMethod: "fadeIn",
+                hideMethod: "fadeOut",
+                closeButton: true,
+                toastClass: "toast-black"
+            });
+            const audio = new Audio("./sound_alert/com_linecorp_line_whistle.ogg");
+            audio.autoplay = true;
+            if (onfrom == "referouttable") {
+                showTableReferOut()
+            } else if (idrefer != "" && idrefer != undefined) {
+
+                showDetailReferOut()
+            }
         }
     });
 
@@ -762,7 +771,7 @@ if (isset($_GET['destroy'])) {
     // ?Socketio
 
     $(document).ready(function() {
- 
+
         jQuery.support.cors = true; //corss
         $('.image-container').click(function() {
             $('.close-button').fadeIn();
@@ -1008,6 +1017,7 @@ if (isset($_GET['destroy'])) {
                 data: {
                     headAuthHis: auth,
                     urlTokenHis: callPathHis,
+                    patien: patien,
                     keyTokenHis: tokenApi,
                     hospCode: hosCode,
                     hn: value
@@ -1015,38 +1025,39 @@ if (isset($_GET['destroy'])) {
                 dataType: "JSON",
                 success: function(response) {
                     // 4. แสดงผลลัพธ์
-                    console.log(response)
+
                     if (response.status == 200) {
                         var today = new Date();
-                        var pastDate = new Date(response.person.birthday);
+                        var pastDate = new Date(response.person[0].birthday);
                         var diffYears = today.getFullYear() - pastDate.getFullYear();
-                        if (response.person.sex == 1) {
+
+                        if (response.person[0].sex == 1) {
                             var sex = "ชาย";
-                        } else if (response.person.sex == 2) {
+                        } else if (response.person[0].sex == 2) {
                             var sex = "หญิง";
                         } else {
                             var sex = "อื่น";
                         }
-                        $("#hn").val(response.person.hn);
-                        $("#cid").val(response.person.cid);
-                        $("#pname").val(response.person.pname);
-                        $("#fname").val(response.person.fname);
-                        $("#lname").val(response.person.lname);
+                        $("#hn").val(response.person[0].hn);
+                        $("#cid").val(response.person[0].cid);
+                        $("#pname").val(response.person[0].pname);
+                        $("#fname").val(response.person[0].fname);
+                        $("#lname").val(response.person[0].lname);
                         $("#age").val(diffYears);
                         $("#sex").val(sex);
-                        $("#addr").val(response.person.address.addr);
-                        $("#moopart").val(response.person.address.mooparth);
-                        $("#amppart").val(response.person.address.amppart);
-                        $("#tmbpart").val(response.person.address.tmbpart);
-                        $("#chwpart").val(response.person.address.chwpart);
-                        $("#opd_allergy").val(response.person.allergy);
-                        if (typeConnect == "ConnectToDb") {
-                            DrugItemdetailDes(response.person.hn)
-                            DrugLabs(response.person.hn)
-                        } else if (typeConnect == "ConnectToAPI") {
-                            DrugItemdetailDes(response.drug)
-                            DrugLabs(response.lab)
-                        }
+                        $("#addr").val(response.person[0].address.addr);
+                        $("#moopart").val(response.person[0].address.mooparth);
+                        $("#amppart").val(response.person[0].address.amppart);
+                        $("#tmbpart").val(response.person[0].address.tmbpart);
+                        $("#chwpart").val(response.person[0].address.chwpart);
+                        $("#opd_allergy").val(response.person[0].allergy);
+                        // if (typeConnect == "ConnectToDb") {
+                        //     DrugItemdetailDes(response.person.hn)
+                        //     DrugLabs(response.person.hn)
+                        // } else if (typeConnect == "ConnectToAPI") {
+                        //     DrugItemdetailDes(response.drug)
+                        //     DrugLabs(response.lab)
+                        // }
 
                     } else if (response.status == 400) {
                         alert('ไม่พบเลข Hn / Cid')
@@ -1101,6 +1112,7 @@ if (isset($_GET['destroy'])) {
                     }
                 },
             });
+
         } else if (typeConnect == "ConnectToDb") {
             $.ajax({
                 url: callPathHis,
@@ -1168,6 +1180,35 @@ if (isset($_GET['destroy'])) {
             });
         }
     };
+
+    // api เรียก drug และ lab 
+    const VstDate = (value) => {
+        $.ajax({
+            url: 'http://localhost:8080/refer/api/',
+            type: "POST",
+            // beforeSend: function() {
+            //     // แสดงข้อความโหลดก่อนส่งข้อมูล
+            //     $("#loader").show();
+            // },
+            // complete: function() {
+            //     // ซ่อนข้อความโหลดเมื่อสำเร็จหรือเกิดข้อผิดพลาด
+            //     $("#loader").hide();
+            // },
+            data: {
+                headAuthHis: auth,
+                urlTokenHis: callPathHis,
+                vstDate: vsDate,
+                keyTokenHis: tokenApi,
+                hospCode: hosCode,
+                hn: $("hn").val(),
+                cid:$("cid").val() ,
+                eventTypeName: value
+            },
+            dataType: "JSON",
+            success: function(response) {}
+        })
+    }
+
 
 
     // ? เรียก api cloud rh4
@@ -1748,6 +1789,7 @@ if (isset($_GET['destroy'])) {
 
                     const optimereceItems = data[date].optimerece;
 
+
                     html +=
                         '<tr><td style="width: fit-content"><div class="form-check"><input class="  check-all-items" type="checkbox" data-date="' +
                         date +
@@ -1912,7 +1954,6 @@ if (isset($_GET['destroy'])) {
 
     // *** funtion Modal
     async function modalDerivery(value) {
-
         if (value == "อื่น") {
 
             $("#OtherCaseSendRefer").show();
@@ -1928,10 +1969,9 @@ if (isset($_GET['destroy'])) {
             });
         });
     }
-
     async function InputOtherCase(value) {
-        return new Promise((resolve) => {
 
+        return new Promise((resolve) => {
             resolve({
                 otherCase: value
             });

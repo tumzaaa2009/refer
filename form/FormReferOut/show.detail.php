@@ -30,7 +30,7 @@
                <label for="อายุ" class="col-md-auto col-form-label mb-1">วันที่ส่ง และ เวลาส่ง :</label>
                <div class="col-md-auto">
                    <input type="text" class="form-control" id="refer_time" name="refer_time" readonly>
-               </div>
+                </div>
 
                <label for="อายุ" class="col-md-auto col-form-label mb-1">ชื่อ:</label>
                <div class="col-md-auto">
@@ -407,7 +407,7 @@
                                                    <button type="button" id="UpStatusReferOutDes" style="display:none;" class="btn btn-success " onclick="UpStatusReferOutIsSave()">
                                                        รับ Refer </button>
                                                    <button type="button" class="btn btn-warning" id="refuse-button" style="display:none;" data-bs-toggle="modal" data-bs-target="#mmmodal-refuse-case">ปฏิเสธการส่งตัว </button>
-
+                                                   <button type="button" class="btn btn-success" id="refuse-button-drv" data-bs-toggle="modal" style="display:none;" data-bs-target="#mmmodal-refuse-in">รายละเอียดแนบการส่งตัว</button>
                                                    <button type="submit" class="btn btn-info"> Download แบบฟอร์มใบส่งตัว </button>
                                                    <button type="button" class="btn btn-primary" style="display:none;" id="UpdateRefRefer" onclick="PutCaseReferOut()"> Update ข้อมูลไปให้ปลายทาง
                                                    </button>
@@ -422,7 +422,7 @@
                                                        <div class="modal-content">
                                                            <div class="modal-header">
                                                                <h4 class="modal-title">เหตุผลการยกเลิกส่งตัว</h4>
-                                                               <button type="button" class="btn-close" data-bs-dimdiss="modal" aria-label="Close"></button>
+                                                               <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                                                            </div>
                                                            <div class="modal-body">
                                                                <div class="form-group">
@@ -486,7 +486,7 @@
                                                                </div>
                                                                <div class="form-group" id="OtherCaseSendRefer" style="display: none;">
                                                                    <label for="exampleInputEmail1">Other Case</label>
-                                                                   <input type="text" class="form-control" id="inputOtherCase" oninput="InputOtherCase(this.value)" name="inputOtherCase">
+                                                                   <input type="text" class="form-control" id="inputOtherCaseDrv" oninput="InputOtherCase(this.value)" name="inputOtherCaseDrv">
                                                                </div>
 
                                                                <div class="form-group">
@@ -520,6 +520,26 @@
                                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                                                                <button type="button" class="btn btn-success" id="cancleReferOutOrg" onclick="RefuseReferOut()">ยืนยันการยกเลิก</button>
                                                            </div>
+                                                       </div>
+                                                   </div>
+                                               </div>
+                                               <div class="modal fade" id='mmmodal-refuse-in' tabindex="-1" aria-hidden="true">
+                                                   <div class="modal-dialog modal-xl">
+                                                       <div class="modal-content">
+                                                           <div class="modal-header">
+                                                               <h4 class="modal-title">รายละเอียดการส่งตัว</h4>
+                                                               <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                                           </div>
+                                                           <div class="modal-body">
+                                                               <div class="form-group">
+                                                                   <textarea class="col-md-12" readonly id="formDry"></textarea>
+                                                               </div>
+                                                               <div class="modal-footer justify-content-between">
+                                                                   <button type="button" class="btn  btn-secondary" data-bs-dismiss="modal">Close</button>
+
+                                                               </div>
+                                                           </div>
+
                                                        </div>
                                                    </div>
                                                </div>

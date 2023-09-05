@@ -1,1 +1,29 @@
-{"hosCode":{"hosCode":"10661","hosName":"\u0e23\u0e1e \u0e2a\u0e23\u0e30\u0e1a\u0e38\u0e23\u0e35"},"0":{"ContentTypeRefer":"refer","DB_TYPE_REFER":"Mysql","Server_NameRefer":"localhost","Database_NameRefer":"referdb_hos","userRefer":"root","Password":"kbInw6pSZ8KhjmWaQf9i\/1131RczX9rokCMBNAhcdOPIvq0jAp2W0a3dd3qCkD5GWUpaVE96czJET3EvVmNGRHVMMTI2UT09","portRefer":"3306","callPathRefer":".\/api\/Refer\/Mysql\/referdb_hos.Mysql.php"},"1":{"typeConnect":"ConnectToDb","ContentTypeHis":"his","DB_TYPE_HIS":"Mysql","Type_His":"hosxp.hospcu","Server_NameHis":"localhost","Database_NameHis":"hos","useHis":"root","Password":"UD1OYg3H7LhF8LuPN0kezEb1Lrk\/B0kxnmhI0ZWu18QxtG9xBGp8pg3j3xleKSTkV09hNnQzemx2K3JJSG1uN0JPYmRqUT09","portHis":"3306","callPathHis":".\/api\/HosApi\/Mysql\/hosxp.hospcu.Mysql.php"}}
+{
+    "hosCode": {
+        "hosCode": "10661",
+        "hosName": "\u0e23\u0e1e \u0e2a\u0e23\u0e30\u0e1a\u0e38\u0e23\u0e35"
+    },
+    "0": {
+        "ContentTypeRefer": "refer",
+        "DB_TYPE_REFER": "Mysql",
+        "Server_NameRefer": "localhost",
+        "Database_NameRefer": "referdb_hos",
+        "userRefer": "root",
+        "Password": "Te4ku8eJQvQ1LCTsjuyfwAA6WYn1AJzyfZZ156jDwk7iV2nCpDtqPVu+8lkQlwGVOWdyYXRIekgyUlRacnRwUkZOTEJHZz09",
+        "portRefer": "3306",
+        "callPathRefer": ".\/api\/Refer\/Mysql\/referdb_hos.Mysql.php"
+    },
+    "1": {
+        "typeConnect": "ConnectToAPI",
+        "ContentTypeHis": "his",
+        "URl": "https:\/\/api.srbr.in.th",
+        "testconnect": "\/refer\/api\/patient\/",
+        "endPoint": "\/refer\/api\/patient\/",
+        "visitDate": "\/refer\/api\/visit\/",
+        "visitLabs": "\/refer\/api\/lab\/",
+        "visitDrug": "\/refer\/api\/drug\/",
+        "Auth": "x-api-key",
+        "hospCode": "10661",
+        "TOKEN": "q02oMOHZ07rGvpyaT0\/\/krLTfybaAaVJfZ8tbkHIB4YENm+XLPVM9UoA7Vx12vnERUhJSGFTUW45Wk4yclJpNW9YcEQzdWh4MjR6TXJmSkxXUG1heVdacTRlMk0xTEJJSmZwQWwrSjdINFA4TGNsbFp1NFdZc2hFTjNSSzdOYjlDbFBrOVE9PQ=="
+    }
+}
