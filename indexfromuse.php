@@ -179,6 +179,22 @@ if (isset($_GET['destroy'])) {
             animation: spin 1s linear infinite;
         }
 
+        .loaderDrug {
+            border: 4px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top: 4px solid #007bff;
+            width: 30px;
+            height: 30px;
+            animation: spin 2s linear infinite;
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            margin-left: -15px;
+            margin-top: -15px;
+            display: none;
+            /* ตั้งค่าเริ่มต้นเป็นซ่อน */
+        }
+
         @keyframes spin {
             0% {
                 transform: rotate(0deg);
@@ -188,6 +204,8 @@ if (isset($_GET['destroy'])) {
                 transform: rotate(360deg);
             }
         }
+
+
 
         .toast-black {
             color: black !important;
@@ -1025,8 +1043,8 @@ if (isset($_GET['destroy'])) {
                 dataType: "JSON",
                 success: function(response) {
                     // 4. แสดงผลลัพธ์
-                    console.log(response.person[0].hn)
-                    if (response.status == 200) {
+
+                    if (response.statusCode == 200) {
                         var today = new Date();
                         var pastDate = new Date(response.person[0].birthday);
                         var diffYears = today.getFullYear() - pastDate.getFullYear();
@@ -1038,6 +1056,7 @@ if (isset($_GET['destroy'])) {
                         } else {
                             var sex = "อื่น";
                         }
+
                         $("#hn").val(response.person[0].hn);
                         $("#cid").val(response.person[0].cid);
                         $("#pname").val(response.person[0].pname);
@@ -1059,7 +1078,7 @@ if (isset($_GET['destroy'])) {
                         //     DrugItemdetailDes(response.drug)
                         //     DrugLabs(response.lab)
                         // }
-
+                        $("#custom-tabs-one-home-tab").tab('show');
                     } else if (response.status == 400) {
                         alert('ไม่พบเลข Hn / Cid')
                         $("#hn").val("");
@@ -1188,14 +1207,15 @@ if (isset($_GET['destroy'])) {
         $.ajax({
             url: 'http://localhost:8080/refer/api/',
             type: "POST",
-            // beforeSend: function() {
-            //     // แสดงข้อความโหลดก่อนส่งข้อมูล
-            //     $("#loader").show();
-            // },
-            // complete: function() {
-            //     // ซ่อนข้อความโหลดเมื่อสำเร็จหรือเกิดข้อผิดพลาด
-            //     $("#loader").hide();
-            // },
+            beforeSend: function() {
+                // แสดงข้อความโหลดก่อนส่งข้อมูล
+                $("#loaderDrug").show();
+            },
+            complete: function() {
+                // ซ่อนข้อความโหลดเมื่อสำเร็จหรือเกิดข้อผิดพลาด
+
+                $("#loaderDrug").hide();
+            },
 
             data: {
                 headAuthHis: auth,
@@ -1208,8 +1228,8 @@ if (isset($_GET['destroy'])) {
             },
             dataType: "JSON",
             success: function(response) {
-                console.log(response)
-                DrugLabs(response.date)
+
+                DrugLabs(response.event)
             }
         })
     }
@@ -1769,14 +1789,35 @@ if (isset($_GET['destroy'])) {
                 }
             });
         } else if (typeConnect == "ConnectToAPI") {
-            generateTreeView(hn)
+
+            generateTreeViewApi(hn)
         }
+
+    }
+    //* Api ยา /labs
+    function generateTreeViewApi(data) {
+
+        let genHtml = '';
+        let html =
+            '<div class="col"><ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">';
+        for (let index = 0; index < data.length; index++) {
+            //* ทำ if else ดึง ยาไม่ก็ labs
+            html +=
+                '<li class="nav-item"><a class="nav-link"><i class="fas fa-angle-left right"></i>' +
+                formatDateThai(data[index]['visit']) +
+                '</a>';
+
+        }
+        html += '</ul></div>';
+
+        document.getElementById('treeviewLabs').innerHTML = html;
+
 
     }
 
     //* generrate ยา // lab
     function generateTreeView(data) {
-        console.log("generateTreeView" + data)
+
 
         let genHtml = '';
         let html =

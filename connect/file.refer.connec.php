@@ -63,18 +63,17 @@ if ($countRwController > 0) {
       $callPathHis = $jsonData[1]['callPathHis'];
     } else if ($jsonData[1]['typeConnect'] == "ConnectToAPI") {
 
-   
+
       $calAuth = $jsonData[1]['Auth'];
       $calToken = $jsonData[1]['TOKEN'];
-      $hospCode =$jsonData[1]['hospCode'];
+      $hospCode = $jsonData[1]['hospCode'];
       $testconnect = $jsonData[1]['testconnect'];
       $callUrl = $jsonData[1]['URl']; //refer api 
       $endPoint = $jsonData[1]['endPoint']; // patien
       $vsDate = $jsonData[1]['visitDate'];
       $labDetail =   $jsonData[1]['visitLabs'];
-      $drugDetail = $json[1]['visitDrug'];
+      $drugDetail = $jsonData[1]['visitDrug'];
     }
-   
   }
 } else if (isset($_POST['contentTypeRefer'])) {
   if ($_POST['contentTypeRefer'] == "refer") {

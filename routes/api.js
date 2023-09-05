@@ -5,6 +5,7 @@ const axios = require("axios");
 /* GET home page. */
 router.post("/refer/testconnectapi/", function (req, resJson, next) {
   // console.log(keyTokenHis)
+ 
 
   let cid = "";
   let hn = "";
@@ -20,7 +21,6 @@ router.post("/refer/testconnectapi/", function (req, resJson, next) {
   } else {
     hn = null;
   }
-  console.log(`${req.body.urlTokenHis}${req.body.testConnect}`);
 
   axios
     .post(
@@ -82,7 +82,7 @@ router.post("/refer/api/", async function (req, resJson, next) {
       });
     resJson.send(resPatien)
   } else if (req.body.vstDate) {
-     
+     console.log(req.body)
     const resVsDate = await axios
       .post(
         `${req.body.urlTokenHis}${req.body.vstDate}`,
@@ -105,6 +105,7 @@ router.post("/refer/api/", async function (req, resJson, next) {
       });
     resJson.send(resVsDate);
   }
+   console.log(req.body);
 });
 
 module.exports = router;

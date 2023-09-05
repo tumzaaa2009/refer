@@ -295,15 +295,15 @@
                                                     </div>
                                                     <div class="col-sm-12">
                                                         <label for="inputPassword3" class="col-sm-2 col-form-label">Api VisitDate</label>
-                                                        <input type="text" class="form-control" name="url-end-point-VisitDate" id="url-end-point-VisitDate" placeholder="/endpoint/" value="<?php echo ''; ?>">
+                                                        <input type="text" class="form-control" name="url-end-point-VisitDate" id="url-end-point-VisitDate" placeholder="/endpoint/" value="<?php echo $vsDate; ?>">
                                                     </div>
                                                     <div class="col-sm-12">
                                                         <label for="inputPassword3" class="col-sm-2 col-form-label">Api LabsVist</label>
-                                                        <input type="text" class="form-control" name="url-end-point-LabsVist" id="url-end-point-LabsVist" placeholder="/endpoint/" value="<?php echo ''; ?>">
+                                                        <input type="text" class="form-control" name="url-end-point-LabsVist" id="url-end-point-LabsVist" placeholder="/endpoint/" value="<?php echo $labDetail; ?>">
                                                     </div>
                                                     <div class="col-sm-12">
                                                         <label for="inputPassword3" class="col-sm-2 col-form-label">Api DrugVist</label>
-                                                        <input type="text" class="form-control" name="url-end-point-DrugVist" id="url-end-point-DrugVist" placeholder="/endpoint/" value="<?php echo ''; ?>">
+                                                        <input type="text" class="form-control" name="url-end-point-DrugVist" id="url-end-point-DrugVist" placeholder="/endpoint/" value="<?php echo $drugDetail ; ?>">
                                                     </div>
                                                     <div class="col-sm-12">
                                                         <label for="inputPassword3" class="col-sm-2 col-form-label">Headder Auth</label>
@@ -411,12 +411,12 @@
                     },
                     dataType: "JSON",
                     success: function(response) {
-                        console.log(response.status)
-                        if (response.status == 200) {
+
+                        if (response.statusCode == 200) {
                             alert(JSON.stringify(response))
-                        } else if (response.status == 500) {
+                        } else if (response.statusCode == 500) {
                             alert("Token ไม่ถูกต้อง")
-                        } else if (response.status == 400) {
+                        } else if (response.statusCode == 400) {
                             alert("ข้อมูลไม่ถูกต้อง")
                         }
                     }

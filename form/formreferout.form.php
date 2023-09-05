@@ -704,7 +704,11 @@ if ($_GET['onfrom'] === "formreferout") { ?>
                                     <label for="file-input"></label>
                                     <div class="card">
                                         <div class="card-body">
-                                            <div id="treeview"></div>
+                                            <div id="loaderDrug" class="loaderDrug">
+                                                <div class="loaderDrug"></div>
+                                            </div>
+                                            <div id="treeview">
+                                            </div>
                                         </div>
                                     </div>
                                 </div>

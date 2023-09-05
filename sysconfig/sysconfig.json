@@ -9,7 +9,7 @@
         "Server_NameRefer": "localhost",
         "Database_NameRefer": "referdb_hos",
         "userRefer": "root",
-        "Password": "Te4ku8eJQvQ1LCTsjuyfwAA6WYn1AJzyfZZ156jDwk7iV2nCpDtqPVu+8lkQlwGVOWdyYXRIekgyUlRacnRwUkZOTEJHZz09",
+        "Password": "LnXIJrSBkhzeVPPYBuWa7tqdIiPaoM2rsd+kMW7UghqiutkXf7EvfMsA\/KVfHhj\/L0RGQnYxRTRzQ3pON05XcjlmR2NWdz09",
         "portRefer": "3306",
         "callPathRefer": ".\/api\/Refer\/Mysql\/referdb_hos.Mysql.php"
     },
@@ -23,7 +23,7 @@
         "visitLabs": "\/refer\/api\/lab\/",
         "visitDrug": "\/refer\/api\/drug\/",
         "Auth": "x-api-key",
-        "hospCode": "10661",
-        "TOKEN": "q02oMOHZ07rGvpyaT0\/\/krLTfybaAaVJfZ8tbkHIB4YENm+XLPVM9UoA7Vx12vnERUhJSGFTUW45Wk4yclJpNW9YcEQzdWh4MjR6TXJmSkxXUG1heVdacTRlMk0xTEJJSmZwQWwrSjdINFA4TGNsbFp1NFdZc2hFTjNSSzdOYjlDbFBrOVE9PQ=="
+        "hospCode": "",
+        "TOKEN": "t9+WXUzUyigBHd8xHGUZpNYMJa\/QaT+yeI7XsK0AY9dGDyOlSCA53IVrEikZBvnSV3pyQXlOdnBpNkhFcVhtSjRKekErRFMzazA4STJ6WFhxS0x2STRoOHp3THdSM1Z3UFFtUjE1b3htK25RS2dIZ1YwKyszTzdKL1BIeDhuZVR2bzdINFE9PQ=="
     }
 }
