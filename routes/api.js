@@ -5,7 +5,6 @@ const axios = require("axios");
 /* GET home page. */
 router.post("/refer/testconnectapi/", function (req, resJson, next) {
   // console.log(keyTokenHis)
- 
 
   let cid = "";
   let hn = "";
@@ -75,14 +74,13 @@ router.post("/refer/api/", async function (req, resJson, next) {
         }
       )
       .then((res) => {
-        return  res.data;
+        return res.data;
       })
       .catch((error) => {
         return console.error(error);
       });
-    resJson.send(resPatien)
+    resJson.send(resPatien);
   } else if (req.body.vstDate) {
-     console.log(req.body)
     const resVsDate = await axios
       .post(
         `${req.body.urlTokenHis}${req.body.vstDate}`,
@@ -104,8 +102,63 @@ router.post("/refer/api/", async function (req, resJson, next) {
         return console.error(error);
       });
     resJson.send(resVsDate);
+  } else if (req.body.typeDetail) {
+    let TypeDate = "";
+    let resDetail;
+    if (req.body.typeDetail == "Drugs") {
+      resDetail = await axios
+        .post(
+          `${req.body.urlTokenHis}${req.body.pathDetail}`,
+          {
+            hospcode: 10661,
+            hn: req.body.hn,
+            drugDate: req.body.detailDate,
+            type: "opd",
+          },
+          {
+            headers: {
+              "x-api-key": `pvoNArKhGdKK9oDl@fTSsDjG8XzptHlxIXR!3JRjzUJhDRbkalaWD`,
+            },
+          }
+        )
+        .then((res) => {
+                 return {
+                   date: req.body.detailDate,
+                   type: req.body.typeDetail,
+                   optimerece: res.data.drug,
+                 };
+        })
+        .catch((error) => {
+          return console.error(error);
+        });
+      console.log(resDetail);
+    } else if (req.body.typeDetail == "Labs") {
+      resDetail = await axios
+        .post(
+          `${req.body.urlTokenHis}${req.body.pathDetail}`,
+          {
+            hospcode: 10661,
+            hn: req.body.hn,
+            labDate: req.body.detailDate,
+            type: 1,
+          },
+          {
+            headers: {
+              "x-api-key": `pvoNArKhGdKK9oDl@fTSsDjG8XzptHlxIXR!3JRjzUJhDRbkalaWD`,
+            },
+          }
+        )
+        .then((res) => {
+        
+          return {date:req.body.detailDate, type: req.body.typeDetail, data: res.data.lab };
+        })
+        .catch((error) => {
+          return console.error(error);
+        });
+    }
+ console.log(resDetail);
+    resJson.send(resDetail);
   }
-   console.log(req.body);
 });
 
 module.exports = router;

@@ -73,6 +73,7 @@ if ($countRwController > 0) {
       $vsDate = $jsonData[1]['visitDate'];
       $labDetail =   $jsonData[1]['visitLabs'];
       $drugDetail = $jsonData[1]['visitDrug'];
+  
     }
   }
 } else if (isset($_POST['contentTypeRefer'])) {

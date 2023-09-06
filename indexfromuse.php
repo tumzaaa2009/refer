@@ -544,14 +544,15 @@ if (isset($_GET['destroy'])) {
         patien = '<?php echo $endPoint ?>';
         vsDate = '<?php echo $vsDate; ?>';
         labDetail = '<?php echo $labDetail; ?>';
-        drugDetail = '<?php echo $visitDrug; ?>';
+        drugDetail = '<?php echo $drugDetail; ?>';
         callPathHis = '<?php echo $callUrl  ?>';
+
+
     } else if (typeConnect == "ConnectToDb") {
         callPathHis = '<?php echo $callPathHis; ?>'
 
     }
     //* ENDPOINT 
-
     let dateToday = new Date();
     var onfrom = '<?php echo isset($_GET['onfrom']) ? $_GET['onfrom'] : ""; ?>';
     var idrefer = '<?php echo isset($_GET['idrefer']) ? $_GET['idrefer'] : ""; ?>';
@@ -1229,7 +1230,7 @@ if (isset($_GET['destroy'])) {
             dataType: "JSON",
             success: function(response) {
 
-                DrugLabs(response.event)
+                DrugLabs(response)
             }
         })
     }
@@ -1795,29 +1796,287 @@ if (isset($_GET['destroy'])) {
 
     }
     //* Api ยา /labs
+
+    // * สร้างตัวแปรเก็บ array ของ date ทั้งหมด และ detail ของ labs หรือ Drugs 
+    let arrayLabsListDate = [];
+    let arrayLabDetail = [];
+    let arrayDrugDate = [];
+
     function generateTreeViewApi(data) {
+        let hn = $("#hn").val();
+        let treeviewId = data.eventTypeName == "Drugs" ? 'treeview' : 'treeviewLabs';
 
-        let genHtml = '';
-        let html =
-            '<div class="col"><ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">';
-        for (let index = 0; index < data.length; index++) {
-            //* ทำ if else ดึง ยาไม่ก็ labs
-            html +=
-                '<li class="nav-item"><a class="nav-link"><i class="fas fa-angle-left right"></i>' +
-                formatDateThai(data[index]['visit']) +
-                '</a>';
+        let html = `
+    <div class="col">
+        <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">`;
+        for (let index = 0; index < data.event.length; index++) {
+            if (data.eventTypeName == "Labs") {
 
+                if (!arrayLabsListDate.includes(data.event[index].visit)) {
+                    arrayLabsListDate.push(data.event[index].visit); // เพิ่มค่าในอาร์เรย์หากยังไม่มีค่า visit นี้ในอาร์เรย์
+                }
+            } else if (data.eventTypeName == "Drugs") {
+                arrayDrugDate.push(data.event[index].visit)
+                if (!arrayDrugDate.includes(data.event[index].visit)) {
+                    arrayDrugDate.push(data.event[index].visit); // เพิ่มค่าในอาร์เรย์หากยังไม่มีค่า visit นี้ในอาร์เรย์
+                }
+            }
+
+            if (data.eventTypeName == "Labs") {
+
+                html +=
+                    `<li class="nav-item"><a class="nav-link" onclick="VistTypeDetail('${arrayLabsListDate[index]}', '${data.eventTypeName}', ${hn}, ${hosCode})"><i class="fas fa-angle-left right" ></i>` +
+                    formatDateThai(arrayLabsListDate[index]) +
+                    `</a><ul class="nav nav-treeview"><li class="nav-item"><div class="table-responsive"><table class="table table-bordered"><thead><tr><th>รายการ</th><th>เลือกทั้งหมด </th><th>LabItemName</th><th>lab_items_normal_value</th><th>lab_order_result</th></tr></thead><tbody  id="${arrayLabsListDate[index]}">`;
+
+                html += '</tbody></table></div></li></ul></li>';
+            } else if (data.eventTypeName == "Drugs") {
+                html += `
+                <li class="nav-item">
+                    <a class="nav-link" onclick="VistTypeDetail('${arrayDrugDate[index]}', '${data.eventTypeName}', ${hn}, ${hosCode})">
+                        <i class="fas fa-angle-left right"></i>
+                        ${formatDateThai(arrayDrugDate[index])}
+                    </a>
+                    <ul class="nav nav-treeview">
+                        <li class="nav-item">
+                            <div class="table-responsive">
+                                <table class="table table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th>เลือกรายการยา</th>
+                                            <th>Drug Name</th>
+                                            <th>ประเภทยา</th>
+                                            <th>Unit</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>asdasddas</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </li>
+                    </ul>
+                </li>`;
+
+            }
         }
-        html += '</ul></div>';
+        html += `
+            </ul>
+        </div>`;
 
-        document.getElementById('treeviewLabs').innerHTML = html;
-
+        document.getElementById(treeviewId).innerHTML = html;
 
     }
 
+    function VistTypeDetail(DateDetail, typeDetail, Hn, hosCode) {
+        let pathTypeDetail = '';
+
+        if (typeDetail == "Drugs") {
+            pathTypeDetail = drugDetail;
+        } else if (typeDetail == "Labs") {
+            pathTypeDetail = labDetail;
+        }
+
+        // เรียกใช้งาน AJAX หลังจาก if-else ได้ค่ามาแล้ว
+        $.ajax({
+            url: 'http://localhost:8080/refer/api/',
+            type: "POST",
+
+            data: {
+                headAuthHis: tokenApi,
+                urlTokenHis: callPathHis,
+                typeDetail: typeDetail,
+                pathDetail: pathTypeDetail,
+                detailDate: DateDetail,
+                hn: $("#hn").val(),
+                hosCode: hosCode,
+                type: "opd"
+            },
+            dataType: "JSON",
+            success: function(response) {
+                // ทำสิ่งที่คุณต้องการกับข้อมูลที่ได้จาก AJAX ในส่วนนี้
+                if (response.type == "Labs") {
+
+                    const resDate = response.date
+                    const resData = response.data
+                    const index = arrayLabsListDate.findIndex(item => {
+
+                        return item === resDate;
+                    });
+
+                    if (index >= 0) {
+
+                        // สร้างอ็อบเจกต์ lab โดยให้ resDate เป็น key และ resData เป็น value
+                        const lab = {
+                            [resDate]: [resData]
+                        };
+
+                        // แทนค่าใน arrayLabsListDate ที่ Index 1 ด้วยอ็อบเจกต์ lab
+                        arrayLabDetail.splice(index, 1, lab);
+                    } else if (index !== -1) {
+                        // หากมีรายการใน arrayLabsListDate ที่มี date ตรงกับ resDate
+                        // ให้ทำการทับ resData ในรายการนั้น
+                        arrayLabDetail[index].data = resData;
+                    }
+                    // console.log(arrayLabsListDate);
+                    // console.log(arrayLabDetail)
+                    const checkboxStatus = {};
+                    const result = arrayLabsListDate.reduce((acc, date) => {
+                        const detail = arrayLabDetail.find(item => item[date]);
+                        if (detail) {
+                            acc[date] = detail[date];
+                        }
+                        return acc;
+                    }, {});
+
+
+                    const labDetailHTMLArray = arrayLabsListDate.map(date => {
+                        const labData = result[date];
+
+                        if (!labData) {
+                            return ''; // ถ้าไม่มีข้อมูลใน result สำหรับวันที่นี้ ให้เป็นสตริงเปล่า
+                        }
+
+                        const labItemsHTML = labData.map(item => {
+                            const itemsHTML = item.map((detail, index) => {
+                                console.log(detail.lab_items_name);
+                                return `
+                                <tr>
+                                    <td style="width: fit-content">
+                                        <input type="checkbox" id="itemCheckboxLabs${date}-${index}" name="itemCheckboxlabs" 
+                                            value='{
+                                                "date": "${date}", 
+                                                "lab_items_code": "${detail.lab_items_code}", 
+                                                "lab_items_name": "${detail.lab_items_name}", 
+                                                "lab_items_normal_value": "${detail.lab_items_normal_value}", 
+                                                "lab_order_result": "${detail.lab_order_result}"
+                                            }'>
+                                    </td>
+                                    <td style="width: fit-content">
+                                        <input type="hidden" class="form-control" readonly value="${date}">
+                                    </td>
+                                    <td style="width: fit-content">
+                                        <input type="text" class="form-control" readonly value="${detail.lab_items_name}">
+                                    </td>
+                                    <td style="width: fit-content">
+                                        <input type="text" class="form-control" readonly value="${detail.lab_items_normal_value}">
+                                    </td>
+                                    <td style="width: fit-content">
+                                        <input type="text" class="form-control" readonly value="${detail.lab_order_result}">
+                                    </td>
+                                </tr>
+                            `;
+                            }).join('');
+                            return itemsHTML;
+                        }).join('');
+
+                        // เพิ่ม checkbox เพียงหนึ่งเท่านั้นในช่วงของวันที่
+                        const html = `
+                                <tr>
+                                    <td style="width: fit-content">
+                                        <input class="check-all-items-labs" type="checkbox" data-date="${date}">
+                                    </td>
+                                    <td colspan="3">
+                                        <label class="form-check-label">เลือกทั้งหมด</label>
+                                    </td>
+                                </tr>
+                            ` + labItemsHTML;
+
+                        return {
+                            date,
+                            labDetailHTML: html
+                        };
+                    });
+
+                    labDetailHTMLArray.forEach(({
+                        date,
+                        labDetailHTML
+                    }) => {
+                        $(`#${date}`).html(labDetailHTML);
+                    });
+
+                    // เพิ่มการเชื่อมต่อกับ checkbox เพื่อเลือกรายการทั้งหมดในวันนั้น
+                    $('.check-all-items-labs').on('change', function() {
+                        const date = $(this).data('date');
+                        const isChecked = this.checked;
+
+                        // บันทึกสถานะ checkbox ในรูปแบบของวันที่
+                        checkboxStatus[date] = isChecked;
+                    });
+
+
+                    arrayLabsListDate.forEach(date => {
+                        const checkboxes = $(`#${date} input[name="itemCheckboxlabs"]`);
+
+                        // ตรวจสอบว่ามีสถานะของ checkbox ของวันนี้หรือไม่
+                        if (!checkboxStatus[date]) {
+                            checkboxStatus[date] = []; // ถ้ายังไม่มีสถานะ ให้สร้างอาเรย์เปล่าไว้ก่อน
+                        }
+
+                        checkboxes.each(function(index) {
+                            const checkboxId = `itemCheckboxLabs${date}-${index}`;
+                            // ตรวจสอบว่ามีสถานะ checkbox ใน checkboxStatus หรือไม่
+                            if (checkboxStatus[date][index] === undefined) {
+                                // ถ้ายังไม่มีสถานะ ให้ตั้งค่าเริ่มต้นเป็น false
+                                checkboxStatus[date][index] = false;
+                            }
+                            // ตั้งค่าสถานะ checkbox ให้ตรงกับ checkboxStatus
+                            this.checked = checkboxStatus[date][index];
+                            // เพิ่มการเชื่อมต่อกับอีเวนต์ onchange สำหรับการเปลี่ยนสถานะ checkbox
+                            $(this).on('change', function() {
+                                checkboxStatus[date][index] = this.checked;
+                            });
+                        });
+                    });
+
+
+                } else {
+                    const resDate = response.date
+                    const resData = response.optimerece
+                    // const index = arrayDrugDate.indexOf(resDate);
+                    const index = arrayDrugDate.findIndex(item => {
+
+                        return item === resDate;
+                    });
+
+                    if (index >= 0) {
+
+                        // สร้างอ็อบเจกต์ lab โดยให้ resDate เป็น key และ resData เป็น value
+                        const lab = {
+                            [resDate]: {
+                                optimerece: resData
+                            }
+                        };
+
+                        // แทนค่าใน arrayLabsListDate ที่ Index 1 ด้วยอ็อบเจกต์ lab
+                        arrayLabsListDate.splice(index, 1, lab);
+                    } else if (index !== -1) {
+                        // หากมีรายการใน arrayLabsListDate ที่มี date ตรงกับ resDate
+                        // ให้ทำการทับ resData ในรายการนั้น
+                        arrayLabsListDate[index].data = resData;
+                    }
+
+
+
+                    console.log(arrayDrugDate)
+                }
+
+
+            }
+        });
+
+
+    }
+    // ** 
+
+
+    // ** จบ function checkbox ของ item api -..-
+    // จบ funtion api
+
     //* generrate ยา // lab
     function generateTreeView(data) {
-
 
         let genHtml = '';
         let html =
