@@ -1205,6 +1205,7 @@ if (isset($_GET['destroy'])) {
 
     // api เรียก drug และ lab 
     const VstDate = (value) => {
+        
         $.ajax({
             url: 'http://localhost:8080/refer/api/',
             type: "POST",
@@ -1790,8 +1791,14 @@ if (isset($_GET['destroy'])) {
                 }
             });
         } else if (typeConnect == "ConnectToAPI") {
-
+            if(arrayLabsListDate.length==0){
             generateTreeViewApi(hn)
+         
+            }
+            if(arrayDrugDate.length==0){
+                
+                generateTreeViewApi(hn)
+            }
         }
 
     }
@@ -1801,6 +1808,7 @@ if (isset($_GET['destroy'])) {
     let arrayLabsListDate = [];
     let arrayLabDetail = [];
     let arrayDrugDate = [];
+    let arrayDrugDetail = [];
 
     function generateTreeViewApi(data) {
         let hn = $("#hn").val();
@@ -1827,7 +1835,7 @@ if (isset($_GET['destroy'])) {
                 html +=
                     `<li class="nav-item"><a class="nav-link" onclick="VistTypeDetail('${arrayLabsListDate[index]}', '${data.eventTypeName}', ${hn}, ${hosCode})"><i class="fas fa-angle-left right" ></i>` +
                     formatDateThai(arrayLabsListDate[index]) +
-                    `</a><ul class="nav nav-treeview"><li class="nav-item"><div class="table-responsive"><table class="table table-bordered"><thead><tr><th>รายการ</th><th>เลือกทั้งหมด </th><th>LabItemName</th><th>lab_items_normal_value</th><th>lab_order_result</th></tr></thead><tbody  id="${arrayLabsListDate[index]}">`;
+                    `</a><ul class="nav nav-treeview"><li class="nav-item"><div class="table-responsive"><table class="table table-bordered"><thead><tr><th>รายการ</th><th>เลือกทั้งหมด </th><th>LabItemName</th><th>lab_items_normal_value</th><th>lab_order_result</th></tr></thead><tbody  id="lab${arrayLabsListDate[index]}">`;
 
                 html += '</tbody></table></div></li></ul></li>';
             } else if (data.eventTypeName == "Drugs") {
@@ -1836,30 +1844,15 @@ if (isset($_GET['destroy'])) {
                     <a class="nav-link" onclick="VistTypeDetail('${arrayDrugDate[index]}', '${data.eventTypeName}', ${hn}, ${hosCode})">
                         <i class="fas fa-angle-left right"></i>
                         ${formatDateThai(arrayDrugDate[index])}
-                    </a>
-                    <ul class="nav nav-treeview">
-                        <li class="nav-item">
-                            <div class="table-responsive">
-                                <table class="table table-bordered">
-                                    <thead>
+                    </a><ul class="nav nav-treeview"><li class="nav-item"><div class="table-responsive"><table class="table table-bordered"><thead>
                                         <tr>
                                             <th>เลือกรายการยา</th>
                                             <th>Drug Name</th>
                                             <th>ประเภทยา</th>
                                             <th>Unit</th>
                                         </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td>asdasddas</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </li>
-                    </ul>
-                </li>`;
-
+                                    </thead><tbody  id="drug${arrayDrugDate[index]}">`;
+                html += '</tbody></table></div></li></ul></li>'
             }
         }
         html += `
@@ -1905,7 +1898,6 @@ if (isset($_GET['destroy'])) {
 
                         return item === resDate;
                     });
-
                     if (index >= 0) {
 
                         // สร้างอ็อบเจกต์ lab โดยให้ resDate เป็น key และ resData เป็น value
@@ -1922,10 +1914,11 @@ if (isset($_GET['destroy'])) {
                     }
                     // console.log(arrayLabsListDate);
                     // console.log(arrayLabDetail)
-                    const checkboxStatus = {};
                     const result = arrayLabsListDate.reduce((acc, date) => {
+
                         const detail = arrayLabDetail.find(item => item[date]);
                         if (detail) {
+
                             acc[date] = detail[date];
                         }
                         return acc;
@@ -1933,6 +1926,7 @@ if (isset($_GET['destroy'])) {
 
 
                     const labDetailHTMLArray = arrayLabsListDate.map(date => {
+
                         const labData = result[date];
 
                         if (!labData) {
@@ -1940,8 +1934,9 @@ if (isset($_GET['destroy'])) {
                         }
 
                         const labItemsHTML = labData.map(item => {
+                            console.log(item)
                             const itemsHTML = item.map((detail, index) => {
-                                console.log(detail.lab_items_name);
+
                                 return `
                                 <tr>
                                     <td style="width: fit-content">
@@ -1971,7 +1966,6 @@ if (isset($_GET['destroy'])) {
                             }).join('');
                             return itemsHTML;
                         }).join('');
-
                         // เพิ่ม checkbox เพียงหนึ่งเท่านั้นในช่วงของวันที่
                         const html = `
                                 <tr>
@@ -1989,91 +1983,118 @@ if (isset($_GET['destroy'])) {
                             labDetailHTML: html
                         };
                     });
-
                     labDetailHTMLArray.forEach(({
                         date,
                         labDetailHTML
                     }) => {
-                        $(`#${date}`).html(labDetailHTML);
-                    });
+                        const existingHTML = $(`#lab${date}`).html(); // เก็บ HTML ที่มีอยู่ในวันนี้
 
+                        // ตรวจสอบว่า HTML สำหรับวันนี้มีค่าหรือไม่
+                        if (!existingHTML) {
+                            $(`#lab${date}`).html(labDetailHTML); // ถ้าไม่มีให้สร้าง HTML ใหม่
+                        }
+                    });
                     // เพิ่มการเชื่อมต่อกับ checkbox เพื่อเลือกรายการทั้งหมดในวันนั้น
                     $('.check-all-items-labs').on('change', function() {
                         const date = $(this).data('date');
-                        const isChecked = this.checked;
-
-                        // บันทึกสถานะ checkbox ในรูปแบบของวันที่
-                        checkboxStatus[date] = isChecked;
-                    });
-
-
-                    arrayLabsListDate.forEach(date => {
-                        const checkboxes = $(`#${date} input[name="itemCheckboxlabs"]`);
-
-                        // ตรวจสอบว่ามีสถานะของ checkbox ของวันนี้หรือไม่
-                        if (!checkboxStatus[date]) {
-                            checkboxStatus[date] = []; // ถ้ายังไม่มีสถานะ ให้สร้างอาเรย์เปล่าไว้ก่อน
-                        }
-
-                        checkboxes.each(function(index) {
-                            const checkboxId = `itemCheckboxLabs${date}-${index}`;
-                            // ตรวจสอบว่ามีสถานะ checkbox ใน checkboxStatus หรือไม่
-                            if (checkboxStatus[date][index] === undefined) {
-                                // ถ้ายังไม่มีสถานะ ให้ตั้งค่าเริ่มต้นเป็น false
-                                checkboxStatus[date][index] = false;
-                            }
-                            // ตั้งค่าสถานะ checkbox ให้ตรงกับ checkboxStatus
-                            this.checked = checkboxStatus[date][index];
-                            // เพิ่มการเชื่อมต่อกับอีเวนต์ onchange สำหรับการเปลี่ยนสถานะ checkbox
-                            $(this).on('change', function() {
-                                checkboxStatus[date][index] = this.checked;
-                            });
-                        });
+                        const checkboxes = $(`#lab${date} input[name="itemCheckboxlabs"]`);
+                        checkboxes.prop('checked', this.checked);
                     });
 
 
                 } else {
-                    const resDate = response.date
-                    const resData = response.optimerece
-                    // const index = arrayDrugDate.indexOf(resDate);
-                    const index = arrayDrugDate.findIndex(item => {
-
-                        return item === resDate;
-                    });
-
+                    const resDate = response.date;
+                    const resData = response.optimerece;
+                    const index = arrayDrugDate.indexOf(resDate);
                     if (index >= 0) {
-
-                        // สร้างอ็อบเจกต์ lab โดยให้ resDate เป็น key และ resData เป็น value
-                        const lab = {
-                            [resDate]: {
-                                optimerece: resData
-                            }
-                        };
-
-                        // แทนค่าใน arrayLabsListDate ที่ Index 1 ด้วยอ็อบเจกต์ lab
-                        arrayLabsListDate.splice(index, 1, lab);
-                    } else if (index !== -1) {
-                        // หากมีรายการใน arrayLabsListDate ที่มี date ตรงกับ resDate
-                        // ให้ทำการทับ resData ในรายการนั้น
-                        arrayLabsListDate[index].data = resData;
+                        arrayDrugDetail.splice(index, 1, {
+                            [resDate]: [resData]
+                        });
+                    } else if (index === -1) {
+                        arrayDrugDetail[index].data = resData;
                     }
 
+                    const result = arrayDrugDate.reduce((acc, date) => {
+                        const drugDetail = arrayDrugDetail.find(item => item[date]);
+                        if (drugDetail) {
+                            acc[date] = drugDetail[date];
+                        }
+                        return acc;
+                    }, {});
 
+                    const DrugDetailHTMLArray = arrayDrugDate.map(date => {
+                        const drugData = result[date];
+                        if (!drugData) {
+                            return '';
+                        }
+                        const drugItemsHTML = drugData.map(item => {
+                            const itemsHTML = item.map((detail, index) => `
+                                                    <tr>
+                                                        <td style="width: fit-content">
+                                                            <input type="checkbox" id="itemCheckbox${date}-${index}" name="itemCheckbox" 
+                                                                value='{
+                                                                    "date": "${date}", 
+                                                                    "drugname": "${detail.drugname}", 
+                                                                    "therapeutic": "${detail.therapeutic}", 
+                                                                    "unit": "${detail.unit}" 
+                                                                }'>
+                                                        </td>
+                                                        <td style="width: fit-content">
+                                                            <input type="hidden" class="form-control" readonly value="${date}">
+                                                        </td>
+                                                        <td style="width: fit-content">
+                                                            <input type="text" class="form-control" readonly value="${detail.drugname}">
+                                                        </td>
+                                                        <td style="width: fit-content">
+                                                            <input type="text" class="form-control" readonly value="${detail.therapeutic}">
+                                                        </td>
+                                                        <td style="width: fit-content">
+                                                            <input type="text" class="form-control" readonly value="${detail.unit}">
+                                                        </td>
+                                                    </tr>
+                                                `).join('');
+                                                                    return itemsHTML;
+                                                                }).join('');
 
-                    console.log(arrayDrugDate)
+                                                                const html = `
+                                                <tr>
+                                                    <td style="width: fit-content">
+                                                        <input class="check-all-items-labs" type="checkbox" data-date="${date}">
+                                                    </td>
+                                                    <td colspan="3">
+                                                        <label class="form-check-label">เลือกทั้งหมด</label>
+                                                    </td>
+                                                </tr>
+                                            ` + drugItemsHTML;
+
+                        return {
+                            date,
+                            drugDetailHTML: html
+                        };
+                    });
+
+                    DrugDetailHTMLArray.forEach(({
+                        date,
+                        drugDetailHTML
+                    }) => {
+                        const existingHTML = $(`#drug${date}`).html();
+                        if (!existingHTML) {
+                            $(`#drug${date}`).html(drugDetailHTML);
+                        }
+                    });
+
+                    $('.check-all-items-labs').on('change', function() {
+                        const date = $(this).data('date');
+                        const checkboxes = $(`#drug${date} input[name="itemCheckbox"]`);
+                        checkboxes.prop('checked', this.checked);
+                    });
                 }
-
-
             }
         });
-
-
     }
-    // ** 
-
 
     // ** จบ function checkbox ของ item api -..-
-    // จบ funtion api
+
 
     //* generrate ยา // lab
     function generateTreeView(data) {

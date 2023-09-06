@@ -716,8 +716,13 @@ if ($_GET['onfrom'] === "formreferout") { ?>
                                     <label for="file-input"></label>
                                     <!-- <input id="file-input" type="file" name="imageUploadRefer" onchange="handleFileInput(event)" accept="image/*" multiple> -->
                                     <div class="card">
-                                        <div class="card-body">
-                                            <div id="treeviewLabs"></div>
+                                        <div class="card-body"> 
+                                        <div id="loaderDrug" class="loaderDrug">
+                                                <div class="loaderDrug"></div>
+                                            </div>
+                                            <div id="treeviewLabs"> </div>
+                                           
+                                      
                                         </div>
                                     </div>
                                 </div>
