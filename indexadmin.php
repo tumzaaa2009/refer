@@ -192,6 +192,12 @@ $userRoles = json_decode($_SESSION["mySession"][6]); // แสดงรายก
                                     <p>รายการ หน่วยบริการ</p>
                                 </a>
                             </li>
+                            <li class="nav-item <?php echo (in_array('sos', $userRoles)) ? '' : 'd-none' ?>">
+                                <a href="indexadmin.php?onfrom=sos" class="nav-link <?php echo ($_GET['onfrom'] == 'sos') ? 'active' : '' ?>">
+                                    <i class="far fa-circle nav-icon "></i>
+                                    <p>รายการ สิทธิ์การรักษา</p>
+                                </a>
+                            </li>
                             <li class="nav-item <?php echo (in_array('department', $userRoles)) ? '' : 'd-none' ?>">
                                 <a href="indexadmin.php?onfrom=department" class="nav-link <?php echo ($_GET['onfrom'] == 'department') ? 'active' : '' ?>">
                                     <i class="far fa-circle nav-icon "></i>
@@ -281,6 +287,14 @@ $userRoles = json_decode($_SESSION["mySession"][6]); // แสดงรายก
                                             include($includedFile);
                                             $includedFileName = basename($includedFile);
                                             $pageActive = "active";
+                                        } else if ($_GET['onfrom'] == "sos") {
+                                            $includedFile = './form/ManageAdmin/Msos/table.sos.php';
+                                            include($includedFile);
+                                            $includedFileName = basename($includedFile);
+                                        } else if ($_GET['onfrom'] == "sosadd") {
+                                            $includedFile = './form/ManageAdmin/Msos/add.sos.php';
+                                            include($includedFile);
+                                            $includedFileName = basename($includedFile);
                                         } else if ($_GET['onfrom'] == "department") {
                                             $includedFile = './form/ManageAdmin/Mdepartment/table.department.php';
                                             include($includedFile);
@@ -440,6 +454,8 @@ $userRoles = json_decode($_SESSION["mySession"][6]); // แสดงรายก
             GetTableCancleCase();
         } else if (onfrom === "departmentadd") {
             TableDepartment();
+        } else if (onfrom == "sos") {
+            GetTableSos();
         }
 
 
@@ -477,7 +493,8 @@ $userRoles = json_decode($_SESSION["mySession"][6]); // แสดงรายก
                             const department = `<option value="department" ${json.includes('department') ? 'selected' : ''}>ห้องตรวจ</option>`;
                             const car = `<option value="car" ${json.includes('car') ? 'selected' : ''}>รถ Refer</option>`;
                             const cancleCase = `<option value="canclecase" ${json.includes('canclecase') ? 'selected' : ''}>เหตุผลการยกเลิกเคส</option>`
-                            selectOptions += userOption + doctorOption + station + department + car + cancleCase + `</select>`;
+                            const Sos = `<option value="sos" ${json.includes('sos') ? 'selected' : ''}>สิทธิ์การรักษา</option>`
+                            selectOptions += userOption + doctorOption + station + department + car + cancleCase + Sos + `</select>`;
                         }
                     } else if (item[0].auth_refer == "null") {
                         selectOptions = `<select class="select2" multiple="multiple" name="authRefer[]"  onchange="editUser(event.target.selectedOptions,${item[0].id},'authRefer')" data-placeholder="เลือกระดับการเข้าถึง" style="width: 100%;">`;
@@ -1194,12 +1211,90 @@ $userRoles = json_decode($_SESSION["mySession"][6]); // แสดงรายก
         $.ajax({
             type: "POST",
             url: `${callPathRefer}`,
+            dataType: "JSON",
+            success: function(response) {
+
+                GetTableCancleCase();
+            }
+        });
+    }
+
+    function GetTableSos() {
+        $.ajax({
+            type: "POST",
+            url: `${callPathRefer}`,
             data: {
-                cancleCaseValue: value,
-                cancleId: id,
-                cancleSource: source,
+                sos: 1
             },
             dataType: "JSON",
+            success: function(response) {
+                let arraySos = [];
+                response.forEach(function(item) {
+                    arraySos.push(
+                        `<tr class="refer-row" >
+                        <td>
+                        <input type="text" class="form-control" name="sosName" value="${item.name}" onchange="EditDelCancleSos(event.target.value,${item.id},'soslCase')">
+                        </td>
+                        <td >
+                            <button onclick="EditDelCancleSos(event.target.value,${item.id},'del')"  class="btn btn-primary mb-3" role="button">ลบรายการ  ${item.name}</button>
+                        </td>
+                    </tr>`
+                    );
+                    arraySos.push(item);
+                });
+                // เรียกใช้ DataTable และแสดงผล
+                const table = $("#TableSos").DataTable({
+                    destroy: true, // ลบข้อมูลเก่าออกเมื่อเปลี่ยนข้อมูลใหม่
+                });
+                table.clear().draw(); // ล้างข้อมูลเก่าทั้งหมดใน DataTable
+                table.rows.add($(arraySos.join(""))).draw(); // เพิ่มข้อมูลใหม่เข้า DataTable
+            }
+        });
+    }
+
+    function AddSos() {
+
+        const form = document.getElementById("refer-sos-add");
+        const formData = new FormData(form);
+        const namesos = formData.get("namesos");
+        const hosCode = formData.get("hosCode");
+        if (namesos === "" || hosCode === "") {
+            alert('กรุณาตรวจสอบข้อมูล')
+            return false;
+        } else {
+            $.ajax({
+                type: "POST",
+                url: `${callPathRefer}`,
+                data: formData,
+                dataType: "JSON",
+                contentType: false,
+                processData: false,
+                success: function(response) {
+                    if (response[0].status == true)
+                        toastr.success(`เสร็จสิน้`, "", {
+                            positionClass: "toast-top-full-width",
+                            timeOut: false,
+                            extendedTimeOut: "500",
+                            showMethod: "fadeIn",
+                            hideMethod: "fadeOut",
+                            closeButton: true,
+                            toastClass: "toast-black"
+                        });
+                }
+            });
+        }
+    }
+
+    function EditDelCancleSos(value, id, source) {
+        $.ajax({
+            type: "POST",
+            url: `${callPathRefer}`,
+            dataType: "JSON",
+            data: {
+                sosValue: value,
+                sosId: id,
+                sosSource: source,
+            },
             success: function(response) {
                 if (response[0].status == true)
                     toastr.success(`เสร็จสิน้`, "", {
@@ -1211,7 +1306,7 @@ $userRoles = json_decode($_SESSION["mySession"][6]); // แสดงรายก
                         closeButton: true,
                         toastClass: "toast-black"
                     });
-                GetTableCancleCase();
+                GetTableSos();
             }
         });
     }

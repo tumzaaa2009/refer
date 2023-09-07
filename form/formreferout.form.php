@@ -599,7 +599,7 @@ if ($_GET['onfrom'] === "formreferout") { ?>
                                                             <div align="left">
                                                                 <label>Memo ต้นทาง</label>
                                                             </div>
-                                                            <textarea name="ccMain" class="col-md-12" id="ccMain" title="Contents">ccMain</textarea>
+                                                            <textarea name="ccMain" class="col-md-12" id="ccMain" title="Contents"> </textarea>
                                                         </div>
                                                         <!-- <div class="col-md-auto col-lg-auto">
                                                              <div align="left">

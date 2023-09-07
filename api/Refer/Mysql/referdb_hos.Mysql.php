@@ -549,8 +549,44 @@ function EditDelCancleCase(){
     }
     echo json_encode($rs);
 }
-//* เรียกใช้การทำงาน //
 
+function GetTableSos(){
+    global $objconnectRefer;
+    $sql = "SELECT * FROM pttype";
+    $query = mysqli_query($objconnectRefer, $sql);
+    if ($query) {
+        while ($rowCar = mysqli_fetch_array($query)) {
+            $rsPttype[] = array('status' => true, "id" => $rowCar["pttype_id"], "name" => $rowCar["pttype_name"] ,"groupId"=> $rowCar["pttypegroup_id"]);
+        }
+    } else {
+        $rsPttype[] = array('status' => false);
+    }
+    echo json_encode($rsPttype);
+}
+//* เรียกใช้การทำงาน //
+function AddSos()
+{ {
+        global $objconnectRefer;
+        $sql = "INSERT INTO pttype (pttype_name) value('" . $_POST["namesos"] . "')";
+        $query = mysqli_query($objconnectRefer, $sql);
+        if ($query)
+            $rs[] = array("status" => true, $query);
+        echo json_encode($rs);
+    }
+}
+function EditDelSos(){
+    global $objconnectRefer;
+    if ($_POST['sosSource'] == "del") {
+        $sqlStation = "DELETE FROM pttype WHERE pttype_id='" . $_POST['sosId'] . "'";
+        $fetchVale =  mysqli_query($objconnectRefer, $sqlStation);
+        if ($fetchVale) $rs[] = array("status" => true, $fetchVale);
+    } else if ($_POST['sosSource'] == "soslCase") {
+        $sqlEditSos = "UPDATE pttype SET pttype_name ='" . $_POST['sosValue'] . "' WHERE pttype_id ='" . $_POST['sosId'] . "' ";
+        $fetchVale = mysqli_query($objconnectRefer, $sqlEditSos);
+        if ($fetchVale) $rs[] = array("status" => true, $fetchVale);
+    }
+    echo json_encode($rs);
+}
 if (isset($_POST['servicestation'])) {
     StationRefer();
 }
@@ -656,3 +692,12 @@ if (isset($_POST['cancleCaseValue']) && isset($_POST['cancleId']) && isset($_POS
     EditDelCancleCase();
 }
 
+if(isset($_POST['sos'])){
+    GetTableSos();
+}
+if(isset($_POST['namesos']) && isset($_POST['hosCode']) ){
+    AddSos();
+}
+if (isset($_POST['sosValue']) && isset($_POST['sosId']) && isset($_POST['sosSource'])) {
+    EditDelSos();
+}
