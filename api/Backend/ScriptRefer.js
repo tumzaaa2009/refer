@@ -613,7 +613,10 @@ const showTableReferOut = () => {
             `<tr style="background: ${
               item.level_actual_color
             };" class="refer-row" >
-            <td>${item.referdate.substring(0, 10)}</td><td>${
+            <td>${item.referdate.substring(
+              0,
+              10
+            )}</td> <td>${item.refer_time}</td><td>${
               item.refer_no
             }</td> 
             <td align="center">${IsSave}</td> 

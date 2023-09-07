@@ -92,6 +92,9 @@
                             <div align="center">วันที่ส่ง</div>
                         </th>
                         <th colspan="1">
+                            <div align="center">เวลา</div>
+                        </th>
+                        <th colspan="1">
                             <div align="center">เลขที่ใบส่งตัว</div>
                         </th>
                         <th>
