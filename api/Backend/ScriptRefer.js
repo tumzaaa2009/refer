@@ -1,3 +1,4 @@
+
 //? Station Destination
 const getStationServiceDestinations = (value) => {
   $.ajax({
@@ -658,17 +659,18 @@ function decryptData(encryptedData, secretKey) {
   const decryptedData = decryptedBytes.toString(CryptoJS.enc.Utf8);
   return JSON.parse(decryptedData);
 }
-function showDetailReferOut() {
+function showDetailReferOut(referId) {
   let dateString = ` `;
   let expDateString = ``;
   $.ajax({
     type: "POST",
     url: "https://rh4cloudcenter.moph.go.th:3000/referapi/showDetailReferOut",
     data: {
-      showDetailReferOut: referId,
+      showDetailReferOut: referId   ,
     },
     dataType: "JSON",
     success: function (response) {
+       
       const dateTimeString = response.message[0].refer_date;
       const date = new Date(dateTimeString);
       const day = date.getUTCDate().toString().padStart(2, "0");
@@ -1586,7 +1588,7 @@ const showTableReferBack = () => {
     },
   });
 };
-const showDetailReferBack = () => {
+const showDetailReferBack = (referId) => {
   $.ajax({
     headers: {
       "x-access-token": hosPassCode,
