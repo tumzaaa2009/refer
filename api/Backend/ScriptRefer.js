@@ -1566,7 +1566,7 @@ const showTableReferBack = () => {
             <td>${item.refer_time}</td>
             <td>${
               item.refer_no
-            }</td><td>${IsSave}</td><td><a class="btn btn-primary" href="indexfromuse.php?onfrom=showdetailreferback&idrefer=${
+            }</td><td align="center">${IsSave}</td><td><a class="btn btn-primary" href="indexfromuse.php?onfrom=showdetailreferback&idrefer=${
               item.codegen_refer_no
             }">รายละเอียด</a></td></tr>`
           );
