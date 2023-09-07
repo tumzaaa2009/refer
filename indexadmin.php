@@ -489,6 +489,10 @@ $userRoles = json_decode($_SESSION["mySession"][6]); // แสดงรายก
                         const cancleCase = `<option value="canclecase">เหตุผลการยกเลิกเคส</option>`
                         selectOptions += userOption + doctorOption + station + department + car + cancleCase + `</select>`;
                     }
+                    let removeUser = " display:none;"
+                    if (item[0].id != 1) {
+                        removeUser = " display:inline;"
+                    }
 
                     arrayHosRefer.push(
                         `<tr class="refer-row">
@@ -505,7 +509,7 @@ $userRoles = json_decode($_SESSION["mySession"][6]); // แสดงรายก
                                 </select>
                                 </td>
                                 <td>
-                                <button onclick="editUser(event.target.value,${item[0].id},'del')" class="btn btn-primary mb-3" role="button">ลบ User</button>
+                                <button onclick="editUser(event.target.value,${item[0].id},'del')" class="btn btn-primary mb-3" role="button" style=" ${removeUser}">ลบ User</button>
                             </td>
             </tr>`
                     );
@@ -985,15 +989,15 @@ $userRoles = json_decode($_SESSION["mySession"][6]); // แสดงรายก
             dataType: "JSON",
             success: function(response) {
                 if (response == true)
-                toastr.success(`บันทึกเสร็จสิ้น`, "", {
-                    positionClass: "toast-top-full-width",
-                    timeOut: false,
-                    extendedTimeOut: "500",
-                    showMethod: "fadeIn",
-                    hideMethod: "fadeOut",
-                    closeButton: true,
-                    toastClass: "toast-black"
-                });
+                    toastr.success(`บันทึกเสร็จสิ้น`, "", {
+                        positionClass: "toast-top-full-width",
+                        timeOut: false,
+                        extendedTimeOut: "500",
+                        showMethod: "fadeIn",
+                        hideMethod: "fadeOut",
+                        closeButton: true,
+                        toastClass: "toast-black"
+                    });
 
             }
         });

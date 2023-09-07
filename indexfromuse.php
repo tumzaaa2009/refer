@@ -333,13 +333,13 @@ if (isset($_GET['destroy'])) {
                         <li class="nav-item">
                             <a href="indexfromuse.php?onfrom=referouttable" class="nav-link <?php echo ($_GET['onfrom'] == 'referouttable') ? 'active' : '' ?>">
                                 <i class="nav-icon fas fa-file"></i>
-                                <p>แสดงรายชื่อผู้ป่วยรับ Refer</p>
+                                <p>แสดงรายชื่อผู้ป่วยส่งตัวทั่วไป</p>
                             </a>
                         </li>
                         <li class="nav-item">
                             <a href="indexfromuse.php?onfrom=referbacktable" class="nav-link <?php echo ($_GET['onfrom'] == 'referbacktable') ? 'active' : '' ?>">
                                 <i class="nav-icon fas fa-file"></i>
-                                <p>แสดงรายชื่อผู้ป่วยส่งต่อ</p>
+                                <p>แสดงรายชื่อผู้ป่วยส่งกลับ</p>
                             </a>
                         </li>
                         <li class="nav-header">LABELS</li>
@@ -756,7 +756,7 @@ if (isset($_GET['destroy'])) {
             const audio = new Audio("./sound_alert/com_linecorp_line_whistle.ogg");
             audio.autoplay = true;
             if (onfrom == "referbacktable") {
-                showTableReferOut()
+                showTableReferBack()
             } else if (idrefer != "" && idrefer != undefined) {
 
                 showDetailReferBack()
@@ -1205,12 +1205,12 @@ if (isset($_GET['destroy'])) {
 
     // api เรียก drug และ lab 
     const VstDate = (value) => {
-        
         $.ajax({
             url: 'http://localhost:8080/refer/api/',
             type: "POST",
             beforeSend: function() {
                 // แสดงข้อความโหลดก่อนส่งข้อมูล
+
                 $("#loaderDrug").show();
             },
             complete: function() {
@@ -1791,12 +1791,19 @@ if (isset($_GET['destroy'])) {
                 }
             });
         } else if (typeConnect == "ConnectToAPI") {
-            if(arrayLabsListDate.length==0){
-            generateTreeViewApi(hn)
-         
+
+            if (arrayLabsListDate.length == 0) {
+                generateTreeViewApi(hn)
+
+            } else {
+                arrayLabsListDate = [];
+                generateTreeViewApi(hn)
             }
-            if(arrayDrugDate.length==0){
-                
+            if (arrayDrugDate.length == 0) {
+
+                generateTreeViewApi(hn)
+            } else {
+                arrayDrugDate = [];
                 generateTreeViewApi(hn)
             }
         }
@@ -1811,6 +1818,7 @@ if (isset($_GET['destroy'])) {
     let arrayDrugDetail = [];
 
     function generateTreeViewApi(data) {
+
         let hn = $("#hn").val();
         let treeviewId = data.eventTypeName == "Drugs" ? 'treeview' : 'treeviewLabs';
 
@@ -1819,12 +1827,14 @@ if (isset($_GET['destroy'])) {
         <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">`;
         for (let index = 0; index < data.event.length; index++) {
             if (data.eventTypeName == "Labs") {
-
+                // arrayLabsListDate = [];
                 if (!arrayLabsListDate.includes(data.event[index].visit)) {
+
                     arrayLabsListDate.push(data.event[index].visit); // เพิ่มค่าในอาร์เรย์หากยังไม่มีค่า visit นี้ในอาร์เรย์
                 }
             } else if (data.eventTypeName == "Drugs") {
-                arrayDrugDate.push(data.event[index].visit)
+                // arrayDrugDate=[];
+
                 if (!arrayDrugDate.includes(data.event[index].visit)) {
                     arrayDrugDate.push(data.event[index].visit); // เพิ่มค่าในอาร์เรย์หากยังไม่มีค่า visit นี้ในอาร์เรย์
                 }
@@ -2053,10 +2063,10 @@ if (isset($_GET['destroy'])) {
                                                         </td>
                                                     </tr>
                                                 `).join('');
-                                                                    return itemsHTML;
-                                                                }).join('');
+                            return itemsHTML;
+                        }).join('');
 
-                                                                const html = `
+                        const html = `
                                                 <tr>
                                                     <td style="width: fit-content">
                                                         <input class="check-all-items-labs" type="checkbox" data-date="${date}">

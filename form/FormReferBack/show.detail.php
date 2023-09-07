@@ -291,6 +291,7 @@
                                                </button>
 
                                                <button type="button" class="btn btn-info" id="suscecc-refer-back" style="display:none;" onclick="SendReferBack()">ยืนยันการรับตัว</button>
+                                               <input type ="hidden" id="status-is-save" />
                                                <h3 id="ShowSecess" style="display:none;color:green"></h3>
 
                                            </div>

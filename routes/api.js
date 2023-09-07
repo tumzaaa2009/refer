@@ -81,6 +81,7 @@ router.post("/refer/api/", async function (req, resJson, next) {
       });
     resJson.send(resPatien);
   } else if (req.body.vstDate) {
+     console.log(req.body);
     const resVsDate = await axios
       .post(
         `${req.body.urlTokenHis}${req.body.vstDate}`,
@@ -103,6 +104,7 @@ router.post("/refer/api/", async function (req, resJson, next) {
       });
     resJson.send(resVsDate);
   } else if (req.body.typeDetail) {
+   
     let TypeDate = "";
     let resDetail;
     if (req.body.typeDetail == "Drugs") {
@@ -110,7 +112,7 @@ router.post("/refer/api/", async function (req, resJson, next) {
         .post(
           `${req.body.urlTokenHis}${req.body.pathDetail}`,
           {
-            hospcode: 10661,
+            hospcode: req.body.hosCode,
             hn: req.body.hn,
             drugDate: req.body.detailDate,
             type: "opd",
@@ -122,22 +124,23 @@ router.post("/refer/api/", async function (req, resJson, next) {
           }
         )
         .then((res) => {
-                 return {
-                   date: req.body.detailDate,
-                   type: req.body.typeDetail,
-                   optimerece: res.data.drug,
-                 };
+          return {
+            date: req.body.detailDate,
+            type: req.body.typeDetail,
+            hn: req.body.hn,
+            optimerece: res.data.drug,
+          };
         })
         .catch((error) => {
           return console.error(error);
         });
-      console.log(resDetail);
+       
     } else if (req.body.typeDetail == "Labs") {
       resDetail = await axios
         .post(
           `${req.body.urlTokenHis}${req.body.pathDetail}`,
           {
-            hospcode: 10661,
+            hospcode: req.body.hosCode,
             hn: req.body.hn,
             labDate: req.body.detailDate,
             type: 1,
@@ -149,8 +152,11 @@ router.post("/refer/api/", async function (req, resJson, next) {
           }
         )
         .then((res) => {
-        
-          return {date:req.body.detailDate, type: req.body.typeDetail, data: res.data.lab };
+          return {
+            date: req.body.detailDate,
+            type: req.body.typeDetail,
+            data: res.data.lab,
+          };
         })
         .catch((error) => {
           return console.error(error);

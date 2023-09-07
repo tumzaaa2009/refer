@@ -247,10 +247,10 @@
                                   <?php if ($typeConnect == "ConnectToAPI") {
                                     ?>
                                       <li class="nav-item">
-                                          <a class="nav-link" id="custom-tabs-one-messages-tab" data-toggle="pill" href="#drugItem" role="tab" aria-controls="drugItem" aria-selected="false" onclick="DrugsItem('Drug')">ข้อมูลการใช้ยา</a>
+                                          <a class="nav-link" id="custom-tabs-one-messages-tab" data-toggle="pill" href="#drugItem" role="tab" aria-controls="drugItem" aria-selected="false" onclick="VstDate('Drugs')">ข้อมูลการใช้ยา</a>
                                       </li>
                                       <li class="nav-item">
-                                          <a class="nav-link" id="custom-tabs-one-messages-tab" data-toggle="pill" href="#labs" role="tab" aria-controls="labs" aria-selected="false" onclick="LabsItem('Drug')">Labs</a>
+                                          <a class="nav-link" id="custom-tabs-one-messages-tab" data-toggle="pill" href="#labs" role="tab" aria-controls="labs" aria-selected="false" onclick="VstDate('Labs')">Labs</a>
                                       </li>
                                   <?php } else { ?>
                                       <li class="nav-item">
@@ -394,6 +394,7 @@
                                                               <table id="TrumaTable" class="table table-bordered table-hover dataTable dtr-inline">
                                                                   <thead>
                                                                       <tr>
+                                                                          <th>การประเมินผู้ป่วย</th>
                                                                           <th>เวลา hr/mm</th>
                                                                           <th>E</th>
                                                                           <th>V</th>
@@ -409,6 +410,14 @@
                                                                   </thead>
                                                                   <tbody>
                                                                       <tr id="TrAddTruma">
+                                                                          <td> <select class="form-control" name="Consciousness" id="">
+                                                                                  <option value="Normal">Normal</option>
+                                                                                  <option value="Drowsiness">Drowsiness</option>
+                                                                                  <option value="SemiComa">SemiComa</option>
+                                                                                  <option value="Coma">Coma</option>
+                                                                                  <option value="ไม่สามารถประเมินได้">ไม่สามารถประเมินได้</option>
+                                                                              </select>
+                                                                          </td>
                                                                           <td><input id="timepicker" name="timeTruma" type="text" class="form-control"></td>
                                                                           <td><input class="form-control" type="number" name="e" /> </td>
                                                                           <td><input class="form-control" type="number" name="v" /> </td>
@@ -534,6 +543,9 @@
                                       <label for="file-input"></label>
                                       <div class="card">
                                           <div class="card-body">
+                                              <div id="loaderDrug" class="loaderDrug">
+                                                  <div class="loaderDrug"></div>
+                                              </div>
                                               <div id="treeview"></div>
                                           </div>
                                       </div>
@@ -543,6 +555,9 @@
                                       <!-- <input id="file-input" type="file" name="imageUploadRefer" onchange="handleFileInput(event)" accept="image/*" multiple> -->
                                       <div class="card">
                                           <div class="card-body">
+                                              <div id="loaderDrug" class="loaderDrug">
+                                                  <div class="loaderDrug"></div>
+                                              </div>
                                               <div id="treeviewLabs"></div>
                                           </div>
                                       </div>
