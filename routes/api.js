@@ -97,6 +97,7 @@ console.log(req.body)
         }
       )
       .then((res) => {
+        res.data.hn = req.body.hn; // เพิ่มค่า hn เข้าไปใน res.data
         return res.data;
       })
       .catch((error) => {
@@ -108,6 +109,7 @@ console.log(req.body)
     let TypeDate = "";
     let resDetail;
     if (req.body.typeDetail == "Drugs") {
+      console.log(req.body)
       resDetail = await axios
         .post(
           `${req.body.urlTokenHis}${req.body.pathDetail}`,
@@ -119,7 +121,7 @@ console.log(req.body)
           },
           {
             headers: {
-              "x-api-key": `pvoNArKhGdKK9oDl@fTSsDjG8XzptHlxIXR!3JRjzUJhDRbkalaWD`,
+              [headderApi]: `${req.body.keyTokenHis}`,
             },
           }
         )
@@ -127,7 +129,6 @@ console.log(req.body)
           return {
             date: req.body.detailDate,
             type: req.body.typeDetail,
-            hn: req.body.hn,
             optimerece: res.data.drug,
           };
         })
@@ -147,7 +148,7 @@ console.log(req.body)
           },
           {
             headers: {
-              "x-api-key": `pvoNArKhGdKK9oDl@fTSsDjG8XzptHlxIXR!3JRjzUJhDRbkalaWD`,
+              [headderApi]: `${req.body.keyTokenHis}`,
             },
           }
         )
@@ -156,6 +157,7 @@ console.log(req.body)
             date: req.body.detailDate,
             type: req.body.typeDetail,
             data: res.data.lab,
+            hn: req.body.hn,
           };
         })
         .catch((error) => {

@@ -356,32 +356,44 @@ if ($_GET['onfrom'] === "formreferout") { ?>
                     <div class="card card-primary card-tabs">
                         <div class="card-header p-0 pt-1">
                             <ul class="nav nav-tabs" id="custom-tabs-one-tab" role="tablist">
-                                <li class="nav-item">
-                                    <a class="nav-link active" id="custom-tabs-one-home-tab" data-toggle="pill" href="#custom-tabs-one-home" role="tab" aria-controls="custom-tabs-one-home" aria-selected="false">ข้อมูลส่งตัวทั่วไป</a>
-                                </li>
 
-                                <li class="nav-item">
-                                    <a class="nav-link" id="custom-tabs-one-profile-tab" data-toggle="pill" href="#custom-tabs-one-profile" role="tab" aria-controls="custom-tabs-one-profile" aria-selected="false">แนบภาพ</a>
-                                </li>
                                 <?php if ($typeConnect == "ConnectToAPI") {
                                 ?>
+                                    <li class="nav-item">
+                                        <a class="nav-link active" id="custom-tabs-one-home-tab" data-toggle="pill" href="#custom-tabs-one-home" role="tab" aria-controls="custom-tabs-one-home" aria-selected="false" onclick="VstDate('person')">ข้อมูลส่งตัวทั่วไป</a>
+                                    </li>
+
+                                    <li class="nav-item">
+                                        <a class="nav-link" id="custom-tabs-one-profile-tab" data-toggle="pill" href="#custom-tabs-one-profile" role="tab" aria-controls="custom-tabs-one-profile" aria-selected="false" onclick="VstDate('picture')">แนบภาพ</a>
+                                    </li>
                                     <li class="nav-item">
                                         <a class="nav-link" id="custom-tabs-one-messages-tab" data-toggle="pill" href="#drugItem" role="tab" aria-controls="drugItem" aria-selected="false" onclick="VstDate('Drugs')">ข้อมูลการใช้ยา</a>
                                     </li>
                                     <li class="nav-item">
                                         <a class="nav-link" id="custom-tabs-one-messages-tab" data-toggle="pill" href="#labs" role="tab" aria-controls="labs" aria-selected="false" onclick="VstDate('Labs')">Labs</a>
                                     </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" id="custom-tabs-one-messages-tab" data-toggle="pill" href="#consult" role="tab" aria-controls="consult" aria-selected="false" onclick="VstDate('loadFile')">เอกสารแนบ</a>
+                                    </li>
                                 <?php } else { ?>
+                                    <li class="nav-item">
+                                        <a class="nav-link active" id="custom-tabs-one-home-tab" data-toggle="pill" href="#custom-tabs-one-home" role="tab" aria-controls="custom-tabs-one-home" aria-selected="false">ข้อมูลส่งตัวทั่วไป</a>
+                                    </li>
+
+                                    <li class="nav-item">
+                                        <a class="nav-link" id="custom-tabs-one-profile-tab" data-toggle="pill" href="#custom-tabs-one-profile" role="tab" aria-controls="custom-tabs-one-profile" aria-selected="false">แนบภาพ</a>
+                                    </li>
                                     <li class="nav-item">
                                         <a class="nav-link" id="custom-tabs-one-messages-tab" data-toggle="pill" href="#drugItem" role="tab" aria-controls="drugItem" aria-selected="false">ข้อมูลการใช้ยา</a>
                                     </li>
                                     <li class="nav-item">
                                         <a class="nav-link" id="custom-tabs-one-messages-tab" data-toggle="pill" href="#labs" role="tab" aria-controls="labs" aria-selected="false">Labs</a>
                                     </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" id="custom-tabs-one-messages-tab" data-toggle="pill" href="#consult" role="tab" aria-controls="consult" aria-selected="false">เอกสารแนบ</a>
+                                    </li>
                                 <?php } ?>
-                                <li class="nav-item">
-                                    <a class="nav-link" id="custom-tabs-one-messages-tab" data-toggle="pill" href="#consult" role="tab" aria-controls="consult" aria-selected="false">เอกสารแนบ</a>
-                                </li>
+
                                 <!-- <li class="nav-item">
                                      <a class="nav-link " id="custom-tabs-one-settings-tab" data-toggle="pill" href="#custom-tabs-one-settings" role="tab" aria-controls="custom-tabs-one-settings" aria-selected="true">Settings</a>
                                  </li> -->
@@ -716,13 +728,13 @@ if ($_GET['onfrom'] === "formreferout") { ?>
                                     <label for="file-input"></label>
                                     <!-- <input id="file-input" type="file" name="imageUploadRefer" onchange="handleFileInput(event)" accept="image/*" multiple> -->
                                     <div class="card">
-                                        <div class="card-body"> 
-                                        <div id="loaderDrug" class="loaderDrug">
+                                        <div class="card-body">
+                                            <div id="loaderDrug" class="loaderDrug">
                                                 <div class="loaderDrug"></div>
                                             </div>
                                             <div id="treeviewLabs"> </div>
-                                           
-                                      
+
+
                                         </div>
                                     </div>
                                 </div>
