@@ -862,15 +862,15 @@
                 generateTreeViewApi(hn)
 
             } else {
-                arrayLabsListDate = [];
-                generateTreeViewApi(hn)
+                // arrayLabsListDate = [];
+                // generateTreeViewApi(hn)
             }
             if (arrayDrugDate.length == 0) {
 
                 generateTreeViewApi(hn)
             } else {
-                arrayDrugDate = [];
-                generateTreeViewApi(hn)
+                // arrayDrugDate = [];
+                // generateTreeViewApi(hn)
             }
         }
 
