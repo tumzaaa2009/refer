@@ -870,22 +870,18 @@ function generateTreeViewApi(data) {
     if (!arrayHn.includes(data.hn)) {
       arrayHn.push(data.hn);
     }
-   
-
-      if (data.eventTypeName == "Labs") {
-        // arrayLabsListDate = [];
-          
-          if (!arrayLabsListDate.includes(data.event[index].visit)) {
-           
-                  arrayLabsListDate.push(data.event[index].visit); // เพิ่มค่าในอาร์เรย์หากยังไม่มีค่า visit นี้ในอาร์เรย์
-        }
-      } else if (data.eventTypeName == "Drugs") {
-        // arrayDrugDate=[];
-
-        if (!arrayDrugDate.includes(data.event[index].visit)) {
-          arrayDrugDate.push(data.event[index].visit); // เพิ่มค่าในอาร์เรย์หากยังไม่มีค่า visit นี้ในอาร์เรย์
-        }
+    if (data.eventTypeName == "Labs") {
+      // arrayLabsListDate = [];
+      if (!arrayLabsListDate.includes(data.event[index].visit)) {
+        arrayLabsListDate.push(data.event[index].visit); // เพิ่มค่าในอาร์เรย์หากยังไม่มีค่า visit นี้ในอาร์เรย์
       }
+    } else if (data.eventTypeName == "Drugs") {
+      // arrayDrugDate=[];
+
+      if (!arrayDrugDate.includes(data.event[index].visit)) {
+        arrayDrugDate.push(data.event[index].visit); // เพิ่มค่าในอาร์เรย์หากยังไม่มีค่า visit นี้ในอาร์เรย์
+      }
+    }
 
     if (data.eventTypeName == "Labs") {
       html +=
