@@ -1211,9 +1211,23 @@ $userRoles = json_decode($_SESSION["mySession"][6]); // แสดงรายก
         $.ajax({
             type: "POST",
             url: `${callPathRefer}`,
+            data: {
+                cancleCaseValue: value,
+                cancleId: id,
+                cancleSource: source,
+            },
             dataType: "JSON",
             success: function(response) {
-
+                if (response[0].status == true)
+                    toastr.success(`เสร็จสิน้`, "", {
+                        positionClass: "toast-top-full-width",
+                        timeOut: false,
+                        extendedTimeOut: "500",
+                        showMethod: "fadeIn",
+                        hideMethod: "fadeOut",
+                        closeButton: true,
+                        toastClass: "toast-black"
+                    });
                 GetTableCancleCase();
             }
         });

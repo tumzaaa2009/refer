@@ -422,7 +422,8 @@ function AddDortor($post)
     global $dbNameRefer;
     global $objconnectRefer;
     global $portRefer;
-    $insertAddDoctor = "INSERT INTO doctor (doctor_name,doctor_status,doctor_tel) VALUES('" . $post['namedoctor'] . " " . $post['lastnamedoctor'] . "', '" . $post['status'] . "','" . $post['telDoctor'] . "' )";
+     
+     $insertAddDoctor = "INSERT INTO doctor (doctor_name,doctor_status,doctor_tel) VALUES('" . $post['namedoctor'] . " " . $post['lastnamedoctor'] . "', '" . $post['status'] . "','" . $post['telDoctor'] . "' )";
     $status = pg_query(pg_connect("host=$serverRefer port=$portRefer dbname=$dbNameRefer user=$userRefer password=$passRefer"), $insertAddDoctor);
     $arr = [];
     if ($status) {
@@ -717,7 +718,7 @@ function AddCase()
     global $dbNameRefer;
     global $objconnectRefer;
     global $portRefer;
-    $sql = "INSERT INTO cancle_case (detail_note) value('" . $_POST["detailCase"] . "')";
+    $sql = "INSERT INTO cancle_case (detail_note) Values('" . $_POST["detailCase"] . "')";
     $query = pg_query(pg_connect("host=$serverRefer port=$portRefer dbname=$dbNameRefer user=$userRefer password=$passRefer"), $sql);
     if ($query) {
         $rs[] = array("status" => true);
@@ -727,7 +728,7 @@ function AddCase()
     echo json_encode($rs);
 }
 function EditDelCancleCase()
-{
+{   
     global $serverRefer;
     global $userRefer;
     global $passRefer;
@@ -750,6 +751,61 @@ function EditDelCancleCase()
         } else {
             $rs[] = array("status" => false);
         }
+    }
+    echo json_encode($rs);
+}
+
+function GetTableSos(){
+    global $serverRefer;
+    global $userRefer;
+    global $passRefer;
+    global $dbNameRefer;
+    global $objconnectRefer;
+    global $portRefer;
+    $sql = "SELECT * FROM pttype";
+    $query = pg_query(pg_connect("host=$serverRefer port=$portRefer dbname=$dbNameRefer user=$userRefer password=$passRefer"), $sql);
+    if ($query) {
+        while ($rowCar = pg_fetch_array($query)) {
+            $rsSos[] = array('status' => true, "id" => $rowCar["pttype_id"], "name" => $rowCar["pttype_name"]);
+        }
+    } else {
+        $rsSos[] = array('status' => false);
+    }
+    echo json_encode($rsSos);
+}
+function AddSos()
+{ 
+        global $serverRefer;
+        global $userRefer;
+        global $passRefer;
+        global $dbNameRefer;
+        global $objconnectRefer;
+        global $portRefer;
+        global $objconnectRefer;
+        echo $sql = "INSERT INTO pttype (pttype_name) VALUES ('" . $_POST["namesos"] . "')";
+        $query = pg_query(pg_connect("host=$serverRefer port=$portRefer dbname=$dbNameRefer user=$userRefer password=$passRefer"), $sql);
+        if ($query)
+            $rs[] = array("status" => true, $query);
+        echo json_encode($rs);
+    
+}
+function EditDelSos()
+{
+    global $serverRefer;
+    global $userRefer;
+    global $passRefer;
+    global $dbNameRefer;
+    global $objconnectRefer;
+    global $portRefer;
+    global $objconnectRefer;
+    if ($_POST['sosSource'] == "del") {
+        $sqlStation = "DELETE FROM pttype WHERE pttype_id='" . $_POST['sosId'] . "'";
+        $fetchVale =  pg_query(pg_connect("host=$serverRefer port=$portRefer dbname=$dbNameRefer user=$userRefer password=$passRefer"), $sqlStation);
+        if ($fetchVale) $rs[] = array("status" => true, $fetchVale);
+    } else if ($_POST['sosSource'] == "soslCase") {
+        $sqlEditSos = "UPDATE pttype SET pttype_name ='" . $_POST['sosValue'] . "' WHERE pttype_id ='" . $_POST['sosId'] . "' ";
+        $fetchVale = pg_query(pg_connect("host=$serverRefer port=$portRefer dbname=$dbNameRefer user=$userRefer password=$passRefer"), $sqlEditSos);
+        if ($fetchVale) $rs[] = array("status" => true, $fetchVale);
     }
     echo json_encode($rs);
 }
@@ -857,6 +913,16 @@ if (isset($_POST['detailCase']) && isset($_POST['hosCode'])) {
     AddCase();
 }
 if (isset($_POST['cancleCaseValue']) && isset($_POST['cancleId']) && isset($_POST['cancleSource'])) {
-
+ 
     EditDelCancleCase();
 }
+if (isset($_POST['sos'])) {
+    GetTableSos();
+}
+if (isset($_POST['namesos']) && isset($_POST['hosCode'])) {
+    AddSos();
+}
+if (isset($_POST['sosValue']) && isset($_POST['sosId']) && isset($_POST['sosSource'])) {
+    EditDelSos();
+}
+ 

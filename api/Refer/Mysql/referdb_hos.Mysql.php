@@ -563,7 +563,7 @@ function GetTableSos(){
     }
     echo json_encode($rsPttype);
 }
-//* เรียกใช้การทำงาน //
+ 
 function AddSos()
 { {
         global $objconnectRefer;

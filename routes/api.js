@@ -58,7 +58,7 @@ router.post("/refer/api/", async function (req, resJson, next) {
       hn = req.body.hn;
       cid = null;
     }
-
+console.log(req.body)
     const resPatien = await axios
       .post(
         `${req.body.urlTokenHis}${req.body.patien}`,
