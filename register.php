@@ -117,7 +117,7 @@
                                         <option value="other">Other<span> : รพ.สต. รพ.ขนาด F1,F</span></option>
                                     </select>
                                     <br>
-                                    <input class="btn btn-lg btn-success btn-block" id="send" name="send" type="button" onClick="chklogin();" value="เข้าระบบ">
+                                    <input class="btn btn-lg btn-success btn-block" id="send" name="send" type="button" onClick="chklogin();" value="ลงทะเบียน">
                                 </fieldset>
                             </form>
                         </div>
