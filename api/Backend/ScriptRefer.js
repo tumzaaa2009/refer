@@ -1,4 +1,3 @@
-
 //? Station Destination
 const getStationServiceDestinations = (value) => {
   $.ajax({
@@ -42,33 +41,39 @@ const sendFromReferOuts = () => {
   const formData = new FormData(form);
   // เพิ่มเงื่อนไข validate ข้อมูลก่อนส่งข้อมูลผ่าน AJAX
   // ตรวจสอบค่าของ input element แต่ละตัวใน form ก่อนส่งข้อมูล
-
-  if ($("#getStationService").val() === 0) {
-    alert("ระบุสถานบริการ");
+ 
+  if ($("#getStationService").val() == 0) {
+    alert("ระบุสถานบริการต้นทาง");
+    $("#getStationService").focus(); // ให้ focus ที่ input หรือ element ที่ต้องการให้ผู้ใช้กรอกข้อมูล
     return false;
   }
-
+  
   if ($("#hosIdMain").val() === "") {
     alert("ระบุรัสรพ");
+    $("#hosIdMain").focus();
     return false;
   }
-
+  
   if ($("#hosMainName").val() === "") {
     alert("ระบุชื่อรพ");
+    $("#hosMainName").focus();
     return false;
   }
-
+  
   if ($("#hosCodeRefer").val() === "0") {
     alert("กรุณาเลือกโรงพยาบาลที่จะส่งต่อ");
+    $("#hosCodeRefer").focus();
     return false;
   }
-
+  
   if ($("#levelActual").val() === "0") {
     alert("กรุณาเลือกระดับความรุนแรง");
+    $("#levelActual").focus();
     return false;
   }
   if ($("#doctorName").val() === "0") {
     alert("กรุณาเลือกแพทย์ผู้สั่ง");
+    $("#doctorName").focus();
     return false;
   }
   if (
@@ -76,12 +81,15 @@ const sendFromReferOuts = () => {
     !formData.get("otherCauseReferout")
   ) {
     alert("กรุณากรอก otherCauseReferout");
+    $("#otherCauseReferout").focus();
     return;
   }
   if (formData.get("timeTruma") == "0:00") {
     alert("กรุณากรอก เวลา");
+    $("#timeTruma").focus();
     return;
   }
+  
   $.ajax({
     headers: {
       "x-access-token": hosPassCode,
@@ -116,53 +124,54 @@ const sendFromReferBack = () => {
   const formData = new FormData(form);
   // เพิ่มเงื่อนไข validate ข้อมูลก่อนส่งข้อมูลผ่าน AJAX
   // ตรวจสอบค่าของ input element แต่ละตัวใน form ก่อนส่งข้อมูล
-  if ($("#getStationService").val() === 0) {
-    alert("ระบุสถานบริการ");
+  if ($("#getStationService").val() == 0) {
+    alert("ระบุสถานบริการต้นทาง");
+    $("#getStationService").focus(); // ให้ focus ที่ input หรือ element ที่ต้องการให้ผู้ใช้กรอกข้อมูล
     return false;
   }
+  
   if ($("#hosIdMain").val() === "") {
     alert("ระบุรัสรพ");
+    $("#hosIdMain").focus();
     return false;
   }
-
+  
   if ($("#hosMainName").val() === "") {
     alert("ระบุชื่อรพ");
+    $("#hosMainName").focus();
     return false;
   }
-
+  
   if ($("#hosCodeRefer").val() === "0") {
     alert("กรุณาเลือกโรงพยาบาลที่จะส่งต่อ");
+    $("#hosCodeRefer").focus();
     return false;
   }
-
+  
   if ($("#levelActual").val() === "0") {
     alert("กรุณาเลือกระดับความรุนแรง");
+    $("#levelActual").focus();
     return false;
   }
   if ($("#doctorName").val() === "0") {
     alert("กรุณาเลือกแพทย์ผู้สั่ง");
-    return false;
-  }
-  if ($("#movementFromReferBack").val() === 0) {
-    alert("ระบุการเคลื่อนย้าย");
+    $("#doctorName").focus();
     return false;
   }
   if (
-    $("#DivotherCauseReferback").is(":visible") &&
-    $("#otherCauseReferBack").val() == ""
+    $("#otherCauseReferout").is(":visible") &&
+    !formData.get("otherCauseReferout")
   ) {
-    alert("กรุณากรอก otherCauseReferBack");
+    alert("กรุณากรอก otherCauseReferout");
+    $("#otherCauseReferout").focus();
     return;
   }
-
-  if (
-    $("#otherCauseReferBack").is(":visible") &&
-    $("#inputOtherCauseReferBack").val() == ""
-  ) {
-    alert("กรุณากรอก inputOtherCauseReferBack");
+  if (formData.get("timeTruma") == "0:00") {
+    alert("กรุณากรอก เวลา");
+    $("#timeTruma").focus();
     return;
   }
-
+  
   $.ajax({
     headers: {
       "x-access-token": hosPassCode,
@@ -614,12 +623,9 @@ const showTableReferOut = () => {
             `<tr style="background: ${
               item.level_actual_color
             };" class="refer-row" >
-            <td>${item.referdate.substring(
-              0,
-              10
-            )}</td> <td>${item.refer_time}</td><td>${
-              item.refer_no
-            }</td> 
+            <td>${item.referdate.substring(0, 10)}</td> <td>${
+              item.refer_time
+            }</td><td>${item.refer_no}</td> 
             <td align="center">${IsSave}</td> 
             <td>${item.refer_name}</td>
             <td>${item.location_org}</td>
@@ -666,11 +672,10 @@ function showDetailReferOut(referId) {
     type: "POST",
     url: "https://rh4cloudcenter.moph.go.th:3000/referapi/showDetailReferOut",
     data: {
-      showDetailReferOut: referId   ,
+      showDetailReferOut: referId,
     },
     dataType: "JSON",
     success: function (response) {
-       
       const dateTimeString = response.message[0].refer_date;
       const date = new Date(dateTimeString);
       const day = date.getUTCDate().toString().padStart(2, "0");
@@ -1484,7 +1489,6 @@ async function SendReferIn() {
 }
 // ยืนยันการส่งตัว
 const showTableReferBack = () => {
-   
   const arrayHosRefer = [];
   const arrayItemRefer = [];
   const form = document.getElementById("seach-engine");
@@ -1680,17 +1684,16 @@ const showDetailReferBack = (referId) => {
         if (response.message[0].risk_turma != "") {
           const jsonRiskTurma = JSON.parse(response.message[0].risk_turma);
           const listTurmar = [];
-      const riskTurmaArray = Object.keys(jsonRiskTurma).map((key) => {
-        if (key === "riskturma") {
-          const riskTurma = jsonRiskTurma[key];
-          return riskTurma.map((item) => {
-            listTurmar.push(item);
-            return `<tr class="table-active table-bordered"><td>${item.Consciousness}</td><td>${item.time}</td><td>${item.e}</td><td>${item.v}</td><td>${item.m}</td><td>${item.pupilR}</td><td>${item.pupilL}</td><td>${item.Tc}</td><td>${item.prF}</td><td>${item.pfM}</td><td>${item.bp}</td><td>${item.mmHg}</td><td>${item.spo2}</td></tr>`;
-            // ส่งค่าที่ต้องการให้กลับจาก map
+          const riskTurmaArray = Object.keys(jsonRiskTurma).map((key) => {
+            if (key === "riskturma") {
+              const riskTurma = jsonRiskTurma[key];
+              return riskTurma.map((item) => {
+                listTurmar.push(item);
+                return `<tr class="table-active table-bordered"><td>${item.Consciousness}</td><td>${item.time}</td><td>${item.e}</td><td>${item.v}</td><td>${item.m}</td><td>${item.pupilR}</td><td>${item.pupilL}</td><td>${item.Tc}</td><td>${item.prF}</td><td>${item.pfM}</td><td>${item.bp}</td><td>${item.mmHg}</td><td>${item.spo2}</td></tr>`;
+                // ส่งค่าที่ต้องการให้กลับจาก map
+              });
+            }
           });
-        }
-      });
-
 
           $("#detailRiskTurmar").val(JSON.stringify(listTurmar));
           $("#riskturmatbody").html(riskTurmaArray);
