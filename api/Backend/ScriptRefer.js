@@ -1095,7 +1095,7 @@ function showDetailReferOut(referId) {
             $("#open-modal-case-referout-cancelorg").hide();
             $("#reservationtime").prop("disabled", false);
             // Select OPtion ปลายทาง
-
+ 
             const typetDes = response.message[0].typept_des.split(",");
             const select2typetDes = [];
             $('select[name="Typept_Des"] option').each(function () {
@@ -1105,13 +1105,22 @@ function showDetailReferOut(referId) {
               }
             });
             $("#Typept").val(select2typetDes).trigger("change");
-
-            ///ส่ง lelve และค่าี
+         
+       
             const levelActual = response.message[0].level_des.split(",");
             const select2levelActual = [];
-            $("#colorLvAc").val(response.message[0].level_actual_des_color);
-            LevelActual(levelActual[0], $("#colorLvAc").val());
-
+            $("#colorLvAc").val(response.message[0].level_actual_des_color); ///ปรับค่าสี
+             let selectElement = document.getElementById("levelActual");
+             // วนลูปผ่านตัวเลือกทั้งหมดใน select
+             for (var i = 0; i < selectElement.options.length; i++) {
+               // เช็คว่าค่าในตัวเลือก (option) ตรงกับค่าที่ต้องการค้นหาหรือไม่
+                console.log(selectElement.options[i].value);
+               if (selectElement.options[i].value === levelActual[0]) {
+                 // กำหนด selected ให้กับตัวเลือกที่ตรงกับเงื่อนไข
+                 selectElement.options[i].selected = true;
+               }
+             }
+            
             const typetbedDes = response.message[0].bad_des.split(",");
             const select2bedDes = [];
             $('select[name="bedHosDes"] option').each(function () {

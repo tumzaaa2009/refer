@@ -71,7 +71,8 @@ const ServiceStation = () => {
     },
   });
 };
-const LevelActual = (value) => {
+const LevelActual = (value,color) => {
+ 
   $.ajax({
     type: "POST",
     url: `${callPathRefer}`,
