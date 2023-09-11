@@ -516,7 +516,7 @@ if (isset($_GET['destroy'])) {
     <!-- sweetalert2 -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.10/dist/sweetalert2.all.min.js"></script>
     <!-- ??Api -->
- 
+
     <script src="./api/Backend/ScriptDbRefer.js"></script>
     <script src="./api/Backend/ScriptRefer.js"></script>
     <!-- Timepicker -->
@@ -527,266 +527,268 @@ if (isset($_GET['destroy'])) {
 </body>
 
 <script>
-  const hosCode = '<?php echo $_SESSION['hosCode']; ?>'
-const hosName = '<?php echo $_SESSION['hosName']; ?>'
-const hosPassCode = '<?php echo $_SESSION['passCode']; ?>'
-const hosOpreator = '<?php echo $_SESSION['hosOpreator']; ?>'
-const callPathRefer = '<?php echo $callPathRefer; ?>'
+    const hosCode = '<?php echo $_SESSION['hosCode']; ?>'
+    const hosName = '<?php echo $_SESSION['hosName']; ?>'
+    const hosPassCode = '<?php echo $_SESSION['passCode']; ?>'
+    const hosOpreator = '<?php echo $_SESSION['hosOpreator']; ?>'
+    const callPathRefer = '<?php echo $callPathRefer; ?>'
 
-let callPathHis = ''
-let tokenApi = ''
-let vsDate = '';
-let labDetail = '';
-let drugDetail = '';
-const typeConnect = '<?php echo $typeConnect ?>'
-// ? typeConnect
-if (typeConnect == "ConnectToAPI") {
-    auth = '<?php echo $calAuth; ?>'
-    tokenApi = '<?php echo decryptPassword($calToken) ?>';
-    patien = '<?php echo $endPoint ?>';
-    vsDate = '<?php echo $vsDate; ?>';
-    labDetail = '<?php echo $labDetail; ?>';
-    drugDetail = '<?php echo $drugDetail; ?>';
-    callPathHis = '<?php echo $callUrl  ?>';
+    let callPathHis = ''
+    let tokenApi = ''
+    let vsDate = '';
+    let labDetail = '';
+    let drugDetail = '';
+    const typeConnect = '<?php echo $typeConnect ?>'
+    // ? typeConnect
+    if (typeConnect == "ConnectToAPI") {
+        auth = '<?php echo $calAuth; ?>'
+        tokenApi = '<?php echo decryptPassword($calToken) ?>';
+        patien = '<?php echo $endPoint ?>';
+        vsDate = '<?php echo $vsDate; ?>';
+        labDetail = '<?php echo $labDetail; ?>';
+        drugDetail = '<?php echo $drugDetail; ?>';
+        callPathHis = '<?php echo $callUrl  ?>';
 
 
-} else if (typeConnect == "ConnectToDb") {
-    callPathHis = '<?php echo $callPathHis; ?>'
+    } else if (typeConnect == "ConnectToDb") {
+        callPathHis = '<?php echo $callPathHis; ?>'
 
-}
-//* ENDPOINT 
-let dateToday = new Date();
-var onfrom = '<?php echo isset($_GET['onfrom']) ? $_GET['onfrom'] : ""; ?>';
-var idrefer = '<?php echo isset($_GET['idrefer']) ? $_GET['idrefer'] : ""; ?>';
-let socket = io.connect("https://rh4cloudcenter.moph.go.th:3000", {
-
-transport: ["websocket", "polling", "flashsocket"],
-});
-
-// login Check
-socket.on("connect_error", function(error) {
-if (error.message === "xhr poll error" || error.message === "transport close") {
-    alert("ฐานข้อมูลกลางไม่สามารถเชื่อมต่อได้");
-    $(".div-status").css({
-        'color': 'red',
-        'font-size': '15px;'
-    }).html("Status ReferR4: Lost Connect");
-} else {
-    console.log("เกิดข้อผิดพลาดในการเชื่อมต่อ Socket.IO: ", error);
-}
-});
-
-socket.on("connect", function() {
-$(".div-status").css({
-    'color': 'green',
-    'font-size': '15px;'
-}).html("Status ReferR4: Connected");
-});
-
-socket.emit("connecting", {
-hosCode: hosCode,
-hosName: hosName,
-passCode: hosPassCode,
-opreator: hosOpreator
-});
-// test 
-
-socket.on(`send_status ${hosCode}`, function(data) {
-if ((data.message = "มี RefNo เข้า  ")) {
-    toastr.success(`มี RefNo เข้า ${data.refNo}`, "", {
-        positionClass: "toast-top-full-width",
-        timeOut: false,
-        extendedTimeOut: "1000",
-        showMethod: "fadeIn",
-        hideMethod: "fadeOut",
-        closeButton: true,
-        toastClass: "toast-black"
-    });
-    const audio = new Audio("./sound_alert/com_linecorp_line_whistle.ogg");
-    audio.autoplay = true;
-    if (onfrom == "referouttable") {
-        showTableReferOut()
     }
-}
-});
-// ? put ReferOut 
+    //* ENDPOINT 
+    let dateToday = new Date();
+    var onfrom = '<?php echo isset($_GET['onfrom']) ? $_GET['onfrom'] : ""; ?>';
+    var idrefer = '<?php echo isset($_GET['idrefer']) ? $_GET['idrefer'] : ""; ?>';
+    let socket = io.connect("https://rh4cloudcenter.moph.go.th:3000", {
 
-socket.on(`SendPutReferOut ${hosCode}`, function(status, msgrefeno, msgCodeGenrefer) {
-toastr.warning(`ต้นทางมีการปรับปรุงข้อมูล ReferOut ${ msgrefeno.messageRef} `, "", {
-    positionClass: "toast-top-full-width",
-    timeOut: false,
-    showMethod: "fadeIn",
-    hideMethod: "fadeOut",
-    closeButton: true,
-    toastClass: "toast-black"
-});
-if (onfrom == "showdetailreferout") {
-    showDetailReferOut()
-}
-});
-socket.on(`SendPutReferOutDes ${hosCode}`, function(status, msgrefeno, msgCodeGenrefer) {
-toastr.warning(`ปลายทางมีการอัพเดทข้อมูล ReferOut ${ msgrefeno.messageRef} `, "", {
-    positionClass: "toast-top-full-width",
-    timeOut: false,
-    showMethod: "fadeIn",
-    hideMethod: "fadeOut",
-    closeButton: true,
-    toastClass: "toast-black"
-});
-if (onfrom == "showdetailreferout") {
-    showDetailReferOut()
-}
-});
+        transport: ["websocket", "polling", "flashsocket"],
+    });
 
-// ! ยกเลิก referout ของต้นทาง  // และปลายทาง เข้านี้
-socket.on(`cancleStatus ${hosCode}`, function(data) {
-toastr.warning(`${data.message}`, "", {
-    positionClass: "toast-top-full-width",
-    timeOut: false,
-    showMethod: "fadeIn",
-    hideMethod: "fadeOut",
-    closeButton: true,
-    toastClass: "toast-black"
+    // login Check
+    socket.on("connect_error", function(error) {
+        if (error.message === "xhr poll error" || error.message === "transport close") {
+            alert("ฐานข้อมูลกลางไม่สามารถเชื่อมต่อได้");
+            $(".div-status").css({
+                'color': 'red',
+                'font-size': '15px;'
+            }).html("Status ReferR4: Lost Connect");
+        } else {
+            console.log("เกิดข้อผิดพลาดในการเชื่อมต่อ Socket.IO: ", error);
+        }
+    });
 
-});
-const audio = new Audio("./sound_alert/com_linecorp_line_whistle.ogg");
-audio.autoplay = true;
-if (onfrom == "referouttable") {
-    showTableReferOut()
-}
+    socket.on("connect", function() {
+        $(".div-status").css({
+            'color': 'green',
+            'font-size': '15px;'
+        }).html("Status ReferR4: Connected");
+    });
 
-});
+    socket.emit("connecting", {
+        hosCode: hosCode,
+        hosName: hosName,
+        passCode: hosPassCode,
+        opreator: hosOpreator
+    });
+    // test 
 
-socket.on(`send_statusUpdate ${hosCode}`, function(data) {
-$("#UpdateRefRefer").hide();
-$("#open-modal-case-referout-cancelorg").hide()
-if (data.message == "susOnrecive") {
-    toastr.success(`รพ ปลายทางรับการส่งตัว ${data.refNo}`, "", {
-        positionClass: "toast-top-full-width",
-        timeOut: false,
-        extendedTimeOut: "1000",
-        showMethod: "fadeIn",
-        hideMethod: "fadeOut",
-        closeButton: true,
+    socket.on(`send_status ${hosCode}`, function(data) {
+        if ((data.message = "มี RefNo เข้า  ")) {
+            toastr.success(`มี RefNo เข้า ${data.refNo}`, "", {
+                positionClass: "toast-top-full-width",
+                timeOut: false,
+                extendedTimeOut: "1000",
+                showMethod: "fadeIn",
+                hideMethod: "fadeOut",
+                closeButton: true,
+                toastClass: "toast-black"
+            });
+            const audio = new Audio("./sound_alert/com_linecorp_line_whistle.ogg");
+            audio.autoplay = true;
+            if (onfrom == "referouttable") {
+                showTableReferOut()
+            }
+        }
+    });
+    // ? put ReferOut 
+
+    socket.on(`SendPutReferOut ${hosCode}`, function(status, msgrefeno, msgCodeGenrefer) {
+        toastr.warning(`ต้นทางมีการปรับปรุงข้อมูล ReferOut ${ msgrefeno.messageRef} `, "", {
+            positionClass: "toast-top-full-width",
+            timeOut: false,
+            showMethod: "fadeIn",
+            hideMethod: "fadeOut",
+            closeButton: true,
+            toastClass: "toast-black"
+        });
+        if (onfrom == "showdetailreferout") {
+            showDetailReferOut(msgrefeno.messageGen)
+        }
+    });
+    socket.on(`SendPutReferOutDes ${hosCode}`, function(status, msgrefeno, msgCodeGenrefer) {
+        toastr.warning(`ปลายทางมีการอัพเดทข้อมูล ReferOut ${ msgrefeno.messageRef} `, "", {
+            positionClass: "toast-top-full-width",
+            timeOut: false,
+            showMethod: "fadeIn",
+            hideMethod: "fadeOut",
+            closeButton: true,
+            toastClass: "toast-black"
+        });
+
+        if (onfrom == "showdetailreferout") {
+
+            showDetailReferOut(msgrefeno.messageGen)
+        }
+    });
+
+    // ! ยกเลิก referout ของต้นทาง  // และปลายทาง เข้านี้
+    socket.on(`cancleStatus ${hosCode}`, function(data) {
+        toastr.warning(`${data.message}`, "", {
+            positionClass: "toast-top-full-width",
+            timeOut: false,
+            showMethod: "fadeIn",
+            hideMethod: "fadeOut",
+            closeButton: true,
+            toastClass: "toast-black"
+
+        });
+        const audio = new Audio("./sound_alert/com_linecorp_line_whistle.ogg");
+        audio.autoplay = true;
+        if (onfrom == "referouttable") {
+            showTableReferOut()
+        }
 
     });
-    $("#UpStatusReferOutDes").hide();
-    $("#open-modal-case-referout-cancelorg").hide();
-    $("#UpdateRefRefer").hide()
-    const audio = new Audio("./sound_alert/com_linecorp_line_whistle.ogg");
-    audio.autoplay = true;
-    if (onfrom == "referouttable") {
-        showTableReferOut()
-    } else if (idrefer != "" && idrefer != undefined) {
 
-        showDetailReferOut()
-    }
-} else if (data.message == "susNotRecive") {
-    toastr.warning(`รพ ปลายทางปฏิเสธการส่งตัว ${data.refNo}`, "", {
-        positionClass: "toast-top-full-width",
-        timeOut: false,
-        extendedTimeOut: "1000",
-        showMethod: "fadeIn",
-        hideMethod: "fadeOut",
-        toastClass: "toast-black",
-        closeButton: true,
-        toastClass: "toast-black"
+    socket.on(`send_statusUpdate ${hosCode}`, function(data) {
+        $("#UpdateRefRefer").hide();
+        $("#open-modal-case-referout-cancelorg").hide()
+        if (data.message == "susOnrecive") {
+            toastr.success(`รพ ปลายทางรับการส่งตัว ${data.refNo}`, "", {
+                positionClass: "toast-top-full-width",
+                timeOut: false,
+                extendedTimeOut: "1000",
+                showMethod: "fadeIn",
+                hideMethod: "fadeOut",
+                closeButton: true,
+
+            });
+            $("#UpStatusReferOutDes").hide();
+            $("#open-modal-case-referout-cancelorg").hide();
+            $("#UpdateRefRefer").hide()
+            const audio = new Audio("./sound_alert/com_linecorp_line_whistle.ogg");
+            audio.autoplay = true;
+            if (onfrom == "referouttable") {
+                showTableReferOut()
+            } else if (idrefer != "" && idrefer != undefined) {
+
+                showDetailReferOut()
+            }
+        } else if (data.message == "susNotRecive") {
+            toastr.warning(`รพ ปลายทางปฏิเสธการส่งตัว ${data.refNo}`, "", {
+                positionClass: "toast-top-full-width",
+                timeOut: false,
+                extendedTimeOut: "1000",
+                showMethod: "fadeIn",
+                hideMethod: "fadeOut",
+                toastClass: "toast-black",
+                closeButton: true,
+                toastClass: "toast-black"
+            });
+            const audio = new Audio("./sound_alert/com_linecorp_line_whistle.ogg");
+            audio.autoplay = true;
+            if (onfrom == "referouttable") {
+                showTableReferOut()
+            } else if (idrefer != "" && idrefer != undefined) {
+
+                showDetailReferOut()
+            }
+
+        }
     });
-    const audio = new Audio("./sound_alert/com_linecorp_line_whistle.ogg");
-    audio.autoplay = true;
-    if (onfrom == "referouttable") {
-        showTableReferOut()
-    } else if (idrefer != "" && idrefer != undefined) {
 
-        showDetailReferOut()
-    }
+    socket.on(`send_statusreferIn ${hosCode} `, function(data) {
+        if ((data.message = "ส่งตัวเคส ")) {
+            toastr.info(`ส่งกลับเคส ${data.refNo}`, "", {
+                positionClass: "toast-top-full-width",
+                timeOut: false,
+                extendedTimeOut: "1000",
+                showMethod: "fadeIn",
+                hideMethod: "fadeOut",
+                closeButton: true,
+                toastClass: "toast-black"
+            });
+            const audio = new Audio("./sound_alert/com_linecorp_line_whistle.ogg");
+            audio.autoplay = true;
+            if (onfrom == "referouttable") {
+                showTableReferOut()
+            } else if (idrefer != "" && idrefer != undefined) {
 
-}
-});
-
-socket.on(`send_statusreferIn ${hosCode} `, function(data) {
-if ((data.message = "ส่งตัวเคส ")) {
-    toastr.info(`ส่งกลับเคส ${data.refNo}`, "", {
-        positionClass: "toast-top-full-width",
-        timeOut: false,
-        extendedTimeOut: "1000",
-        showMethod: "fadeIn",
-        hideMethod: "fadeOut",
-        closeButton: true,
-        toastClass: "toast-black"
+                showDetailReferOut()
+            }
+        }
     });
-    const audio = new Audio("./sound_alert/com_linecorp_line_whistle.ogg");
-    audio.autoplay = true;
-    if (onfrom == "referouttable") {
-        showTableReferOut()
-    } else if (idrefer != "" && idrefer != undefined) {
-
-        showDetailReferOut()
-    }
-}
-});
 
 
-socket.on(`send_status_ReferBack ${hosCode}`, function(data) {
+    socket.on(`send_status_ReferBack ${hosCode}`, function(data) {
 
-if ((data.data = 200)) {
-    toastr.info(`ส่งกลับเคส ${data.refNo}`, "", {
-        positionClass: "toast-top-full-width",
-        timeOut: false,
-        extendedTimeOut: "1000",
-        showMethod: "fadeIn",
-        hideMethod: "fadeOut",
-        closeButton: true,
-        toastClass: "toast-black"
+        if ((data.data = 200)) {
+            toastr.info(`ส่งกลับเคส ${data.refNo}`, "", {
+                positionClass: "toast-top-full-width",
+                timeOut: false,
+                extendedTimeOut: "1000",
+                showMethod: "fadeIn",
+                hideMethod: "fadeOut",
+                closeButton: true,
+                toastClass: "toast-black"
+            });
+            const audio = new Audio("./sound_alert/com_linecorp_line_whistle.ogg");
+            audio.autoplay = true;
+            showTableReferOut();
+        }
     });
-    const audio = new Audio("./sound_alert/com_linecorp_line_whistle.ogg");
-    audio.autoplay = true;
-    showTableReferOut();
-}
-});
-socket.on(`sendreferbackonlysend ${hosCode}`, function(data) {
-if ((data.data = 200)) {
-    toastr.info(`${data.message} ${data.refNo}`, "", {
-        positionClass: "toast-top-full-width",
-        timeOut: false,
-        extendedTimeOut: "1000",
-        showMethod: "fadeIn",
-        hideMethod: "fadeOut",
-        closeButton: true,
-        toastClass: "toast-black"
-    });
-    const audio = new Audio("./sound_alert/com_linecorp_line_whistle.ogg");
-    audio.autoplay = true;
-    if (onfrom == "referbacktable") {
-        showTableReferBack()
-    } else if (idrefer != "" && idrefer != undefined) {
+    socket.on(`sendreferbackonlysend ${hosCode}`, function(data) {
+        if ((data.data = 200)) {
+            toastr.info(`${data.message} ${data.refNo}`, "", {
+                positionClass: "toast-top-full-width",
+                timeOut: false,
+                extendedTimeOut: "1000",
+                showMethod: "fadeIn",
+                hideMethod: "fadeOut",
+                closeButton: true,
+                toastClass: "toast-black"
+            });
+            const audio = new Audio("./sound_alert/com_linecorp_line_whistle.ogg");
+            audio.autoplay = true;
+            if (onfrom == "referbacktable") {
+                showTableReferBack()
+            } else if (idrefer != "" && idrefer != undefined) {
 
-        showDetailReferBack()
-    }
-}
-});
-//ปลายทางปล่วยหน่วยบริการ
-socket.on(`chang_hos ${hosCode}`, function(data) {
-if ((data.data = 200)) {
-    toastr.info(`${data.message}`, "", {
-        positionClass: "toast-top-full-width",
-        timeOut: false,
-        extendedTimeOut: "1000",
-        showMethod: "fadeIn",
-        hideMethod: "fadeOut",
-        closeButton: true,
-        toastClass: "toast-black"
+                showDetailReferBack()
+            }
+        }
     });
-    const audio = new Audio("./sound_alert/com_linecorp_line_whistle.ogg");
-    audio.autoplay = true;
-    if (onfrom == "referouttable") {
-        showTableReferOut()
-    } else if (idrefer != "" && idrefer != undefined) {
+    //ปลายทางปล่วยหน่วยบริการ
+    socket.on(`chang_hos ${hosCode}`, function(data) {
+        if ((data.data = 200)) {
+            toastr.info(`${data.message}`, "", {
+                positionClass: "toast-top-full-width",
+                timeOut: false,
+                extendedTimeOut: "1000",
+                showMethod: "fadeIn",
+                hideMethod: "fadeOut",
+                closeButton: true,
+                toastClass: "toast-black"
+            });
+            const audio = new Audio("./sound_alert/com_linecorp_line_whistle.ogg");
+            audio.autoplay = true;
+            if (onfrom == "referouttable") {
+                showTableReferOut()
+            } else if (idrefer != "" && idrefer != undefined) {
 
-        showDetailReferOut()
-    }
-}
-});
+                showDetailReferOut()
+            }
+        }
+    });
 
 
     $(document).ready(function() {
@@ -931,8 +933,6 @@ if ((data.data = 200)) {
         }
 
     });
-
-
 </script>
 
 </html>

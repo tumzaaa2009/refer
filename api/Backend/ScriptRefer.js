@@ -41,31 +41,31 @@ const sendFromReferOuts = () => {
   const formData = new FormData(form);
   // เพิ่มเงื่อนไข validate ข้อมูลก่อนส่งข้อมูลผ่าน AJAX
   // ตรวจสอบค่าของ input element แต่ละตัวใน form ก่อนส่งข้อมูล
- 
+
   if ($("#getStationService").val() == 0) {
     alert("ระบุสถานบริการต้นทาง");
     $("#getStationService").focus(); // ให้ focus ที่ input หรือ element ที่ต้องการให้ผู้ใช้กรอกข้อมูล
     return false;
   }
-  
+
   if ($("#hosIdMain").val() === "") {
     alert("ระบุรัสรพ");
     $("#hosIdMain").focus();
     return false;
   }
-  
+
   if ($("#hosMainName").val() === "") {
     alert("ระบุชื่อรพ");
     $("#hosMainName").focus();
     return false;
   }
-  
+
   if ($("#hosCodeRefer").val() === "0") {
     alert("กรุณาเลือกโรงพยาบาลที่จะส่งต่อ");
     $("#hosCodeRefer").focus();
     return false;
   }
-  
+
   if ($("#levelActual").val() === "0") {
     alert("กรุณาเลือกระดับความรุนแรง");
     $("#levelActual").focus();
@@ -89,7 +89,7 @@ const sendFromReferOuts = () => {
     $("#timeTruma").focus();
     return;
   }
-  
+
   $.ajax({
     headers: {
       "x-access-token": hosPassCode,
@@ -129,25 +129,25 @@ const sendFromReferBack = () => {
     $("#getStationService").focus(); // ให้ focus ที่ input หรือ element ที่ต้องการให้ผู้ใช้กรอกข้อมูล
     return false;
   }
-  
+
   if ($("#hosIdMain").val() === "") {
     alert("ระบุรัสรพ");
     $("#hosIdMain").focus();
     return false;
   }
-  
+
   if ($("#hosMainName").val() === "") {
     alert("ระบุชื่อรพ");
     $("#hosMainName").focus();
     return false;
   }
-  
+
   if ($("#hosCodeRefer").val() === "0") {
     alert("กรุณาเลือกโรงพยาบาลที่จะส่งต่อ");
     $("#hosCodeRefer").focus();
     return false;
   }
-  
+
   if ($("#levelActual").val() === "0") {
     alert("กรุณาเลือกระดับความรุนแรง");
     $("#levelActual").focus();
@@ -171,7 +171,7 @@ const sendFromReferBack = () => {
     $("#timeTruma").focus();
     return;
   }
-  
+
   $.ajax({
     headers: {
       "x-access-token": hosPassCode,
@@ -666,6 +666,7 @@ function decryptData(encryptedData, secretKey) {
   return JSON.parse(decryptedData);
 }
 function showDetailReferOut(referId) {
+ 
   let dateString = ` `;
   let expDateString = ``;
   $.ajax({
@@ -1104,16 +1105,12 @@ function showDetailReferOut(referId) {
               }
             });
             $("#Typept").val(select2typetDes).trigger("change");
+
+            ///ส่ง lelve และค่าี
             const levelActual = response.message[0].level_des.split(",");
             const select2levelActual = [];
-            console.log(levelActual);
-            $('select[name="levelActual_Des"] option').each(function () {
-              if (levelActual.includes($(this).val())) {
-                $(this).prop("selected", true);
-                select2levelActual.push($(this).val());
-              }
-            });
-            $("#levelActual").val(select2levelActual).trigger("change");
+            $("#colorLvAc").val(response.message[0].level_actual_des_color);
+            LevelActual(levelActual[0], $("#colorLvAc").val());
 
             const typetbedDes = response.message[0].bad_des.split(",");
             const select2bedDes = [];
@@ -1161,10 +1158,32 @@ function showDetailReferOut(referId) {
               //   `<a href="indexfromuse.php?onfrom=showdetailreferout&idrefer=${refOld}-${refNew}">เอกสารส่งเก่า</a>`
               // );
             }
-            $("#levelActual").css(
+
+            ///ส่ง lelve และค่าี
+            const levelActual = response.message[0].level_des.split(",");
+            const select2levelActual = [];
+            $("#levelActual").hide();
+            $("#levelActualShow").val(response.message[0].level_des);
+            $("#levelActualShow").css(
               "background-color",
               response.message[0].level_actual_des_color
             );
+            console.log(response.message[0].level_actual_des_color);
+            $("#levelActualShow").css("display", "block");
+
+            // $("#levelActual").val(response.message[0].level_des);
+            // $(
+            //   '#levelActual option[value="' +
+            //     response.message[0].level_des +
+            //     '"]'
+            // ).prop("selected", true);
+            // $("#levelActual").css(
+            //   "background-color",
+            //   response.message[0].level_actual_des_color
+            // );
+            // // หากต้องการกำหนดสีพื้นหลังจาก response.message[0].level_actual_des_color
+            // const backgroundColor = response.message[0].level_actual_des_color;
+            // $("#levelActual").css("background-color", backgroundColor);
 
             $("#cc").prop("readonly", false);
             $("#managementDes").prop("readonly", false);

@@ -30,7 +30,7 @@
                <label for="อายุ" class="col-md-auto col-form-label mb-1">วันที่ส่ง และ เวลาส่ง :</label>
                <div class="col-md-auto">
                    <input type="text" class="form-control" id="refer_time" name="refer_time" readonly>
-                </div>
+               </div>
 
                <label for="อายุ" class="col-md-auto col-form-label mb-1">ชื่อ:</label>
                <div class="col-md-auto">
@@ -206,9 +206,12 @@
                                                <div class="col-md">
                                                    <div class="form-group">
                                                        <label class="col-md-autocol-form-label">Level of Acuity:</label>
-                                                       <select class="form-control lvlactual" width="100%;" name="levelActual_Des" id="levelActual" disabled onchange="updateColor()">
+                                                       <select class="form-control lvlactual" width="100%;" name="levelActual_Des" id="levelActual" disabled onchange="updateColor(event)">
                                                        </select>
-                                                       <input type="hidden" name="colorLvAc">
+                                                       <input type="hidden" name="colorLvAc" id="colorLvAc">
+                                                       <input type="text" class="form-control" id="levelActualShow" name="levelActualShow" readonly style="display:none">
+
+
                                                    </div>
                                                </div>
                                                <div class="col-md">
