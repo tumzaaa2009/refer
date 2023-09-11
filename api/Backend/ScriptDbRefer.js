@@ -847,8 +847,8 @@ function ModalReferOutDes() {
   $("#contentReferoutDes").html("");
 }
 const referId = `<?php echo $_GET["idrefer"]; ?>`;
-function rrr() {
-  
+function test() {
+  // พี่สร้างขึ้นมาใหม่
 }
 // * ลาก ITEM ยา มา
 function DrugItemdetailDes(hn) {
