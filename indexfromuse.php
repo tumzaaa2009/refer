@@ -659,7 +659,7 @@ if (isset($_GET['destroy'])) {
 
     });
 
-    socket.on(`send_statusUpdate ${hosCode}`, function(data) {
+    socket.on(`send_statusUpdate ${hosCode}`, function(data, msgrefeno) {
         $("#UpdateRefRefer").hide();
         $("#open-modal-case-referout-cancelorg").hide()
         if (data.message == "susOnrecive") {
@@ -681,7 +681,7 @@ if (isset($_GET['destroy'])) {
                 showTableReferOut()
             } else if (idrefer != "" && idrefer != undefined) {
 
-                showDetailReferOut()
+                showDetailReferOut(msgrefeno.referCodeGen)
             }
         } else if (data.message == "susNotRecive") {
             toastr.warning(`รพ ปลายทางปฏิเสธการส่งตัว ${data.refNo}`, "", {
@@ -700,15 +700,15 @@ if (isset($_GET['destroy'])) {
                 showTableReferOut()
             } else if (idrefer != "" && idrefer != undefined) {
 
-                showDetailReferOut()
+                showDetailReferOut(msgrefeno.referCodeGen)
             }
 
         }
     });
 
-    socket.on(`send_statusreferIn ${hosCode} `, function(data) {
+    socket.on(`send_statusreferIn ${hosCode} `, function(data, msgrefeno) {
         if ((data.message = "ส่งตัวเคส ")) {
-            toastr.info(`ส่งกลับเคส ${data.refNo}`, "", {
+            toastr.info(`ส่งกลับเคส ${msgrefeno.refNo}`, "", {
                 positionClass: "toast-top-full-width",
                 timeOut: false,
                 extendedTimeOut: "1000",
@@ -723,7 +723,7 @@ if (isset($_GET['destroy'])) {
                 showTableReferOut()
             } else if (idrefer != "" && idrefer != undefined) {
 
-                showDetailReferOut()
+                showDetailReferOut(msgrefeno.messageGen)
             }
         }
     });
@@ -746,9 +746,9 @@ if (isset($_GET['destroy'])) {
             showTableReferOut();
         }
     });
-    socket.on(`sendreferbackonlysend ${hosCode}`, function(data) {
+    socket.on(`sendreferbackonlysend ${hosCode}`, function(data, msgrefeno) {
         if ((data.data = 200)) {
-            toastr.info(`${data.message} ${data.refNo}`, "", {
+            toastr.info(`${msgrefeno.message} ${msgrefeno.refNo}`, "", {
                 positionClass: "toast-top-full-width",
                 timeOut: false,
                 extendedTimeOut: "1000",
@@ -763,14 +763,14 @@ if (isset($_GET['destroy'])) {
                 showTableReferBack()
             } else if (idrefer != "" && idrefer != undefined) {
 
-                showDetailReferBack()
+                showDetailReferBack(msgrefeno.messageGen)
             }
         }
     });
     //ปลายทางปล่วยหน่วยบริการ
-    socket.on(`chang_hos ${hosCode}`, function(data) {
+    socket.on(`chang_hos ${hosCode}`, function(data, msgrefeno) {
         if ((data.data = 200)) {
-            toastr.info(`${data.message}`, "", {
+            toastr.info(`${msgrefeno.message}`, "", {
                 positionClass: "toast-top-full-width",
                 timeOut: false,
                 extendedTimeOut: "1000",
@@ -785,7 +785,7 @@ if (isset($_GET['destroy'])) {
                 showTableReferOut()
             } else if (idrefer != "" && idrefer != undefined) {
 
-                showDetailReferOut()
+                showDetailReferOut(msgrefeno.messageGen)
             }
         }
     });

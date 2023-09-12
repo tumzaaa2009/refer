@@ -666,7 +666,7 @@ function decryptData(encryptedData, secretKey) {
   return JSON.parse(decryptedData);
 }
 function showDetailReferOut(referId) {
- 
+  alert(referId);
   let dateString = ` `;
   let expDateString = ``;
   $.ajax({
@@ -1095,7 +1095,7 @@ function showDetailReferOut(referId) {
             $("#open-modal-case-referout-cancelorg").hide();
             $("#reservationtime").prop("disabled", false);
             // Select OPtion ปลายทาง
- 
+
             const typetDes = response.message[0].typept_des.split(",");
             const select2typetDes = [];
             $('select[name="Typept_Des"] option').each(function () {
@@ -1105,22 +1105,21 @@ function showDetailReferOut(referId) {
               }
             });
             $("#Typept").val(select2typetDes).trigger("change");
-         
-       
+
             const levelActual = response.message[0].level_des.split(",");
             const select2levelActual = [];
             $("#colorLvAc").val(response.message[0].level_actual_des_color); ///ปรับค่าสี
-             let selectElement = document.getElementById("levelActual");
-             // วนลูปผ่านตัวเลือกทั้งหมดใน select
-             for (var i = 0; i < selectElement.options.length; i++) {
-               // เช็คว่าค่าในตัวเลือก (option) ตรงกับค่าที่ต้องการค้นหาหรือไม่
-                console.log(selectElement.options[i].value);
-               if (selectElement.options[i].value === levelActual[0]) {
-                 // กำหนด selected ให้กับตัวเลือกที่ตรงกับเงื่อนไข
-                 selectElement.options[i].selected = true;
-               }
-             }
-            
+            let selectElement = document.getElementById("levelActual");
+            // วนลูปผ่านตัวเลือกทั้งหมดใน select
+            for (var i = 0; i < selectElement.options.length; i++) {
+              // เช็คว่าค่าในตัวเลือก (option) ตรงกับค่าที่ต้องการค้นหาหรือไม่
+              console.log(selectElement.options[i].value);
+              if (selectElement.options[i].value === levelActual[0]) {
+                // กำหนด selected ให้กับตัวเลือกที่ตรงกับเงื่อนไข
+                selectElement.options[i].selected = true;
+              }
+            }
+
             const typetbedDes = response.message[0].bad_des.split(",");
             const select2bedDes = [];
             $('select[name="bedHosDes"] option').each(function () {
@@ -1482,7 +1481,7 @@ async function SendReferIn() {
         $("#UpStatusReferOutDes").hide();
         $("#open-modal-case-referHosCodeDes").hide();
         $("#referSus").html("รับการส่งตัวแล้ว").css("color", "green");
-        showDetailReferOut();
+        showDetailReferOut(response.messageGen);
       } else if (response.send === "info") {
         toastr.info(`${response.msg}`, "", {
           positionClass: "toast-top-center",
@@ -1500,7 +1499,7 @@ async function SendReferIn() {
             );
           },
         });
-        showDetailReferOut();
+        showDetailReferOut(response.messageGen);
       } else {
         toastr.error(`${response.msg}`, "", {
           positionClass: "toast-top-center",
@@ -1510,7 +1509,7 @@ async function SendReferIn() {
           hideMethod: "fadeOut",
           closeButton: true,
         });
-        showDetailReferOut();
+        showDetailReferOut(response.messageGen);
       }
     },
   });
