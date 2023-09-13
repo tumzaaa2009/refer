@@ -66,6 +66,10 @@
                        <label>สิทธิ์การรักษา </label>
                        <input type="text" class="form-control" name="pttype" id="getpttype" placeholder="" readonly>
                    </div>
+                   <div class="col-md-6">
+                       <label>เลขสิทธิ์ </label>
+                       <input type="text" class="form-control" name="pttype-sos" id="pttype-sos" placeholder="" readonly>
+                   </div>
                </div>
            </div>
            <div class="col-md-12">

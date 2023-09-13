@@ -901,6 +901,7 @@ function showDetailReferOut(referId) {
         $("#showotherCauseReferout").val(
           `${response.message[0].cause_referout_other}`
         );
+        $("#pttype-sos").val(`${response.message[0].SSO}`);
         $("#getpttype").val(`${response.message[0].pttype_id}`);
         $("#codeReferDes").val(`${response.message[0].refer_hospcode}`);
         $("#doctorNameDes").val(response.message[0].doctor_name);
