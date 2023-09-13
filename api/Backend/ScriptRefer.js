@@ -1159,6 +1159,7 @@ function showDetailReferOut(referId) {
 
             $("#reservationtime").val(startDate + " - " + endDate);
           } else if (hosCode == response.message[0].refer_code) {
+            alert("gg")
             // รพ ต้นทาง
             const [refOld, refNew] =
               response.message[0].codegen_refer_no.split("-");
