@@ -1231,7 +1231,7 @@ function showDetailReferOut(referId) {
               response.message[0].service_plane_des.split(",");
             const select2Values = [];
               console.log(response.message[0].service_plane_des);
-            $('select[name="sevicePlanDes"] option').each(function () {
+            $("#servicePlane option").each(function () {
               console.log("foreach", $(this).val());
               // if (servicePlaneDes.includes($(this).val())) {
               //   $(this).prop("selected", true);
