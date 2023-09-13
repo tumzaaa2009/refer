@@ -591,9 +591,9 @@ if (isset($_GET['destroy'])) {
     });
     // test 
 
-    socket.on(`send_status ${hosCode}`, function(data) {
+    socket.on(`send_status ${hosCode}`, function(data, msgrefeno) {
         if ((data.message = "มี RefNo เข้า  ")) {
-            toastr.success(`มี RefNo เข้า ${data.refNo}`, "", {
+            toastr.success(`มี RefNo เข้า ${msgrefeno.refNo}`, "", {
                 positionClass: "toast-top-full-width",
                 timeOut: false,
                 extendedTimeOut: "1000",
@@ -678,6 +678,7 @@ if (isset($_GET['destroy'])) {
             const audio = new Audio("./sound_alert/com_linecorp_line_whistle.ogg");
             audio.autoplay = true;
             if (onfrom == "referouttable") {
+                alert('asdasdasddas')
                 showTableReferOut()
             } else if (idrefer != "" && idrefer != undefined) {
 
