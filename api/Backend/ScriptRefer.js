@@ -897,7 +897,7 @@ function showDetailReferOut(referId) {
         $("#carReferDes").val(`${response.message[0].car_refer}`);
         $("#causeReferoutDes").val(`${response.message[0].cause_referout}`);
         $("#otherCauseReferout").show();
-      
+
         $("#showotherCauseReferout").val(
           `${response.message[0].cause_referout_other}`
         );
@@ -1291,6 +1291,7 @@ function showDetailReferOut(referId) {
             // } else {
             //   $("#open-modal-case-referout-cancelorg").show();
             // }
+
             if (
               response.message[0].cancle_org == "" ||
               response.message[0].cancle_org == null
@@ -1299,6 +1300,12 @@ function showDetailReferOut(referId) {
               $("#open-modal-case-referout-cancelorg").show();
             } else if (response.message[0].cancle_org != "") {
               $("#open-modal-case-referHocode").hide();
+            }
+            if (
+              response.message[0].cancle_des != "" ||
+              response.message[0].cancle_des != null
+            ) {
+              $("#open-modal-case-referout-cancelorg").hide();
             }
 
             $("#open-modal-case-referin").hide();
