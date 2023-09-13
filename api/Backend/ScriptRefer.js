@@ -1079,7 +1079,7 @@ function showDetailReferOut(referId) {
           // ? Putข้อความเคส ---------------------------------------- Refer
           // รพ ปลายทาง 
           if (hosCode == referHoscode) {
-            alert('asdasd')
+           
             $("#refuse-button").show();
             $("#UpStatusReferOutDes").show();
             $("#UpdateRefRefer").hide();
@@ -1177,7 +1177,7 @@ function showDetailReferOut(referId) {
             console.log(response.message[0].level_actual_des_color);
             $("#levelActualShow").css("display", "block");
             $('select[name="sevicePlanDes"] option').each(function () { 
-              console.log($(this).val());
+              console.log($(this).val())
              if (
                response.message[0].service_plane_des.includes($(this).val())
              ) {
