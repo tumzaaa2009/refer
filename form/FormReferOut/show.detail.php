@@ -167,7 +167,7 @@
                                                <div class="col-md-4" id="otherCauseReferout" style=" display: none;">
                                                    <div class="form-group">
                                                        <label>อื่น :</label>
-                                                       <input type="text" class="form-control" name="otherCauseReferout" placeholder="ป้อนเหตุผล" readonly>
+                                                       <input type="text" class="form-control" name="otherCauseReferout" id="showotherCauseReferout" placeholder="ป้อนเหตุผล" readonly>
                                                    </div>
                                                </div>
                                                <div class="col-md-4">
@@ -184,17 +184,7 @@
                                                    </div>
 
                                                </div>
-                                               <div class="col-md-5">
-                                                   <div class="form-group ">
-                                                       <div class="row ">
-                                                           <div class="col-md-5">
-                                                               <label>การประเมินผู้ป่วย</label>
-                                                               <input class="form-control  " name="conscious" id="conscious" readonly />
 
-                                                           </div>
-                                                       </div>
-                                                   </div>
-                                               </div>
                                                <h3 class="mt-3">ข้อมูล รพ ปลายทาง</h3>
                                                <div class="col-md">
                                                    <!-- select -->
@@ -254,9 +244,9 @@
                                                    <div class="col-md-6">
                                                        <div class="form-group">
                                                            <label>Service Plane :</label>
-                                                           <select class="form-control select2" name="sevicePlanDes" id="servicePlane" width="100%;" multiple="multiple"  disabled> </select>
-                                                            <input type="text" class="form-control" id="serviceTextPlaneDes" readonly style="display: none;"  >
-                                                        </div>
+                                                           <select class="form-control select2" name="sevicePlanDes" id="servicePlane" width="100%;" multiple="multiple" disabled> </select>
+                                                           <input type="text" class="form-control" id="serviceTextPlaneDes" readonly style="display: none;">
+                                                       </div>
                                                    </div>
                                                    <div class="col-md-6">
                                                        <div class="form-group">

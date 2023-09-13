@@ -666,7 +666,6 @@ function decryptData(encryptedData, secretKey) {
   return JSON.parse(decryptedData);
 }
 function showDetailReferOut(referId) {
-  
   let dateString = ` `;
   let expDateString = ``;
   $.ajax({
@@ -897,7 +896,9 @@ function showDetailReferOut(referId) {
         $("#servicePlaneDes").val(`${response.message[0].service_plane}`);
         $("#carReferDes").val(`${response.message[0].car_refer}`);
         $("#causeReferoutDes").val(`${response.message[0].cause_referout}`);
-        $("#otherCauseReferout").val(
+        $("#otherCauseReferout").show();
+      
+        $("#showotherCauseReferout").val(
           `${response.message[0].cause_referout_other}`
         );
         $("#getpttype").val(`${response.message[0].pttype_id}`);
@@ -986,7 +987,7 @@ function showDetailReferOut(referId) {
               response.message[0].dead_case_des +
               '"]'
           ).prop("selected", true);
- 
+
           const servicePlaneDes =
             response.message[0].service_plane_des.split(",");
           const select2Values = [];
@@ -1077,7 +1078,7 @@ function showDetailReferOut(referId) {
           }`;
 
           // ? Putข้อความเคส ---------------------------------------- Refer
-          // รพ ปลายทาง 
+          // รพ ปลายทาง
           if (hosCode == referHoscode) {
             $("#refuse-button").show();
             $("#UpStatusReferOutDes").show();
@@ -1114,7 +1115,7 @@ function showDetailReferOut(referId) {
             // วนลูปผ่านตัวเลือกทั้งหมดใน select
             for (var i = 0; i < selectElement.options.length; i++) {
               // เช็คว่าค่าในตัวเลือก (option) ตรงกับค่าที่ต้องการค้นหาหรือไม่
-             
+
               if (selectElement.options[i].value === levelActual[0]) {
                 // กำหนด selected ให้กับตัวเลือกที่ตรงกับเงื่อนไข
                 selectElement.options[i].selected = true;
@@ -1147,31 +1148,27 @@ function showDetailReferOut(referId) {
             ).prop("selected", true);
 
             // ************ ปลายทาง sevicePlanDes
-                 const servicePlaneDesReferCode =
-                   response.message[0].service_plane_des.split(",");
-                 // Initialize Select2 on the select element
-                 $("#servicePlane").select2();
+            const servicePlaneDesReferCode =
+              response.message[0].service_plane_des.split(",");
+            // Initialize Select2 on the select element
+            $("#servicePlane").select2();
 
-                 // Loop through each option in the select element
-                 $("#servicePlane option").each(function () {
-                   if (servicePlaneDesReferCode.includes($(this).val())) {
-                     console.log($(this).val());
-                     $(this).prop("selected", true);
-                   }
-                 });
+            // Loop through each option in the select element
+            $("#servicePlane option").each(function () {
+              if (servicePlaneDesReferCode.includes($(this).val())) {
+                console.log($(this).val());
+                $(this).prop("selected", true);
+              }
+            });
 
-                 // Trigger the change event to notify Select2 of the selection change
-                 $("#servicePlane").trigger("change");
+            // Trigger the change event to notify Select2 of the selection change
+            $("#servicePlane").trigger("change");
 
-                      
             $("#reservationtime").val(startDate + " - " + endDate);
-            
           } else if (hosCode == response.message[0].refer_code) {
-              alert('asdtwretmklremptm')
             // รพ ต้นทาง
             const [refOld, refNew] =
               response.message[0].codegen_refer_no.split("-");
-           
             ///ส่ง lelve และค่าี
             const levelActual = response.message[0].level_des.split(",");
             const select2levelActual = [];
@@ -1181,10 +1178,9 @@ function showDetailReferOut(referId) {
               "background-color",
               response.message[0].level_actual_des_color
             );
-           
+
             $("#levelActualShow").css("display", "block");
-      
- 
+
             $("#cc").prop("readonly", false);
             $("#managementDes").prop("readonly", false);
             $("#Diagonosis").prop("readonly", false);
@@ -1196,7 +1192,7 @@ function showDetailReferOut(referId) {
 
             const typetDes = response.message[0].typept_des.split(",");
             const select2typetDes = [];
-      
+
             $('select[name="Typept_Des"] option').each(function () {
               if (typetDes.includes($(this).val())) {
                 $(this).prop("selected", true);
@@ -1235,7 +1231,7 @@ function showDetailReferOut(referId) {
                 '"]'
             ).prop("selected", true);
             const servicePlaneDes = response.message[0].service_plane_des;
-          
+
             $("#servicePlane").next(".select2-container").hide();
             $("#serviceTextPlaneDes").show();
             $("#serviceTextPlaneDes").val(servicePlaneDes);
@@ -1556,7 +1552,6 @@ const showTableReferBack = () => {
         lengthChange: false,
       });
       if (response.status == 200) {
-        
         let dateString = ` `;
         response.message.forEach(function (item) {
           const dateTimeString = item.is_date;
