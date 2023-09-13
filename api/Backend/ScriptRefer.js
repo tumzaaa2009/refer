@@ -1079,7 +1079,6 @@ function showDetailReferOut(referId) {
           // ? Putข้อความเคส ---------------------------------------- Refer
           // รพ ปลายทาง 
           if (hosCode == referHoscode) {
-           
             $("#refuse-button").show();
             $("#UpStatusReferOutDes").show();
             $("#UpdateRefRefer").hide();
@@ -1147,17 +1146,16 @@ function showDetailReferOut(referId) {
                 '"]'
             ).prop("selected", true);
 
-            console.log(response.message[0].service_plane_des);
+            // ************ ปลายทาง sevicePlanDes
+            // $('select[name="sevicePlanDes"] option').each(function () {
 
-            $('select[name="sevicePlanDes"] option').each(function () {
-             
-              if (
-                response.message[0].service_plane_des.includes($(this).val())
-              ) {
-                $(this).prop("selected", true);
-              }
-            });
-            $("#servicePlane").select2();
+            //   if (
+            //     response.message[0].service_plane_des.includes($(this).val())
+            //   ) {
+            //     $(this).prop("selected", true);
+            //   }
+            // });
+            // $("#servicePlane").select2();
 
             $("#reservationtime").val(startDate + " - " + endDate);
           } else if (hosCode == response.message[0].refer_code) {
@@ -1174,17 +1172,10 @@ function showDetailReferOut(referId) {
               "background-color",
               response.message[0].level_actual_des_color
             );
-            console.log(response.message[0].level_actual_des_color);
+           
             $("#levelActualShow").css("display", "block");
-            $('select[name="sevicePlanDes"] option').each(function () { 
-              console.log($(this).val())
-             if (
-               response.message[0].service_plane_des.includes($(this).val())
-             ) {
-               $(this).prop("selected", true);
-             }
-           });
-
+      
+ 
             $("#cc").prop("readonly", false);
             $("#managementDes").prop("readonly", false);
             $("#Diagonosis").prop("readonly", false);
@@ -1237,7 +1228,7 @@ function showDetailReferOut(referId) {
             const servicePlaneDes =
               response.message[0].service_plane_des.split(",");
             const select2Values = [];
-           
+ 
             $('select[name="sevicePlanDes"] option').each(function () {
               if (servicePlaneDes.includes($(this).val())) {
                 $(this).prop("selected", true);
