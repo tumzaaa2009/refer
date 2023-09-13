@@ -593,11 +593,13 @@ if ($_GET['onfrom'] === "formreferout") { ?>
                                                                 <label>ETT NO.</label>
                                                             </div>
                                                         </div>
-                                                        <div class="col-md-auto">
+                                                        <div class="col-md-4">
                                                             <input type="text" class="form-control" name="noEtt" style="border:solid;" id="noEtt" oninput="textnoEtt(this.value)" disabled>
+                                                            <label>NoEtt.</label>
                                                         </div>
-                                                        <div class="col-md-auto">
+                                                        <div class="col-md-4">
                                                             <input type="text" class="form-control" name="MarkEtt" style="border:solid;" id="MarkEtt" oninput="textMarkEtt(this.value)" disabled>
+                                                            <label>MarkEtt NO.</label>
                                                         </div>
                                                     </div>
                                                 </div>
