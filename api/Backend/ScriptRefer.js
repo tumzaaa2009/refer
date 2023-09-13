@@ -1077,7 +1077,9 @@ function showDetailReferOut(referId) {
           }`;
 
           // ? Putข้อความเคส ---------------------------------------- Refer
+          // รพ ปลายทาง 
           if (hosCode == referHoscode) {
+            alert('asdasd')
             $("#refuse-button").show();
             $("#UpStatusReferOutDes").show();
             $("#UpdateRefRefer").hide();
@@ -1148,6 +1150,7 @@ function showDetailReferOut(referId) {
             console.log(response.message[0].service_plane_des);
 
             $('select[name="sevicePlanDes"] option').each(function () {
+             
               if (
                 response.message[0].service_plane_des.includes($(this).val())
               ) {
@@ -1158,15 +1161,10 @@ function showDetailReferOut(referId) {
 
             $("#reservationtime").val(startDate + " - " + endDate);
           } else if (hosCode == response.message[0].refer_code) {
+            // รพ ต้นทาง
             const [refOld, refNew] =
               response.message[0].codegen_refer_no.split("-");
-            if (refNew != "" && refOld != "") {
-              // $("#referSus").show();
-              // $("#referSus").html(
-              //   `<a href="indexfromuse.php?onfrom=showdetailreferout&idrefer=${refOld}-${refNew}">เอกสารส่งเก่า</a>`
-              // );
-            }
-
+            
             ///ส่ง lelve และค่าี
             const levelActual = response.message[0].level_des.split(",");
             const select2levelActual = [];
@@ -1178,20 +1176,14 @@ function showDetailReferOut(referId) {
             );
             console.log(response.message[0].level_actual_des_color);
             $("#levelActualShow").css("display", "block");
-
-            // $("#levelActual").val(response.message[0].level_des);
-            // $(
-            //   '#levelActual option[value="' +
-            //     response.message[0].level_des +
-            //     '"]'
-            // ).prop("selected", true);
-            // $("#levelActual").css(
-            //   "background-color",
-            //   response.message[0].level_actual_des_color
-            // );
-            // // หากต้องการกำหนดสีพื้นหลังจาก response.message[0].level_actual_des_color
-            // const backgroundColor = response.message[0].level_actual_des_color;
-            // $("#levelActual").css("background-color", backgroundColor);
+            $('select[name="sevicePlanDes"] option').each(function () {
+   
+             if (
+               response.message[0].service_plane_des.includes($(this).val())
+             ) {
+               $(this).prop("selected", true);
+             }
+           });
 
             $("#cc").prop("readonly", false);
             $("#managementDes").prop("readonly", false);
@@ -1245,6 +1237,7 @@ function showDetailReferOut(referId) {
             const servicePlaneDes =
               response.message[0].service_plane_des.split(",");
             const select2Values = [];
+           
             $('select[name="sevicePlanDes"] option').each(function () {
               if (servicePlaneDes.includes($(this).val())) {
                 $(this).prop("selected", true);
