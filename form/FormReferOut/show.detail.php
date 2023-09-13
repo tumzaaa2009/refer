@@ -254,8 +254,9 @@
                                                    <div class="col-md-6">
                                                        <div class="form-group">
                                                            <label>Service Plane :</label>
-                                                           <select class="form-control select2" name="sevicePlanDes" id="servicePlane" width="100%;" multiple="multiple" disabled> </select>
-                                                       </div>
+                                                           <select class="form-control select2" name="sevicePlanDes" id="servicePlane" width="100%;" multiple="multiple"  disabled> </select>
+                                                            <input type="text" class="form-control" id="serviceTextPlaneDes" readonly style="display: none;"  >
+                                                        </div>
                                                    </div>
                                                    <div class="col-md-6">
                                                        <div class="form-group">

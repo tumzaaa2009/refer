@@ -1163,16 +1163,15 @@ function showDetailReferOut(referId) {
                  // Trigger the change event to notify Select2 of the selection change
                  $("#servicePlane").trigger("change");
 
-                       
- 
-
+                      
             $("#reservationtime").val(startDate + " - " + endDate);
+            
           } else if (hosCode == response.message[0].refer_code) {
-         
+              alert('asdtwretmklremptm')
             // รพ ต้นทาง
             const [refOld, refNew] =
               response.message[0].codegen_refer_no.split("-");
-            
+           
             ///ส่ง lelve และค่าี
             const levelActual = response.message[0].level_des.split(",");
             const select2levelActual = [];
@@ -1235,20 +1234,12 @@ function showDetailReferOut(referId) {
                 response.message[0].dead_case_des +
                 '"]'
             ).prop("selected", true);
+            const servicePlaneDes = response.message[0].service_plane_des;
+          
+            $("#servicePlane").next(".select2-container").hide();
+            $("#serviceTextPlaneDes").show();
+            $("#serviceTextPlaneDes").val(servicePlaneDes);
 
-            const servicePlaneDes =
-              response.message[0].service_plane_des.split(",");
-            const select2Values = [];
-         
-            $("#servicePlane option").each(function () {
-             
-              if (servicePlaneDes.includes($(this).val())) {
-                $(this).prop("selected", true);
-                select2Values.push($(this).val());
-              }
-            });
-
-            $("#servicePlane").val(select2Values).trigger("change");
             $("#reservationtime").val(startDate + " - " + endDate);
           }
         } else if (response.message[0].is_save == -10) {
