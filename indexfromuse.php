@@ -662,8 +662,9 @@ if (isset($_GET['destroy'])) {
     socket.on(`send_statusUpdate ${hosCode}`, function(data, msgrefeno) {
         $("#UpdateRefRefer").hide();
         $("#open-modal-case-referout-cancelorg").hide()
-        if (data.message == "susOnrecive") {
-            toastr.success(`รพ ปลายทางรับการส่งตัว ${data.refNo}`, "", {
+
+        if (msgrefeno.message == "susOnrecive") {
+            toastr.success(`รพ ปลายทางรับการส่งตัว ${msgrefeno.refNo}`, "", {
                 positionClass: "toast-top-full-width",
                 timeOut: false,
                 extendedTimeOut: "1000",
@@ -678,14 +679,14 @@ if (isset($_GET['destroy'])) {
             const audio = new Audio("./sound_alert/com_linecorp_line_whistle.ogg");
             audio.autoplay = true;
             if (onfrom == "referouttable") {
-                alert('asdasdasddas')
+
                 showTableReferOut()
             } else if (idrefer != "" && idrefer != undefined) {
 
                 showDetailReferOut(msgrefeno.referCodeGen)
             }
         } else if (msgrefeno.message == "susNotRecive") {
-            toastr.warning(`รพ ปลายทางปฏิเสธการส่งตัว ${data.refNo}`, "", {
+            toastr.warning(`รพ ปลายทางปฏิเสธการส่งตัว ${msgrefeno.refNo}`, "", {
                 positionClass: "toast-top-full-width",
                 timeOut: false,
                 extendedTimeOut: "1000",
