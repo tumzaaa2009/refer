@@ -350,7 +350,7 @@
                                                    </div>
                                                </div>
                                                <div class="col-md-auto">
-                                                   <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal" aria-hidden="true">
+                                                   <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
                                                        รายละเอียด ICD10
                                                    </button>
                                                    <input type="hidden" name="icd10Detail" id="icd10Detail">
@@ -358,12 +358,12 @@
                                                <!-- Button trigger modal -->
 
                                                <!-- Modal -->
-                                               <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel">
+                                               <div class="modal fade" id="exampleModal">
                                                    <div class="modal-dialog modal-xl">
                                                        <div class="modal-content">
                                                            <div class="modal-header">
                                                                <h4 class="modal-title">ICD10 รายละเอียด</h4>
-                                                               <button type="button" class="close" data-dimdiss="modal" aria-label="Close">
+                                                               <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                                                    <span aria-hidden="true">&times;</span>
                                                                </button>
                                                            </div>
