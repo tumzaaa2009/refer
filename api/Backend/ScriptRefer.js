@@ -666,7 +666,7 @@ function decryptData(encryptedData, secretKey) {
   return JSON.parse(decryptedData);
 }
 function showDetailReferOut(referId) {
-  alert(referId);
+  
   let dateString = ` `;
   let expDateString = ``;
   $.ajax({
