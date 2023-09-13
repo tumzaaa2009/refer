@@ -1414,7 +1414,7 @@ function showDetailReferOut(referId) {
           const showText = `${
             response.message[0].select_type_drv +
             " " +
-            "ลายละเอียดแนบ" +
+            "รายละเอียดแนบ" +
             " " +
             response.message[0].result_text_drv +
             " อื่นๆ:" +
