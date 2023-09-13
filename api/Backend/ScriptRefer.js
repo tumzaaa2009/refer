@@ -1159,7 +1159,7 @@ function showDetailReferOut(referId) {
 
             $("#reservationtime").val(startDate + " - " + endDate);
           } else if (hosCode == response.message[0].refer_code) {
-            alert("gg")
+         
             // รพ ต้นทาง
             const [refOld, refNew] =
               response.message[0].codegen_refer_no.split("-");
@@ -1188,6 +1188,7 @@ function showDetailReferOut(referId) {
 
             const typetDes = response.message[0].typept_des.split(",");
             const select2typetDes = [];
+      
             $('select[name="Typept_Des"] option').each(function () {
               if (typetDes.includes($(this).val())) {
                 $(this).prop("selected", true);
@@ -1229,12 +1230,13 @@ function showDetailReferOut(referId) {
             const servicePlaneDes =
               response.message[0].service_plane_des.split(",");
             const select2Values = [];
- 
+              console.log(response.message[0].service_plane_des);
             $('select[name="sevicePlanDes"] option').each(function () {
-              if (servicePlaneDes.includes($(this).val())) {
-                $(this).prop("selected", true);
-                select2Values.push($(this).val());
-              }
+              console.log("foreach", $(this).val());
+              // if (servicePlaneDes.includes($(this).val())) {
+              //   $(this).prop("selected", true);
+              //   select2Values.push($(this).val());
+              // }
             });
 
             $("#servicePlane").val(select2Values).trigger("change");
