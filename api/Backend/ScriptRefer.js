@@ -1233,10 +1233,10 @@ function showDetailReferOut(referId) {
               console.log(response.message[0].service_plane_des);
             $("#servicePlane option").each(function () {
               console.log("foreach", $(this).val());
-              // if (servicePlaneDes.includes($(this).val())) {
-              //   $(this).prop("selected", true);
-              //   select2Values.push($(this).val());
-              // }
+              if (servicePlaneDes.includes($(this).val())) {
+                $(this).prop("selected", true);
+                select2Values.push($(this).val());
+              }
             });
 
             $("#servicePlane").val(select2Values).trigger("change");
