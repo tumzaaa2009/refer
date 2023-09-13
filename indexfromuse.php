@@ -90,7 +90,6 @@ if (isset($_GET['destroy'])) {
     <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.10/dist/sweetalert2.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-timepicker/0.5.2/css/bootstrap-timepicker.min.css">
     <style>
- 
         body {
             margin: 0;
             font-family: 'Kanit', sans-serif;
@@ -684,7 +683,7 @@ if (isset($_GET['destroy'])) {
 
                 showDetailReferOut(msgrefeno.referCodeGen)
             }
-        } else if (data.message == "susNotRecive") {
+        } else if (msgrefeno.message == "susNotRecive") {
             toastr.warning(`รพ ปลายทางปฏิเสธการส่งตัว ${data.refNo}`, "", {
                 positionClass: "toast-top-full-width",
                 timeOut: false,
