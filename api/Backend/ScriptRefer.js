@@ -1239,15 +1239,15 @@ function showDetailReferOut(referId) {
             response.message[0].cancle_des !== null
           ) {
             $("#cancleRefer-status-10-11").html(
-              `<h2>เหตุผลการยกเลิกต้นทาง-ปลายทาง  : ${response.message[0].cancle_org} - ${response.message[0].cancle_des}</h2>`
+              `<h2>เหตุผลการยกเลิกต้นทาง: ${response.message[0].cancle_org} </h2> <h2>ปลายทาง :  ${response.message[0].cancle_des}</h2>`
             );
           } else if (response.message[0].cancle_des == null) {
             $("#cancleRefer-status-10-11").html(
-              `<h2>ต้นทางยกเลิก: ${response.message[0].cancle_org}</h2>`
+              `<h2>เหตุผลการยกเลิกต้นทาง: ${response.message[0].cancle_org} </h2> <h2>ปลายทาง :  ${response.message[0].cancle_des}</h2>`
             );
           } else if (response.message[0].cancle_org == null) {
             $("#cancleRefer-status-10-11").html(
-              `<h2>ปลายทาง : ${response.message[0].cancle_des}</h2>`
+              `<h2>เหตุผลการยกเลิกต้นทาง: ${response.message[0].cancle_org} </h2> <h2>ปลายทาง :  ${response.message[0].cancle_des}</h2>`
             );
           }
 
@@ -1263,13 +1263,16 @@ function showDetailReferOut(referId) {
             response.message[0].cancle_des !== null
           ) {
             $("#cancleRefer-status-10-11").html(
-              `<h2>เหตุผลการยกเลิกต้นทาง: ${response.message[0].cancle_org} }</h2> <h2>ปลายทาง :  ${response.message[0].cancle_des}</h2>`
+                   `<h2>เหตุผลการยกเลิกต้นทาง: ${response.message[0].cancle_org} </h2> <h2>ปลายทาง :  ${response.message[0].cancle_des}</h2>`
             );
-          } else {
+          } else if (response.message[0].cancle_des == null) {
             $("#cancleRefer-status-10-11").html(
-              `<h2>เหตุผลการยกเลิกต้นทาง: ${response.message[0].cancle_org} }</h2> <h2>ปลายทาง :  ${response.message[0].cancle_des}</h2>`
+              `<h2>เหตุผลการยกเลิกต้นทาง: ${response.message[0].cancle_org} </h2> <h2>ปลายทาง :  ${response.message[0].cancle_des}</h2>`
             );
-          }
+          } else if (response.message[0].cancle_org == null) {
+            $("#cancleRefer-status-10-11").html(
+              `<h2>เหตุผลการยกเลิกต้นทาง: ${response.message[0].cancle_org} </h2> <h2>ปลายทาง :  ${response.message[0].cancle_des}</h2>`
+            );
           }
           if (hosCode == referHoscode) {
           } else {
@@ -1372,11 +1375,11 @@ function showDetailReferOut(referId) {
             response.message[0].cancle_des !== null
           ) {
             $("#cancleRefer-status-10-11").html(
-              `<h2>เหตุผลการยกเลิกต้นทาง: ${response.message[0].cancle_org} }</h2> <h2>ปลายทาง :  ${response.message[0].cancle_des}</h2>`
+              `<h2>เหตุผลการยกเลิกต้นทาง: ${response.message[0].cancle_org} </h2> <h2>ปลายทาง :  ${response.message[0].cancle_des}</h2>`
             );
           } else {
             $("#cancleRefer-status-10-11").html(
-              `<h2>เหตุผลการยกเลิกต้นทาง: ${response.message[0].cancle_org} }</h2> <h2>ปลายทาง :  ${response.message[0].cancle_des}</h2>`
+              `<h2>เหตุผลการยกเลิกต้นทาง: ${response.message[0].cancle_org} </h2> <h2>ปลายทาง :  ${response.message[0].cancle_des}</h2>`
             );
           }
 
