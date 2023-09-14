@@ -251,6 +251,7 @@ function sendFromReferhosCode() {
   const forms = document.getElementById("refer-out-form");
   const formData = new FormData(forms);
   formData.append("HoscodeCheck", hosCode);
+   formData.append("canleOrg", hosCode);
   if ($("#hosCodeRefer").val() === "0") {
     alert("กรุณาเลือกโรงพยาบาลที่จะส่งต่อ");
     return false;
@@ -901,6 +902,10 @@ function showDetailReferOut(referId) {
         $("#coordinateIs").val(response.message[0].coordinate_name);
         $("#conscious").val(response.message[0].conscious);
         $("#is-save").val(response.message[0].is_save);
+        $("#cancle-org-text").val(response.message[0].cancle_org);
+        $("#cancle-org_by-text").val(response.message[0].cancle_by_org)
+        $("#cancle-des-text").val(response.message[0].cancle_des);
+        $("#cancle-des-by-text").val(response.message[0].cancle_by_des)
         // ? ตาราง risk torma
         if (response.message[0].risk_turma != "") {
           const jsonRiskTurma = JSON.parse(response.message[0].risk_turma);
@@ -1105,6 +1110,7 @@ function showDetailReferOut(referId) {
             const levelActual = response.message[0].level_des.split(",");
             const select2levelActual = [];
             $("#colorLvAc").val(response.message[0].level_actual_des_color); ///ปรับค่าสี
+
             let selectElement = document.getElementById("levelActual");
             // วนลูปผ่านตัวเลือกทั้งหมดใน select
             for (var i = 0; i < selectElement.options.length; i++) {
@@ -1263,7 +1269,7 @@ function showDetailReferOut(referId) {
             response.message[0].cancle_des !== null
           ) {
             $("#cancleRefer-status-10-11").html(
-                   `<h2>เหตุผลการยกเลิกต้นทาง: ${response.message[0].cancle_org} </h2> <h2>ปลายทาง :  ${response.message[0].cancle_des}</h2>`
+              `<h2>เหตุผลการยกเลิกต้นทาง: ${response.message[0].cancle_org} </h2> <h2>ปลายทาง :  ${response.message[0].cancle_des}</h2>`
             );
           } else if (response.message[0].cancle_des == null) {
             $("#cancleRefer-status-10-11").html(
