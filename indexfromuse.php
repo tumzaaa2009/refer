@@ -592,7 +592,7 @@ if (isset($_GET['destroy'])) {
     // test 
 
     socket.on(`send_status ${hosCode}`, function(data, msgrefeno) {
-        if ((data.message = "มี RefNo เข้า  ")) {
+        if ((data.message = "SendDataCenter Success")) {
             toastr.success(`มี RefNo เข้า ${msgrefeno.refNo}`, "", {
                 positionClass: "toast-top-full-width",
                 timeOut: false,
