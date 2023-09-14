@@ -32,7 +32,7 @@
                     <div class="row">
                         <div class="col-sm">
                             <div class="form-group">
-                                <label>เลชที่ใบส่งตัว</label>
+                                <label>เลขที่ใบส่งตัว</label>
                                 <input type="text" class="form-control" placeholder="" name="refno">
                             </div>
                         </div>
