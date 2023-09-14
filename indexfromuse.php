@@ -663,7 +663,7 @@ if (isset($_GET['destroy'])) {
         $("#UpdateRefRefer").hide();
         $("#open-modal-case-referout-cancelorg").hide()
 
-        if (msgrefeno.messages == "susOnrecive") {
+        if (msgrefeno.message == "susOnrecive") {
             toastr.success(`รพ ปลายทางรับการส่งตัว ${msgrefeno.refNo}`, "", {
                 positionClass: "toast-top-full-width",
                 timeOut: false,

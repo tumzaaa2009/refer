@@ -446,14 +446,7 @@ function UpStatusReferOutIsSave() {
             if (hosCode == response.referCode) {
               $("#UpStatusReferOutDesResive").show();
             }
-            toastr.success(`${response.refNo}`, "", {
-              positionClass: "toast-top-full-width",
-              timeOut: false,
-              extendedTimeOut: "1000",
-              showMethod: "fadeIn",
-              hideMethod: "fadeOut",
-              closeButton: true,
-            });
+ 
             setTimeout(function () {
               location.href = "indexfromuse.php?onfrom=referouttable";
             }, 1.5);
