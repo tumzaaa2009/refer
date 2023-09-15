@@ -397,11 +397,11 @@
                                                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" style="display: none;" id="open-modal-case-referHocode" data-bs-target="#mmmodalReferCode"> เปลี่ยนสถานพยาบาลปลายทาง
                                                    </button>
                                                    <!-- ยกเลิกต้นทาง -->
-                                                   <input type="text" id="cancle-org-text" name="cancle_org_text" />
-                                                   <input type="text" id="cancle-org-by-text" name="cancle_org_by_text" />
+                                                   <input type="hidden" id="cancle-org-text" name="cancle_org_text" />
+                                                   <input type="hidden" id="cancle-org-by-text" name="cancle_org_by_text" />
                                                    <!-- ยกเลิกปลายทาง -->
-                                                   <input type="text" id="cancle-des-text" name="cancle_des_text" />
-                                                   <input type="text" id="cancle-des-by-text" name="cancle_des_by_text" />
+                                                   <input type="hidden" id="cancle-des-text" name="cancle_des_text" />
+                                                   <input type="hidden" id="cancle-des-by-text" name="cancle_des_by_text" />
 
                                                    <button type="button" class="btn btn-success" data-bs-toggle="modal" style="display: none;" id="open-modal-case-referHosCodeDes" data-bs-target="#mmmodalReferCode">
                                                        ส่งต่อ

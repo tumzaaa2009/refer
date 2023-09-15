@@ -1,3 +1,13 @@
+function clearFields() {
+  // เลือกฟิลด์ "เลขที่ใบส่งตัว" และ "รหัสสถานพยาบาลปลายทาง" โดยใช้ชื่อ (name) ของฟิลด์
+  var refnoField = document.querySelector("input[name='refno']");
+  var hosreferField = document.querySelector("input[name='hosrefer']");
+
+  // เคลียร์ค่าในฟิลด์ "เลขที่ใบส่งตัว" และ "รหัสสถานพยาบาลปลายทาง"
+  refnoField.value = "";
+  hosreferField.value = "";
+}
+
 // * ทำ formattdate
 function formatDateToThai(dateStr) {
   const months = [
@@ -71,8 +81,7 @@ const ServiceStation = () => {
     },
   });
 };
-const LevelActual = (value,color) => {
- 
+const LevelActual = (value, color) => {
   $.ajax({
     type: "POST",
     url: `${callPathRefer}`,

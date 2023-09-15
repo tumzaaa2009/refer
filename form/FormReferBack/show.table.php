@@ -42,7 +42,7 @@
                                 <input type="number" class="form-control" placeholder="" name="hosrefer" max="5">
                             </div>
                         </div>
-                     
+
                         <div class="col-sm">
                             <label>Date:</label>
                             <input type="text" name="daterange" class="form-control" />
@@ -67,7 +67,7 @@
                                 </div>
                                 <div class="col-sm">
                                     <div class="form-group">
-                                        <button type="button" class="form-control btn btn-primary">ล้างข้อมูล</button>
+                                        <button type="button" class="form-control btn btn-primary" onclick="clearFields()">ล้างข้อมูล</button>
                                     </div>
                                 </div>
                             </div>
@@ -106,9 +106,9 @@
     </div>
     <!-- * div modal  -->
     <div class="col">
-      
+
         <span class="mr-5"> <i class="fa fa-exchange-alt"></i> เปลี่ยนสถานที่ปลายทาง</span>
-        <span class="mr-5"> <i class="fa fa-ambulance" aria-hidden="true"></i>  รอการส่งตัวกลับ</span>
+        <span class="mr-5"> <i class="fa fa-ambulance" aria-hidden="true"></i> รอการส่งตัวกลับ</span>
         <span class="mr-5"> <i class="fa fa-check" aria-hidden="true" style="color: black;"></i> ยืนยันการรับตัว</span>
 
 
