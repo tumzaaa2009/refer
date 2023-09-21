@@ -30,7 +30,7 @@
            <!-- /.card-header -->
            <!-- form start -->
            <form id="refer-back-form" method="POST" enctype="multipart/form-data" action="./form/FormReferBack/print.refer.back.php">
-               <div class="card-body">
+               <div class="card-body" style="border:solid;">
                    <div class="form-group row">
                        <label for="เลขที่ใบส่งตัว" class="col-md-auto col-form-label mb-1">เลขที่ใบส่งตัว</label>
                        <div class="col-md-auto">
