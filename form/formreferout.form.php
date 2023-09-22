@@ -1,6 +1,6 @@
-<!-- <div id="loader" class="loader-container">
+<div id="loader" class="loader-container">
     <div class="loader"></div>
-</div> -->
+</div>
 <?php
 
 if ($_GET['onfrom'] === "formreferout") { ?>
