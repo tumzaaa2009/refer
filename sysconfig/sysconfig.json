@@ -1,1 +1,29 @@
-{"hosCode":{"hosCode":"10661","hosName":"\u0e23\u0e1e\u0e2a\u0e23\u0e30\u0e1a\u0e38\u0e23\u0e35"},"0":{"ContentTypeRefer":"refer","DB_TYPE_REFER":"Mysql","Server_NameRefer":"localhost","Database_NameRefer":"referdb_hos","userRefer":"root","Password":"2YlHR36rYKjdGsaGUf69DiY5vHrFTWnh3QiLkGGNcTTXUPO6ILrgLqhOXPHMyJLrYXQzQnBuNzdqNklmbzZnckEvcm5mQT09","portRefer":"3306","callPathRefer":".\/api\/Refer\/Mysql\/referdb_hos.Mysql.php"},"1":{"typeConnect":"ConnectToAPI","ContentTypeHis":"his","URl":"https:\/\/api.srbr.in.th","testconnect":"\/refer\/api\/patient\/","endPoint":"\/refer\/api\/patient\/","visitDate":"\/refer\/api\/visit\/","visitLabs":"","visitDrug":"\/refer\/api\/drug\/","Auth":"x-api-key","hospCode":"10661","TOKEN":"s+S\/7FFe0p6ZknWNQtLj15e1zMhlqamjrOpUhBLlrjCjMpv0Noxb+VHWKE4Ot8VPcWlQUFJOVzBCZnFGM2dUZXhaUG5wSlMrVHlXcEwxVTlURmJpYVRJcmVIeWgvS29yQlBMWG9mblNIejNiQTFMTStXd0ptM0dRR2hEaklwSjA1WUNuSVE9PQ=="}}
+{
+    "hosCode": {
+        "hosCode": "10661",
+        "hosName": "\u0e23\u0e1e\u0e2a\u0e23\u0e30\u0e1a\u0e38\u0e23\u0e35"
+    },
+    "0": {
+        "ContentTypeRefer": "refer",
+        "DB_TYPE_REFER": "Mysql",
+        "Server_NameRefer": "localhost",
+        "Database_NameRefer": "referdb_hos",
+        "userRefer": "root",
+        "Password": "2YlHR36rYKjdGsaGUf69DiY5vHrFTWnh3QiLkGGNcTTXUPO6ILrgLqhOXPHMyJLrYXQzQnBuNzdqNklmbzZnckEvcm5mQT09",
+        "portRefer": "3306",
+        "callPathRefer": ".\/api\/Refer\/Mysql\/referdb_hos.Mysql.php"
+    },
+    "1": {
+        "typeConnect": "ConnectToAPI",
+        "ContentTypeHis": "his",
+        "URl": "https:\/\/api.srbr.in.th",
+        "testconnect": "\/refer\/api\/patient\/",
+        "endPoint": "\/refer\/api\/patient\/",
+        "visitDate": "\/refer\/api\/visit\/",
+        "visitLabs": "",
+        "visitDrug": "\/refer\/api\/drug\/",
+        "Auth": "x-api-key",
+        "hospCode": "10661",
+        "TOKEN": "s+S\/7FFe0p6ZknWNQtLj15e1zMhlqamjrOpUhBLlrjCjMpv0Noxb+VHWKE4Ot8VPcWlQUFJOVzBCZnFGM2dUZXhaUG5wSlMrVHlXcEwxVTlURmJpYVRJcmVIeWgvS29yQlBMWG9mblNIejNiQTFMTStXd0ptM0dRR2hEaklwSjA1WUNuSVE9PQ=="
+    }
+}
