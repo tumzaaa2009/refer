@@ -446,13 +446,13 @@ if ($_GET['onfrom'] === "formreferout") { ?>
                                                 <input type="hidden" name="colorLvAc">
                                             </div>
                                         </div>
-                                        <div class=" col-md-6">
+                                        <!-- <div class=" col-md-6">
                                             <label class="col-md-autocol-form-label">CreateLink-Zoom</label>
                                             <select class="form-control select2" id="selectZooms" name="selectZooms">
                                                 <option select value="0">ไม่ใช้</option>
                                                 <option value="1">ใช้</option>
                                             </select>
-                                        </div>
+                                        </div> -->
                                         <div class="col-md-6">
                                             <!-- select -->
                                             <div class="form-group">

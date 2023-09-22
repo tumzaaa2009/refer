@@ -280,7 +280,7 @@
                                                            </div>
                                                        </div>
                                                        <div class="modal-footer justify-content-between">
-                                                           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                                           <button type="button" class="btn btn-secondary" data-dismiss="modal" aria-label="Close">Close</button>
                                                        </div>
                                                    </div>
                                                </div>
@@ -291,7 +291,7 @@
                                                </button>
 
                                                <button type="button" class="btn btn-info" id="suscecc-refer-back" style="display:none;" onclick="SendReferBack()">ยืนยันการรับตัว</button>
-                                               <input type ="hidden" id="status-is-save" />
+                                               <input type="hidden" id="status-is-save" />
                                                <h3 id="ShowSecess" style="display:none;color:green"></h3>
 
                                            </div>

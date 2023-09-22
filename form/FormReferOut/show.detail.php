@@ -380,7 +380,7 @@
                                                                </div>
                                                            </div>
                                                            <div class="modal-footer justify-content-between">
-                                                               <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                                               <button type="button" class="btn btn-secondary" data-dismiss="modal" aria-label="Close">Close</button>
                                                            </div>
                                                        </div>
                                                    </div>
