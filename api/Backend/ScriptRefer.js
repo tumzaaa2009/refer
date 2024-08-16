@@ -5,7 +5,7 @@ const getStationServiceDestinations = (value) => {
       "x-access-token": hosPassCode,
     },
     type: "POST",
-    url: `https://rh4cloudcenter.moph.go.th:3000/referapi/servicestaion`,
+    url: `https://rh4cloudcenter.moph.go.th/referapi/servicestaion`,
     data: {
       servicestation: value,
     },
@@ -86,7 +86,7 @@ const sendFromReferOuts = () => {
       "x-access-token": hosPassCode,
     },
     type: "POST",
-    url: "https://rh4cloudcenter.moph.go.th:3000/referapi/postreferout",
+    url: "https://rh4cloudcenter.moph.go.th/referapi/postreferout",
     data: formData,
     contentType: false,
     processData: false,
@@ -167,7 +167,7 @@ const sendFromReferBack = () => {
       "x-access-token": hosPassCode,
     },
     type: "POST",
-    url: "https://rh4cloudcenter.moph.go.th:3000/referapi/postreferback",
+    url: "https://rh4cloudcenter.moph.go.th/referapi/postreferback",
     data: formData,
     contentType: false,
     processData: false,
@@ -206,7 +206,7 @@ function cancleReferoutOrg() {
   } else {
     $.ajax({
       type: "POST",
-      url: `https://rh4cloudcenter.moph.go.th:3000/referapi/referoutcancledes`,
+      url: `https://rh4cloudcenter.moph.go.th/referapi/referoutcancledes`,
       data: {
         idrefer: $("#refer_no").val(),
         caseCancle: caseCancle,
@@ -254,7 +254,7 @@ function sendFromReferhosCode() {
       "x-access-token": hosPassCode,
     },
     type: "POST",
-    url: "https://rh4cloudcenter.moph.go.th:3000/referapi/referhoscodeupdate",
+    url: "https://rh4cloudcenter.moph.go.th/referapi/referhoscodeupdate",
     data: formData,
     contentType: false,
     processData: false,
@@ -290,7 +290,7 @@ const getStation = (hoscode) => {
   $.ajax({
     type: "POST",
     data: { hoscode: hoscode },
-    url: "https://rh4cloudcenter.moph.go.th:3000/referapi/referstation",
+    url: "https://rh4cloudcenter.moph.go.th/referapi/referstation",
     dataType: "JSON",
     success: function (response) {
       let arraySelectStation = [];
@@ -323,7 +323,7 @@ const PutCaseReferOut = () => {
       "x-access-token": hosPassCode,
     },
     type: "PUT",
-    url: `https://rh4cloudcenter.moph.go.th:3000/referapi/putreferout`,
+    url: `https://rh4cloudcenter.moph.go.th/referapi/putreferout`,
     data: formData,
     contentType: false,
     processData: false,
@@ -353,7 +353,7 @@ function PutRefDes() {
       "x-access-token": hosPassCode,
     },
     type: "PUT",
-    url: `https://rh4cloudcenter.moph.go.th:3000/referapi/putreferoutdes`,
+    url: `https://rh4cloudcenter.moph.go.th/referapi/putreferoutdes`,
     data: formData,
     contentType: false,
     processData: false,
@@ -421,7 +421,7 @@ function UpStatusReferOutIsSave() {
           "x-access-token": referCode,
         },
         type: "PUT",
-        url: "https://rh4cloudcenter.moph.go.th:3000/referapi/updatestatus",
+        url: "https://rh4cloudcenter.moph.go.th/referapi/updatestatus",
         data: formData,
         dataType: "JSON",
         contentType: false,
@@ -482,7 +482,7 @@ function RefuseReferOut() {
         "x-access-token": referCode,
       },
       type: "PUT",
-      url: "https://rh4cloudcenter.moph.go.th:3000/referapi/updatestatus",
+      url: "https://rh4cloudcenter.moph.go.th/referapi/updatestatus",
       data: formData,
       dataType: "JSON",
       contentType: false,
@@ -537,7 +537,7 @@ const showTableReferOut = () => {
   }
   $.ajax({
     type: "POST",
-    url: "https://rh4cloudcenter.moph.go.th:3000/referapi/showtablereferout",
+    url: "https://rh4cloudcenter.moph.go.th/referapi/showtablereferout",
     data: data,
     dataType: "JSON",
     beforeSend: function () {
@@ -660,7 +660,7 @@ function showDetailReferOut() {
   let expDateString = ``;
   $.ajax({
     type: "POST",
-    url: "https://rh4cloudcenter.moph.go.th:3000/referapi/showDetailReferOut",
+    url: "https://rh4cloudcenter.moph.go.th/referapi/showDetailReferOut",
     data: {
       showDetailReferOut: referId,
     },
@@ -1406,7 +1406,7 @@ async function SendReferIn() {
       "x-access-token": hosPassCode,
     },
     type: "POST",
-    url: "https://rh4cloudcenter.moph.go.th:3000/referapi/postreferin",
+    url: "https://rh4cloudcenter.moph.go.th/referapi/postreferin",
     dataType: "JSON",
     data: {
       referNo,
@@ -1494,7 +1494,7 @@ const showTableReferBack = () => {
   }
   $.ajax({
     type: "POST",
-    url: "https://rh4cloudcenter.moph.go.th:3000/referapi/showtablereferback",
+    url: "https://rh4cloudcenter.moph.go.th/referapi/showtablereferback",
     data: data,
     dataType: "JSON",
     beforeSend: function () {
@@ -1576,7 +1576,7 @@ const showDetailReferBack = () => {
       "x-access-token": hosPassCode,
     },
     type: "POST",
-    url: "https://rh4cloudcenter.moph.go.th:3000/referapi/showdetailreferback",
+    url: "https://rh4cloudcenter.moph.go.th/referapi/showdetailreferback",
     data: {
       showDetailReferOut: referId,
     },
@@ -1855,7 +1855,7 @@ const sendFromReferBackhosCode = () => {
       "x-access-token": hosPassCode,
     },
     type: "POST",
-    url: "https://rh4cloudcenter.moph.go.th:3000/referapi/putreferbackonlysend",
+    url: "https://rh4cloudcenter.moph.go.th/referapi/putreferbackonlysend",
     data: formData,
     contentType: false,
     processData: false,
@@ -1893,7 +1893,7 @@ const SendReferBack = () => {
         "x-access-token": hosPassCode,
       },
       type: "POST",
-      url: "https://rh4cloudcenter.moph.go.th:3000/referapi/putreferbackonlysend",
+      url: "https://rh4cloudcenter.moph.go.th/referapi/putreferbackonlysend",
       data: formData,
       contentType: false,
       processData: false,
