@@ -804,7 +804,7 @@ $userRoles = json_decode($_SESSION["mySession"][6]); // แสดงรายก
 
             $.ajax({
                 type: "POST",
-                url: "https://rh4cloudcenter.moph.go.th:3000/referapi/createstation",
+                url: "https://rh4cloudcenter.moph.go.th/referapi/createstation",
                 data: valueInputstation,
                 dataType: "JSON",
                 success: function(response) {
@@ -859,7 +859,7 @@ $userRoles = json_decode($_SESSION["mySession"][6]); // แสดงรายก
         if (valueInputstation != "") {
             $.ajax({
                 type: "POST",
-                url: "https://rh4cloudcenter.moph.go.th:3000/referapi/createstation",
+                url: "https://rh4cloudcenter.moph.go.th/referapi/createstation",
                 data: valueInputstation,
                 dataType: "JSON",
                 success: function(response) {

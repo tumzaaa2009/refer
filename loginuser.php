@@ -210,7 +210,7 @@ if (isset($_POST['submitPost'])) {
         if (hosCodeCheck != '' && passCodeCheck != "") {
             $.ajax({
                 type: "POST",
-                url: "https://rh4cloudcenter.moph.go.th:3000/referapi/login",
+                url: "https://rh4cloudcenter.moph.go.th/referapi/login",
 
                 data: {
                     hosCode: hosCodeCheck,

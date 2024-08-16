@@ -538,7 +538,7 @@ if (isset($_GET['destroy'])) {
     var onfrom = '<?php echo isset($_GET['onfrom']) ? $_GET['onfrom'] : ""; ?>';
     var idrefer = '<?php echo isset($_GET['idrefer']) ? $_GET['idrefer'] : ""; ?>';
     // ?Socketio
-    var socket = io.connect("https://rh4cloudcenter.moph.go.th:3000", {
+    var socket = io.connect("https://rh4cloudcenter.moph.go.th", {
 
         transport: ["websocket", "polling", "flashsocket"],
     });
